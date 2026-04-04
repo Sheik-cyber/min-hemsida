@@ -112,12 +112,95 @@
   .pillar h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--white); margin-bottom: 0.3rem; }
   .pillar p { color: var(--gray); font-size: 0.92rem; margin: 0; }
 
-  /* FIRE WORDS BAND */
-  .fire-band { background: var(--dark); padding: 3.5rem 5vw; border-top: 1px solid rgba(255,92,26,0.1); border-bottom: 1px solid rgba(255,92,26,0.1); }
-  .fire-words { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0; }
-  .fire-word { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.6rem, 3.5vw, 3rem); letter-spacing: 0.06em; color: rgba(245,242,237,0.13); padding-right: 2rem; line-height: 1.2; }
-  .fire-word.lit { color: var(--white); }
-  .fire-word.accent { color: var(--orange); padding-right: 2rem; }
+  /* FIRE WORDS BAND – redesigned: symmetric centered grid */
+  .fire-band {
+    background: var(--dark);
+    padding: 5rem 5vw;
+    border-top: 1px solid rgba(255,92,26,0.12);
+    border-bottom: 1px solid rgba(255,92,26,0.12);
+    position: relative;
+    overflow: hidden;
+  }
+  .fire-band::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,92,26,0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .fire-band-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .fire-band-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 2.5rem;
+    display: block;
+  }
+  .fire-words-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border: 1px solid rgba(255,92,26,0.12);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .fire-word-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.5rem;
+    border-right: 1px solid rgba(255,92,26,0.12);
+    border-bottom: 1px solid rgba(255,92,26,0.12);
+    position: relative;
+    transition: background 0.3s;
+  }
+  .fire-word-cell:nth-child(3n) { border-right: none; }
+  .fire-word-cell:nth-child(4), .fire-word-cell:nth-child(5), .fire-word-cell:nth-child(6) { border-bottom: none; }
+  .fire-word-cell:hover { background: rgba(255,92,26,0.05); }
+  .fire-word-cell .fw-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.4rem, 2.8vw, 2.4rem);
+    letter-spacing: 0.08em;
+    color: var(--white);
+    line-height: 1;
+  }
+  .fire-word-cell .fw-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--orange);
+    border-radius: 50%;
+    margin-left: 1rem;
+    flex-shrink: 0;
+    vertical-align: middle;
+    position: relative;
+    top: -2px;
+  }
+  .fire-word-cell:nth-child(3n) .fw-dot,
+  .fire-word-cell:last-child .fw-dot { display: none; }
+  .fire-band-cta {
+    margin-top: 2.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .fire-band-cta .cta-line {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
 
   /* TJÄNSTER */
   #tjanster { background: var(--dark); }
@@ -221,6 +304,11 @@
     .testimonials-grid { grid-template-columns: 1fr; }
     .eld-grid { grid-template-columns: 1fr; }
     .form-row { grid-template-columns: 1fr; }
+    .fire-words-grid { grid-template-columns: 1fr 1fr; }
+    .fire-word-cell:nth-child(3n) { border-right: 1px solid rgba(255,92,26,0.12); }
+    .fire-word-cell:nth-child(2n) { border-right: none; }
+    .fire-word-cell:nth-child(4), .fire-word-cell:nth-child(5), .fire-word-cell:nth-child(6) { border-bottom: 1px solid rgba(255,92,26,0.12); }
+    .fire-word-cell:nth-child(5), .fire-word-cell:nth-child(6) { border-bottom: none; }
   }
 </style>
 </head>
@@ -305,18 +393,20 @@
 </section>
 
 <div class="fire-band reveal">
-  <div class="fire-words">
-    <span class="fire-word lit">BESTÄMD</span>
-    <span class="fire-word accent">·</span>
-    <span class="fire-word lit">VILJESTYRKA</span>
-    <span class="fire-word accent">·</span>
-    <span class="fire-word lit">MOD</span>
-    <span class="fire-word accent">·</span>
-    <span class="fire-word lit">ALDRIG GE UPP</span>
-    <span class="fire-word accent">·</span>
-    <span class="fire-word lit">HANDLINGSKRAFTIG</span>
-    <span class="fire-word accent">·</span>
-    <span class="fire-word lit">RAKRYGGAD</span>
+  <div class="fire-band-inner">
+    <span class="fire-band-label">Vad Resolve står för</span>
+    <div class="fire-words-grid">
+      <div class="fire-word-cell"><span class="fw-text">BESTÄMD</span><span class="fw-dot"></span></div>
+      <div class="fire-word-cell"><span class="fw-text">VILJESTYRKA</span><span class="fw-dot"></span></div>
+      <div class="fire-word-cell"><span class="fw-text">MOD</span></div>
+      <div class="fire-word-cell"><span class="fw-text">ALDRIG GE UPP</span><span class="fw-dot"></span></div>
+      <div class="fire-word-cell"><span class="fw-text">HANDLINGSKRAFTIG</span><span class="fw-dot"></span></div>
+      <div class="fire-word-cell"><span class="fw-text">RAKRYGGAD</span></div>
+    </div>
+    <div class="fire-band-cta">
+      <span class="cta-line">Redo att tända elden?</span>
+      <a href="#kontakt" class="btn-primary">Boka kostnadsfri konsultation →</a>
+    </div>
   </div>
 </div>
 
@@ -538,7 +628,7 @@
         <div class="contact-item"><span>📍</span><span>Stockholm, Sverige</span></div>
       </div>
     </div>
-    <form class="contact-form reveal" onsubmit="handleSubmit(event)">
+    <form class="contact-form reveal" action="https://formspree.io/f/xgoppvzy">
       <div class="form-row">
         <div class="form-group">
           <label for="name">Namn</label>
@@ -596,12 +686,7 @@
     btn.classList.add('active');
   }
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    const btn = e.target.querySelector('button[type=submit]');
-    btn.textContent = '✓ Skickat! Vi hör av oss snart.';
-    btn.style.background = '#2ecc71';
-    btn.disabled = true;
+ 
   }
 
   window.addEventListener('scroll', () => {
