@@ -298,7 +298,14 @@
 
   /* RESPONSIVE */
   @media (max-width: 900px) {
-    nav ul { display: none; }
+    nav ul { display: none; flex-direction: column; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(13,17,23,0.98); z-index: 200; justify-content: center; align-items: center; gap: 2rem; padding: 2rem; }
+    nav ul.open { display: flex; }
+    nav ul a { font-size: 1.4rem; letter-spacing: 0.12em; }
+    .hamburger { display: flex; flex-direction: column; gap: 5px; cursor: pointer; z-index: 300; padding: 6px; }
+    .hamburger span { display: block; width: 26px; height: 2px; background: var(--white); border-radius: 2px; transition: all 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
     .about-grid, .services-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
     .tab-panel.active { grid-template-columns: 1fr; }
     .testimonials-grid { grid-template-columns: 1fr; }
@@ -309,6 +316,9 @@
     .fire-word-cell:nth-child(2n) { border-right: none; }
     .fire-word-cell:nth-child(4), .fire-word-cell:nth-child(5), .fire-word-cell:nth-child(6) { border-bottom: 1px solid rgba(255,92,26,0.12); }
     .fire-word-cell:nth-child(5), .fire-word-cell:nth-child(6) { border-bottom: none; }
+  }
+  @media (min-width: 901px) {
+    .hamburger { display: none; }
   }
   /* PAGE TAB SYSTEM */
   .page { display: none; }
@@ -321,13 +331,16 @@
 
 <nav>
   <a href="#" class="logo" onclick="showPage('hero'); return false;">RESOL<span>VE</span></a>
-  <ul>
-    <li><a href="#" onclick="showPage('om'); return false;">Om oss</a></li>
-    <li><a href="#" onclick="showPage('tjanster'); return false;">Tjänster</a></li>
-    <li><a href="#" onclick="showPage('paket'); return false;">Paket</a></li>
-    <li><a href="#" onclick="showPage('testimonials'); return false;">Referenser</a></li>
-    <li><a href="#" class="nav-cta" onclick="showPage('kontakt'); return false;">Boka nu</a></li>
+  <ul id="nav-menu">
+    <li><a href="#" onclick="showPage('om'); closeMenu(); return false;">Om oss</a></li>
+    <li><a href="#" onclick="showPage('tjanster'); closeMenu(); return false;">Tjänster</a></li>
+    <li><a href="#" onclick="showPage('paket'); closeMenu(); return false;">Paket</a></li>
+    <li><a href="#" onclick="showPage('testimonials'); closeMenu(); return false;">Referenser</a></li>
+    <li><a href="#" class="nav-cta" onclick="showPage('kontakt'); closeMenu(); return false;">Boka nu</a></li>
   </ul>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
 </nav>
 
 <div id="page-hero" class="page active">
@@ -671,6 +684,18 @@
 </footer>
 
 <script>
+  function toggleMenu() {
+    const menu = document.getElementById('nav-menu');
+    const burger = document.getElementById('hamburger');
+    menu.classList.toggle('open');
+    burger.classList.toggle('open');
+  }
+
+  function closeMenu() {
+    document.getElementById('nav-menu').classList.remove('open');
+    document.getElementById('hamburger').classList.remove('open');
+  }
+
   function showPage(id) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     const target = document.getElementById('page-' + id);
