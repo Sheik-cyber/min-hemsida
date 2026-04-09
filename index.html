@@ -297,12 +297,46 @@
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
   /* RESPONSIVE */
+  .hamburger { display: none; }
+
   @media (max-width: 900px) {
-    nav ul { display: none; flex-direction: column; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(13,17,23,0.98); z-index: 200; justify-content: center; align-items: center; gap: 2rem; padding: 2rem; }
-    nav ul.open { display: flex; }
-    nav ul a { font-size: 1.4rem; letter-spacing: 0.12em; }
-    .hamburger { display: flex; flex-direction: column; gap: 5px; cursor: pointer; z-index: 300; padding: 6px; }
-    .hamburger span { display: block; width: 26px; height: 2px; background: var(--white); border-radius: 2px; transition: all 0.3s; }
+    nav ul { display: none !important; }
+    nav ul.open {
+      display: flex !important;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(13,17,23,0.98);
+      z-index: 200;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      padding: 2rem;
+    }
+    nav ul.open li a {
+      font-size: 1.5rem;
+      letter-spacing: 0.1em;
+      color: var(--white);
+    }
+    nav ul.open li a:hover { color: var(--orange); }
+    .hamburger {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      z-index: 300;
+      padding: 6px;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 26px;
+      height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
     .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
     .hamburger.open span:nth-child(2) { opacity: 0; }
     .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
@@ -317,9 +351,7 @@
     .fire-word-cell:nth-child(4), .fire-word-cell:nth-child(5), .fire-word-cell:nth-child(6) { border-bottom: 1px solid rgba(255,92,26,0.12); }
     .fire-word-cell:nth-child(5), .fire-word-cell:nth-child(6) { border-bottom: none; }
   }
-  @media (min-width: 901px) {
-    .hamburger { display: none; }
-  }
+
   /* PAGE TAB SYSTEM */
   .page { display: none; }
   .page.active { display: block; }
