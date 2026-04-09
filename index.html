@@ -296,35 +296,61 @@
   .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
-  /* RESPONSIVE */
+  /* MOBILE NAV */
   .hamburger { display: none; }
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(13,17,23,0.99);
+    z-index: 500;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem;
+    letter-spacing: 0.1em;
+    color: var(--white);
+    text-decoration: none;
+    padding: 1rem 2rem;
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,92,26,0.1);
+    transition: color 0.2s, background 0.2s;
+  }
+  .mobile-menu a:first-child { border-top: 1px solid rgba(255,92,26,0.1); }
+  .mobile-menu a:hover { color: var(--orange); background: rgba(255,92,26,0.05); }
+  .mobile-menu a.nav-cta-mob {
+    color: var(--orange);
+    margin-top: 1rem;
+    border: none;
+    font-size: 1.6rem;
+  }
+  .mobile-close {
+    position: absolute;
+    top: 1.4rem;
+    right: 5vw;
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 600;
+    line-height: 1;
+  }
 
   @media (max-width: 900px) {
     nav ul { display: none !important; }
-    nav ul.open {
-      display: flex !important;
-      flex-direction: column;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(13,17,23,0.98);
-      z-index: 200;
-      justify-content: center;
-      align-items: center;
-      gap: 2rem;
-      padding: 2rem;
-    }
-    nav ul.open li a {
-      font-size: 1.5rem;
-      letter-spacing: 0.1em;
-      color: var(--white);
-    }
-    nav ul.open li a:hover { color: var(--orange); }
     .hamburger {
       display: flex;
       flex-direction: column;
       gap: 5px;
       cursor: pointer;
-      z-index: 300;
+      z-index: 600;
       padding: 6px;
       background: none;
       border: none;
@@ -364,16 +390,25 @@
 <nav>
   <a href="#" class="logo" onclick="showPage('hero'); return false;">RESOL<span>VE</span></a>
   <ul id="nav-menu">
-    <li><a href="#" onclick="showPage('om'); closeMenu(); return false;">Om oss</a></li>
-    <li><a href="#" onclick="showPage('tjanster'); closeMenu(); return false;">Tjänster</a></li>
-    <li><a href="#" onclick="showPage('paket'); closeMenu(); return false;">Paket</a></li>
-    <li><a href="#" onclick="showPage('testimonials'); closeMenu(); return false;">Referenser</a></li>
-    <li><a href="#" class="nav-cta" onclick="showPage('kontakt'); closeMenu(); return false;">Boka nu</a></li>
+    <li><a href="#" onclick="showPage('om'); return false;">Om oss</a></li>
+    <li><a href="#" onclick="showPage('tjanster'); return false;">Tjänster</a></li>
+    <li><a href="#" onclick="showPage('paket'); return false;">Paket</a></li>
+    <li><a href="#" onclick="showPage('testimonials'); return false;">Referenser</a></li>
+    <li><a href="#" class="nav-cta" onclick="showPage('kontakt'); return false;">Boka nu</a></li>
   </ul>
-  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Meny">
     <span></span><span></span><span></span>
-  </div>
+  </button>
 </nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <button class="mobile-close" onclick="closeMenu()">✕</button>
+  <a href="#" onclick="showPage('om'); closeMenu(); return false;">Om oss</a>
+  <a href="#" onclick="showPage('tjanster'); closeMenu(); return false;">Tjänster</a>
+  <a href="#" onclick="showPage('paket'); closeMenu(); return false;">Paket</a>
+  <a href="#" onclick="showPage('testimonials'); closeMenu(); return false;">Referenser</a>
+  <a href="#" class="nav-cta-mob" onclick="showPage('kontakt'); closeMenu(); return false;">Boka nu →</a>
+</div>
 
 <div id="page-hero" class="page active">
 <section id="hero">
@@ -717,14 +752,14 @@
 
 <script>
   function toggleMenu() {
-    const menu = document.getElementById('nav-menu');
+    const menu = document.getElementById('mobile-menu');
     const burger = document.getElementById('hamburger');
     menu.classList.toggle('open');
     burger.classList.toggle('open');
   }
 
   function closeMenu() {
-    document.getElementById('nav-menu').classList.remove('open');
+    document.getElementById('mobile-menu').classList.remove('open');
     document.getElementById('hamburger').classList.remove('open');
   }
 
