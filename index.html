@@ -376,7 +376,35 @@
     .fire-word-cell:nth-child(2n) { border-right: none; }
     .fire-word-cell:nth-child(4), .fire-word-cell:nth-child(5), .fire-word-cell:nth-child(6) { border-bottom: 1px solid rgba(255,92,26,0.12); }
     .fire-word-cell:nth-child(5), .fire-word-cell:nth-child(6) { border-bottom: none; }
+    .proof-grid { grid-template-columns: 1fr; }
+    .ig-fallback-inner { flex-direction: column; }
+    .cs-inner { flex-direction: column; text-align: center; }
   }
+
+  /* INSTAGRAM FEED */
+  .ig-feed-wrap { max-width: 1100px; margin: 0 auto; }
+  .ig-fallback { background: var(--dark2); border: 1px solid rgba(255,92,26,0.15); border-radius: 8px; padding: 3rem 2.5rem; text-align: center; }
+  .ig-fallback-inner { display: flex; align-items: center; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 2rem; }
+  .ig-handle-box { display: flex; align-items: center; gap: 1rem; }
+  .ig-icon { font-size: 2.5rem; }
+  .ig-handle { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 0.08em; color: var(--white); }
+  .ig-sub { color: var(--gray); font-size: 0.85rem; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.1em; text-transform: uppercase; }
+  .ig-follow-btn { white-space: nowrap; }
+  .ig-note { color: var(--gray); font-size: 0.82rem; max-width: 500px; margin: 0 auto; line-height: 1.6; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1.5rem; }
+
+  /* PROOF CARDS */
+  .proof-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 4rem; }
+  .proof-card { background: var(--dark3); border-radius: 8px; padding: 2.5rem 2rem; border-top: 3px solid var(--orange); transition: transform 0.25s; }
+  .proof-card:hover { transform: translateY(-6px); }
+  .proof-icon { font-size: 2.5rem; margin-bottom: 1.2rem; display: block; }
+  .proof-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.04em; color: var(--white); margin-bottom: 0.8rem; line-height: 1.1; }
+  .proof-card p { color: var(--gray); font-size: 0.95rem; line-height: 1.7; }
+
+  /* COMING SOON BLOCK */
+  .coming-soon-block { margin-top: 2rem; }
+  .cs-inner { background: linear-gradient(135deg, var(--dark3) 0%, rgba(255,92,26,0.08) 100%); border: 1px solid rgba(255,92,26,0.3); border-radius: 8px; padding: 3rem; display: flex; align-items: center; gap: 2.5rem; flex-wrap: wrap; }
+  .cs-tag { font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange); background: rgba(255,92,26,0.12); padding: 0.3rem 0.8rem; border-radius: 2px; border: 1px solid rgba(255,92,26,0.3); white-space: nowrap; flex-shrink: 0; }
+  .cs-text { color: var(--white); font-size: 1.05rem; font-weight: 600; flex: 1; min-width: 200px; margin: 0; }
 
   /* PAGE TAB SYSTEM */
   .page { display: none; }
@@ -426,9 +454,8 @@
       <a href="#kontakt" class="btn-outline">Boka konsultation</a>
     </div>
     <div class="hero-stats">
-      <div><div class="stat-num">150+</div><div class="stat-label">Aktiva ungdomar</div></div>
-      <div><div class="stat-num">40+</div><div class="stat-label">Föreningar & företag</div></div>
-      <div><div class="stat-num">+20år</div><div class="stat-label">Erfarenhet</div></div>
+      <div><div class="stat-num">150+</div><div class="stat-label">Ungdomar som valt att aldrig ge upp</div></div>
+      <div><div class="stat-num">+20år</div><div class="stat-label">Erfarenhet av att forma viljestyrka</div></div>
     </div>
   </div>
 </section>
@@ -656,47 +683,83 @@
 </div>
 
 <div id="page-testimonials" class="page">
-<section id="testimonials">
-  <div class="reveal">
-    <div class="section-tag">Vad andra säger</div>
-    <h2>ELDEN SPRIDER SIG.</h2>
+
+<!-- INSTAGRAM SECTION -->
+<section id="instagram-section" style="background:var(--dark); padding:7rem 5vw;">
+  <div class="reveal" style="text-align:center; margin-bottom:3.5rem;">
+    <div class="section-tag">Resolve i verkligheten</div>
+    <h2>SÅ SER DET UT.</h2>
+    <p style="color:var(--gray); max-width:500px; margin:1rem auto 0; font-size:1rem;">Inga ord slår bilder. Följ resan i realtid.</p>
   </div>
-  <div class="testimonials-grid">
-    <div class="testimonial-card reveal">
-      <span class="quote-mark">"</span>
-      <p class="testimonial-text">Resolve har förändrat hela vår föreningskultur. Ungdomarna är rakryggade, mer beslutsamma och framförallt – de ger inte upp när det blir tungt.</p>
-      <div class="testimonial-author">
-        <div class="author-avatar">MH</div>
-        <div>
-          <div class="author-name">Marcus Holmberg</div>
-          <div class="author-role">Ordförande, Västra IF</div>
+
+  <!-- Instagram embed via Elfsight or fallback grid -->
+  <div class="ig-feed-wrap reveal">
+    <!-- Elfsight Instagram widget – byt ut APP_ID när du skapat widget på elfsight.com -->
+    <script src="https://static.elfsight.com/platform/platform.js" async></script>
+    <div class="elfsight-app-placeholder" id="ig-placeholder">
+      <!-- Fallback visas om skriptet inte laddar -->
+      <div class="ig-fallback">
+        <div class="ig-fallback-inner">
+          <div class="ig-handle-box">
+            <span class="ig-icon">📸</span>
+            <div>
+              <div class="ig-handle">@teamresolve.se</div>
+              <div class="ig-sub">Följ oss på Instagram</div>
+            </div>
+          </div>
+          <a href="https://www.instagram.com/teamresolve.se" target="_blank" rel="noopener" class="btn-primary ig-follow-btn">
+            Följ @teamresolve.se →
+          </a>
         </div>
+        <p class="ig-note">Aktivera Instagram-flödet: gå till <strong style="color:var(--white);">elfsight.com</strong>, skapa ett gratis Instagram Feed-widget med kontot <strong style="color:var(--white);">@teamresolve.se</strong> och klistra in app-ID:t ovan.</p>
       </div>
     </div>
-    <div class="testimonial-card reveal">
-      <span class="quote-mark">"</span>
-      <p class="testimonial-text">Sedan vi startade med Resolve har sjukfrånvaron minskat med 30%. Medarbetarna är piggare, mer handlingskraftiga och tar sig an utmaningar på ett helt nytt sätt.</p>
-      <div class="testimonial-author">
-        <div class="author-avatar">SL</div>
-        <div>
-          <div class="author-name">Sara Lindgren</div>
-          <div class="author-role">HR-chef, Techbolaget AB</div>
-        </div>
-      </div>
+  </div>
+
+  <!-- CTA under flödet -->
+  <div class="reveal" style="text-align:center; margin-top:3rem;">
+    <a href="https://www.instagram.com/teamresolve.se" target="_blank" rel="noopener" class="btn-outline">
+      Se alla inlägg på Instagram →
+    </a>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF – ärlig version -->
+<section id="testimonials" style="background:var(--dark2); padding:7rem 5vw;">
+  <div class="reveal">
+    <div class="section-tag">Varför Resolve</div>
+    <h2>BYGGT PÅ ÄKTA GRUND.</h2>
+    <p style="color:var(--gray); max-width:600px; margin:1rem 0 4rem; font-size:1.05rem;">Inte ett gym till. Inte en kurs till. Resolve är grundat av två personer som levt det de lär ut — och som sett med egna ögon vad som händer när någon äntligen tror på sin egen förmåga.</p>
+  </div>
+
+  <div class="proof-grid">
+    <div class="proof-card reveal">
+      <div class="proof-icon">🪖</div>
+      <h3>Mer än ett decennium i Försvarsmakten</h3>
+      <p>Disciplin, lojalitet och förmågan att hålla ihop ett lag när det är som tuffast. Det är inte teori — det är erfarenhet från situationer de flesta aldrig ens föreställer sig.</p>
     </div>
-    <div class="testimonial-card reveal">
-      <span class="quote-mark">"</span>
-      <p class="testimonial-text">De förstår ungdomar på djupet. Det handlar inte bara om att träna kroppen – det handlar om att forma viljan. Resolve levererar på båda fronterna.</p>
-      <div class="testimonial-author">
-        <div class="author-avatar">JK</div>
-        <div>
-          <div class="author-name">Jenny Karlsson</div>
-          <div class="author-role">Tränare, Södra FK</div>
-        </div>
-      </div>
+    <div class="proof-card reveal">
+      <div class="proof-icon">🥋</div>
+      <h3>Landslagsnivå inom kampsport</h3>
+      <p>År av att forma karaktär under press. En djup förståelse för vad en människa faktiskt klarar av — och hur man som ledare får fram det ur någon annan.</p>
+    </div>
+    <div class="proof-card reveal">
+      <div class="proof-icon">🔥</div>
+      <h3>150+ ungdomar har gått igenom programmet</h3>
+      <p>Vi bygger upp. Varje säsong, varje ungdom, varje förening lämnar med en starkare bild av sig själva än den de kom med. Det är vad vi är här för.</p>
+    </div>
+  </div>
+
+  <!-- Kommande referenser -->
+  <div class="reveal coming-soon-block">
+    <div class="cs-inner">
+      <span class="cs-tag">PÅ GÅNG</span>
+      <p class="cs-text">Redo att bli en av de första föreningarna som berättar om sin resa med Resolve?</p>
+      <a href="#" onclick="showPage('kontakt'); return false;" class="btn-primary">Boka en kostnadsfri konsultation</a>
     </div>
   </div>
 </section>
+
 </div>
 
 <div id="page-kontakt" class="page">
