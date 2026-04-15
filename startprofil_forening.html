@@ -514,23 +514,37 @@
   document.getElementById('form-efter').addEventListener('change', () => updateProgress('form-efter', 'progress-efter'));
   document.getElementById('form-efter').addEventListener('input', () => updateProgress('form-efter', 'progress-efter'));
 
-  function submitForm(e, type) {
+  async function submitForm(e, type) {
     e.preventDefault();
     const form = e.target;
+    const btn = form.querySelector('.btn-submit');
+    btn.textContent = 'Skickar...';
+    btn.disabled = true;
+
     const data = new FormData(form);
-    const obj = { type, timestamp: new Date().toISOString() };
-    data.forEach((v, k) => obj[k] = v);
+    data.append('_subject', 'Resolve Startprofil (' + type + ') - ' + (data.get('kod') || 'okänd'));
+    data.append('formulär_typ', 'Startprofil Förening - ' + (type === 'fore' ? 'FÖRE programmet' : 'EFTER programmet'));
 
-    // Save to localStorage with timestamp
-    const key = 'resolve_forening_' + type + '_' + Date.now();
-    try { localStorage.setItem(key, JSON.stringify(obj)); } catch(err) {}
-
-    // Hide forms, show success
-    document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
-    document.getElementById('success-screen').classList.add('show');
-    window.scrollTo(0, 0);
-
-    console.log('Resolve Startprofil (' + type + '):', obj);
+    try {
+      const res = await fetch('https://formspree.io/f/teamresolveinfo@gmail.com', {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+        document.getElementById('success-screen').classList.add('show');
+        window.scrollTo(0, 0);
+      } else {
+        btn.textContent = 'Försök igen';
+        btn.disabled = false;
+        alert('Något gick fel. Försök igen.');
+      }
+    } catch(err) {
+      btn.textContent = 'Försök igen';
+      btn.disabled = false;
+      alert('Något gick fel. Kontrollera din internetuppkoppling.');
+    }
   }
 </script>
 </body>
