@@ -112,95 +112,17 @@
   .pillar h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--white); margin-bottom: 0.3rem; }
   .pillar p { color: var(--gray); font-size: 0.92rem; margin: 0; }
 
-  /* FIRE WORDS BAND – redesigned: symmetric centered grid */
-  .fire-band {
-    background: var(--dark);
-    padding: 5rem 5vw;
-    border-top: 1px solid rgba(255,92,26,0.12);
-    border-bottom: 1px solid rgba(255,92,26,0.12);
-    position: relative;
-    overflow: hidden;
-  }
-  .fire-band::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,92,26,0.04) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .fire-band-inner {
-    position: relative;
-    z-index: 1;
-    max-width: 1100px;
-    margin: 0 auto;
-    text-align: center;
-  }
-  .fire-band-label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.78rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--orange);
-    margin-bottom: 2.5rem;
-    display: block;
-  }
-  .fire-words-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0;
-    border: 1px solid rgba(255,92,26,0.12);
-    border-radius: 4px;
-    overflow: hidden;
-  }
-  .fire-word-cell {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem 1.5rem;
-    border-right: 1px solid rgba(255,92,26,0.12);
-    border-bottom: 1px solid rgba(255,92,26,0.12);
-    position: relative;
-    transition: background 0.3s;
-  }
+  /* FIRE WORDS BAND */
+  .fire-band { background: var(--dark); padding: 5rem 5vw; border-top: 1px solid rgba(255,92,26,0.12); border-bottom: 1px solid rgba(255,92,26,0.12); position: relative; overflow: hidden; }
+  .fire-band::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,92,26,0.04) 0%, transparent 70%); pointer-events: none; }
+  .fire-band-inner { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; text-align: center; }
+  .fire-band-label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.78rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--orange); margin-bottom: 2.5rem; display: block; }
+  .fire-words-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid rgba(255,92,26,0.12); border-radius: 4px; overflow: hidden; }
+  .fire-word-cell { display: flex; align-items: center; justify-content: center; padding: 2rem 1.5rem; border-right: 1px solid rgba(255,92,26,0.12); border-bottom: 1px solid rgba(255,92,26,0.12); position: relative; transition: background 0.3s; }
   .fire-word-cell:nth-child(3n) { border-right: none; }
-  .fire-word-cell:nth-child(4), .fire-word-cell:nth-child(5), .fire-word-cell:nth-child(6) { border-bottom: none; }
   .fire-word-cell:hover { background: rgba(255,92,26,0.05); }
-  .fire-word-cell .fw-text {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(1.4rem, 2.8vw, 2.4rem);
-    letter-spacing: 0.08em;
-    color: var(--white);
-    line-height: 1;
-  }
-  .fire-word-cell .fw-dot {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    background: var(--orange);
-    border-radius: 50%;
-    margin-left: 1rem;
-    flex-shrink: 0;
-    vertical-align: middle;
-    position: relative;
-    top: -2px;
-  }
-  .fire-word-cell:nth-child(3n) .fw-dot,
-  .fire-word-cell:last-child .fw-dot { display: none; }
-  .fire-band-cta {
-    margin-top: 2.8rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-  }
-  .fire-band-cta .cta-line {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.9rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--gray);
-  }
+  .fire-word-cell .fw-text { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.4rem, 2.8vw, 2.4rem); letter-spacing: 0.08em; color: var(--white); line-height: 1; }
+  .fire-band-cta { margin-top: 2.8rem; display: flex; align-items: center; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
 
   /* TJÄNSTER */
   #tjanster { background: var(--dark); }
@@ -218,22 +140,11 @@
   .service-features li { display: flex; align-items: center; gap: 0.7rem; font-size: 0.95rem; color: var(--white); font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.03em; }
   .service-features li::before { content: '→'; color: var(--orange); font-weight: 700; flex-shrink: 0; }
 
-  /* INRE ELD */
-  #eld { background: var(--dark2); padding: 7rem 5vw; }
-  .eld-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; max-width: 1100px; }
-  .eld-card { padding: 2.5rem 2rem; background: var(--dark3); border-radius: 8px; border-top: 3px solid var(--orange); position: relative; transition: transform 0.25s; }
-  .eld-card:hover { transform: translateY(-6px); }
-  .eld-number { font-family: 'Bebas Neue', sans-serif; font-size: 5rem; color: rgba(255,92,26,0.07); line-height: 1; position: absolute; top: 1rem; right: 1.2rem; user-select: none; }
-  .eld-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 0.06em; color: var(--orange); margin-bottom: 0.8rem; line-height: 1; position: relative; z-index: 1; }
-  .eld-card p { color: var(--gray); font-size: 0.98rem; line-height: 1.7; position: relative; z-index: 1; }
-  .eld-card p strong { color: var(--white); }
-
   /* PAKET */
   #paket { background: var(--dark); }
   .packages-tabs { display: flex; gap: 0; margin-bottom: 3rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
   .tab-btn { background: none; border: none; padding: 0.9rem 2rem; font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.2s, border-color 0.2s; }
   .tab-btn.active { color: var(--orange); border-bottom-color: var(--orange); }
-  .tab-btn:hover { color: var(--white); }
   .tab-panel { display: none; }
   .tab-panel.active { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
   .pkg-card { background: var(--dark3); border-radius: 8px; padding: 2rem; border: 1px solid rgba(255,255,255,0.07); position: relative; transition: transform 0.3s, box-shadow 0.3s; }
@@ -247,170 +158,22 @@
   .pkg-features { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.8rem; }
   .pkg-features li { font-size: 0.9rem; color: var(--white); display: flex; gap: 0.6rem; align-items: flex-start; }
   .pkg-features li .check { color: var(--orange); font-weight: 700; flex-shrink: 0; }
-
-  /* TESTIMONIALS */
-  #testimonials { background: var(--dark2); }
-  .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
-  .testimonial-card { background: var(--dark3); border-radius: 8px; padding: 2rem; border: 1px solid rgba(255,255,255,0.06); transition: transform 0.3s; }
-  .testimonial-card:hover { transform: translateY(-4px); }
-  .quote-mark { font-family: 'Bebas Neue', sans-serif; font-size: 4rem; color: var(--orange); line-height: 0.7; margin-bottom: 1rem; display: block; opacity: 0.6; }
-  .testimonial-text { color: var(--white); font-size: 0.98rem; line-height: 1.7; font-style: italic; margin-bottom: 1.5rem; }
-  .testimonial-author { display: flex; align-items: center; gap: 0.9rem; }
-  .author-avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--orange); display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--white); flex-shrink: 0; }
-  .author-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: 0.05em; font-size: 1rem; color: var(--white); }
-  .author-role { font-size: 0.82rem; color: var(--gray); }
-
-  /* CLOSING MANIFESTO */
-  .closing-band { background: var(--dark); padding: 7rem 5vw; text-align: center; border-top: 1px solid rgba(255,92,26,0.1); position: relative; overflow: hidden; }
-  .closing-band::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(255,92,26,0.07) 0%, transparent 70%); }
-  .closing-band-inner { position: relative; z-index: 1; }
-  .closing-band .big-quote { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.6rem, 6.5vw, 6rem); letter-spacing: 0.04em; line-height: 1.02; color: var(--white); max-width: 900px; margin: 0 auto 2rem; }
-  .closing-band .big-quote em { font-style: normal; color: var(--orange); }
-  .closing-band .resolve-line { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--gray); margin-bottom: 2.5rem; }
-
-  /* KONTAKT */
-  #kontakt { background: var(--dark2); }
-  .contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 5rem; align-items: start; max-width: 1000px; }
-  .contact-info h2 { margin-bottom: 1rem; }
-  .contact-info p { color: var(--gray); font-size: 1rem; margin-bottom: 2rem; }
-  .contact-details { display: flex; flex-direction: column; gap: 1rem; }
-  .contact-item { display: flex; gap: 0.8rem; align-items: center; color: var(--gray); font-size: 0.95rem; }
-  .contact-item span:first-child { font-size: 1.2rem; }
-  .contact-form { display: flex; flex-direction: column; gap: 1.2rem; }
-  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
-  label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); }
-  input, select, textarea { background: var(--dark3); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 0.85rem 1rem; color: var(--white); font-family: 'Barlow', sans-serif; font-size: 0.95rem; transition: border-color 0.2s; outline: none; width: 100%; }
-  input:focus, select:focus, textarea:focus { border-color: var(--orange); }
-  select { appearance: none; cursor: pointer; }
-  textarea { resize: vertical; min-height: 120px; }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .pkg-vat { font-size: 0.75rem; color: var(--gray); margin-top: 1rem; text-align: center; font-style: italic; }
 
   /* FOOTER */
   footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.06); padding: 2.5rem 5vw; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
   .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.12em; color: var(--white); text-decoration: none; }
   .footer-logo span { color: var(--orange); }
-  footer p { color: var(--gray); font-size: 0.85rem; }
 
-  /* ANIMATIONS */
   @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
   .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
-  /* MOBILE NAV */
-  .hamburger { display: none; }
-  .mobile-menu {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(13,17,23,0.99);
-    z-index: 500;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 0;
-  }
-  .mobile-menu.open { display: flex; }
-  .mobile-menu a {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.2rem;
-    letter-spacing: 0.1em;
-    color: var(--white);
-    text-decoration: none;
-    padding: 1rem 2rem;
-    width: 100%;
-    text-align: center;
-    border-bottom: 1px solid rgba(255,92,26,0.1);
-    transition: color 0.2s, background 0.2s;
-  }
-  .mobile-menu a:first-child { border-top: 1px solid rgba(255,92,26,0.1); }
-  .mobile-menu a:hover { color: var(--orange); background: rgba(255,92,26,0.05); }
-  .mobile-menu a.nav-cta-mob {
-    color: var(--orange);
-    margin-top: 1rem;
-    border: none;
-    font-size: 1.6rem;
-  }
-  .mobile-close {
-    position: absolute;
-    top: 1.4rem;
-    right: 5vw;
-    background: none;
-    border: none;
-    color: var(--white);
-    font-size: 2rem;
-    cursor: pointer;
-    z-index: 600;
-    line-height: 1;
-  }
-
   @media (max-width: 900px) {
     nav ul { display: none !important; }
-    .hamburger {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      z-index: 600;
-      padding: 6px;
-      background: none;
-      border: none;
-    }
-    .hamburger span {
-      display: block;
-      width: 26px;
-      height: 2px;
-      background: var(--white);
-      border-radius: 2px;
-      transition: all 0.3s;
-    }
-    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .hamburger.open span:nth-child(2) { opacity: 0; }
-    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
     .about-grid, .services-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
     .tab-panel.active { grid-template-columns: 1fr; }
-    .testimonials-grid { grid-template-columns: 1fr; }
-    .eld-grid { grid-template-columns: 1fr; }
-    .form-row { grid-template-columns: 1fr; }
-    .fire-words-grid { grid-template-columns: 1fr 1fr; }
-    .fire-word-cell:nth-child(3n) { border-right: 1px solid rgba(255,92,26,0.12); }
-    .fire-word-cell:nth-child(2n) { border-right: none; }
-    .fire-word-cell:nth-child(4), .fire-word-cell:nth-child(5), .fire-word-cell:nth-child(6) { border-bottom: 1px solid rgba(255,92,26,0.12); }
-    .fire-word-cell:nth-child(5), .fire-word-cell:nth-child(6) { border-bottom: none; }
-    .proof-grid { grid-template-columns: 1fr; }
-    .ig-fallback-inner { flex-direction: column; }
-    .cs-inner { flex-direction: column; text-align: center; }
   }
-
-  /* INSTAGRAM FEED */
-  .ig-feed-wrap { max-width: 1100px; margin: 0 auto; }
-  .ig-fallback { background: var(--dark2); border: 1px solid rgba(255,92,26,0.15); border-radius: 8px; padding: 3rem 2.5rem; text-align: center; }
-  .ig-fallback-inner { display: flex; align-items: center; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 2rem; }
-  .ig-handle-box { display: flex; align-items: center; gap: 1rem; }
-  .ig-icon { font-size: 2.5rem; }
-  .ig-handle { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 0.08em; color: var(--white); }
-  .ig-sub { color: var(--gray); font-size: 0.85rem; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.1em; text-transform: uppercase; }
-  .ig-follow-btn { white-space: nowrap; }
-  .ig-note { color: var(--gray); font-size: 0.82rem; max-width: 500px; margin: 0 auto; line-height: 1.6; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1.5rem; }
-
-  /* PROOF CARDS */
-  .proof-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 4rem; }
-  .proof-card { background: var(--dark3); border-radius: 8px; padding: 2.5rem 2rem; border-top: 3px solid var(--orange); transition: transform 0.25s; }
-  .proof-card:hover { transform: translateY(-6px); }
-  .proof-icon { font-size: 2.5rem; margin-bottom: 1.2rem; display: block; }
-  .proof-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.04em; color: var(--white); margin-bottom: 0.8rem; line-height: 1.1; }
-  .proof-card p { color: var(--gray); font-size: 0.95rem; line-height: 1.7; }
-
-  /* COMING SOON BLOCK */
-  .coming-soon-block { margin-top: 2rem; }
-  .cs-inner { background: linear-gradient(135deg, var(--dark3) 0%, rgba(255,92,26,0.08) 100%); border: 1px solid rgba(255,92,26,0.3); border-radius: 8px; padding: 3rem; display: flex; align-items: center; gap: 2.5rem; flex-wrap: wrap; }
-  .cs-tag { font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange); background: rgba(255,92,26,0.12); padding: 0.3rem 0.8rem; border-radius: 2px; border: 1px solid rgba(255,92,26,0.3); white-space: nowrap; flex-shrink: 0; }
-  .cs-text { color: var(--white); font-size: 1.05rem; font-weight: 600; flex: 1; min-width: 200px; margin: 0; }
-
-  /* PAGE TAB SYSTEM */
-  .page { display: none; }
-  .page.active { display: block; }
-  nav ul a.nav-active { color: var(--orange); }
-
 </style>
 </head>
 <body>
@@ -424,159 +187,22 @@
     <li><a href="#" onclick="showPage('testimonials'); return false;">Referenser</a></li>
     <li><a href="#" class="nav-cta" onclick="showPage('kontakt'); return false;">Boka nu</a></li>
   </ul>
-  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Meny">
-    <span></span><span></span><span></span>
-  </button>
 </nav>
-
-<div class="mobile-menu" id="mobile-menu">
-  <button class="mobile-close" onclick="closeMenu()">✕</button>
-  <a href="#" onclick="showPage('om'); closeMenu(); return false;">Om oss</a>
-  <a href="#" onclick="showPage('tjanster'); closeMenu(); return false;">Tjänster</a>
-  <a href="#" onclick="showPage('paket'); closeMenu(); return false;">Paket</a>
-  <a href="#" onclick="showPage('testimonials'); closeMenu(); return false;">Referenser</a>
-  <a href="#" class="nav-cta-mob" onclick="showPage('kontakt'); closeMenu(); return false;">Boka nu →</a>
-</div>
 
 <div id="page-hero" class="page active">
 <section id="hero">
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
   <div class="hero-content">
-    <div class="hero-tag">Bestämd &nbsp;·&nbsp; Rakryggad &nbsp;·&nbsp; Handlingskraftig</div>
-    <h1>JAG ÄR <em>BESTÄMD.</em><br>JAG <span class="outline">LÖSER DET.</span></h1>
+    <div class="hero-tag">Investera i er viktigaste tillgång</div>
+    <h1>STARKARE TEAM.<br><span class="outline">LÄGRE SJUKFRÅNVARO.</span></h1>
     <div class="hero-manifesto">
-      <p class="lead">JAG GER <span>INTE</span> UPP.</p>
-      <p class="sub-line">Resolve skapar den inre elden som håller dig igång när det är som tuffast. Skräddarsydda program för ungdomar i föreningar och team som vill prestera på riktigt.</p>
+      <p class="lead">VI BYGGER <span>HÅLLBAR</span> PRESTATION.</p>
+      <p class="sub-line">Resolve skapar en piggare företagskultur genom strategisk hälsa. Vi säljer inte bara träning – vi säljer en rakryggad inställning som syns på sista raden.</p>
     </div>
     <div class="hero-actions">
-      <a href="#paket" class="btn-primary">Se våra paket</a>
-      <a href="#kontakt" class="btn-outline">Boka konsultation</a>
-    </div>
-    <div class="hero-stats">
-      <div><div class="stat-num">150+</div><div class="stat-label">Ungdomar som valt att aldrig ge upp</div></div>
-      <div><div class="stat-num">+20år</div><div class="stat-label">Erfarenhet av att forma viljestyrka</div></div>
-    </div>
-  </div>
-</section>
-
-<div class="manifesto-band reveal">
-  <div class="manifesto-band-inner">
-    <div class="big-line">BESLUTSAMHET <span class="wh">FORMAR SIG</span></div>
-    <div class="big-line">GENOM <span class="wh">MOTSTÅND.</span></div>
-    <div class="sub">Resolve &nbsp;—&nbsp; Aldrig ge upp</div>
-  </div>
-</div>
-
-</div>
-
-<div id="page-om" class="page">
-<section id="om">
-  <div style="max-width:900px;">
-    <div class="section-tag">Om Resolve</div>
-    <h2>TRÄNING ÄR MER ÄN RÖRELSE</h2>
-    <p style="color:var(--gray); font-size:1.05rem; margin-bottom:1.2rem;">Resolve grundades på en enkel övertygelse: <strong style="color:var(--white);">viljestyrka är en muskel</strong>. Precis som kroppen formas av träning formas karaktären av beslutsamhet. Vi kombinerar fysisk träning med den mentala elden som håller dig rakryggad när det känns som tyngst.</p>
-    <p style="color:var(--gray); font-size:1.05rem; margin-bottom:3rem;">Vi tror att <strong style="color:var(--white);">varje individ</strong> bär på en inre kraft som väntar på att aktiveras. Vår roll är att tända den och se till att den aldrig slocknar.</p>
-    <div style="border-top:1px solid rgba(255,92,26,0.2); padding-top:3rem;">
-      <p style="font-family:'Bebas Neue',sans-serif; font-size:clamp(1.8rem,3.5vw,2.8rem); line-height:1.2; letter-spacing:0.04em; color:var(--white); margin-bottom:2rem;">Det finns de som pratar om att aldrig ge upp.<br>Och det finns de som levt det.</p>
-      <p style="color:var(--gray); font-size:1.05rem; line-height:1.85; margin-bottom:1.4rem;">Vi är två personer som tagit helt olika vägar hit, formade av saker som inte stod i någon kursplan och inte kan läras ut i ett klassrum.</p>
-      <p style="color:var(--gray); font-size:1.05rem; line-height:1.85; margin-bottom:1.4rem;">Den ene har tillbringat mer än ett decennium i försvarsmakten. Som veteran har han sett människor i situationer de flesta aldrig ens föreställer sig. Han förstår hur beteenden formas och hur de förändras. Veteran är inte en titel man lägger av sig när man tar av sig uniformen. Det är ett sätt att se på livet.</p>
-      <p style="color:var(--gray); font-size:1.05rem; line-height:1.85; margin-bottom:1.4rem;">Disciplinen. Lojaliteten. Förmågan att ta kontrollen när kroppen vill ge upp och allt i dig skriker stopp men du tar ett steg till ändå. Han vet också vad som händer när ett lag verkligen fungerar. I försvarsmakten är teambuilding inte en aktivitet utan skillnaden mellan att lösa uppgiften eller inte. Den lärdomen tar han med sig till varje grupp han möter idag.</p>
-      <p style="color:var(--gray); font-size:1.05rem; line-height:1.85; margin-bottom:1.4rem;">Den andre representerade Sverige på landslagsnivå med en lång bakgrund inom kampsporten. Den erfarenheten sitter inte bara i kroppen utan i hur han tänker, hur han leder och hur han möter människor. Han har spenderat år nära ungdomar som befunnit sig på livets svåraste platser, och det han tog med sig därifrån var inte en metod. Det var en djupare förståelse för vad en människa faktiskt klarar av när någon tror på dem på riktigt.</p>
-      <p style="font-size:1.15rem; font-weight:600; color:var(--white); line-height:1.7; margin-bottom:1.4rem;">Slå ihop en mans djupa förståelse för det mänskliga psyket och en annan mans erfarenhet av att forma karaktär under press och du får något som varken ett gym eller en kurs kan ge dig. Du får Resolve.</p>
-      <p style="color:var(--gray); font-size:1.05rem; line-height:1.85; margin-bottom:1.4rem;">Inte för att världen behöver ett gym till. Utan för att vi båda har sett vad som händer när någon äntligen tror på sin egen förmåga och vi ville skapa en plats där det händer varje dag.</p>
-      <p style="color:var(--gray); font-size:1.05rem; line-height:1.85; margin-bottom:1.4rem;">Resolve är för ungdomen som behöver hitta sin riktning. För föreningen som vill bygga mer än ett lag. För företaget som förstår att ett team som litar på varandra presterar på en helt annan nivå. Precis som i försvarsmakten är sammanhållning och förtroende inte mjuka värden. De är det som avgör om man når målet eller inte.</p>
-      <div style="padding:1.6rem 1.8rem; border-left:3px solid var(--orange); background:var(--dark3); border-radius:0 6px 6px 0; margin:2rem 0;">
-        <p style="font-family:'Bebas Neue',sans-serif; font-size:1.6rem; letter-spacing:0.06em; line-height:1.4; color:var(--white); margin:0 0 0.5rem;"><span style="color:var(--orange);">Fortis et liber.</span> Stark och fri.</p>
-        <p style="color:var(--gray); font-size:0.98rem; margin:0;">Fri från begränsningarna man sätter på sig själv. Stark i den människa man väljer att bli.</p>
-      </div>
-      <p style="color:var(--gray); font-size:1.05rem; line-height:1.85; margin-bottom:1.4rem;">Resolve är ett koncept och ett sätt att leva. En övertygelse om att viljestyrka, beslutsamhet och karaktär inte är något man föds med utan något som tränas fram.</p>
-      <p style="color:var(--gray); font-size:1.05rem; line-height:1.85; margin-bottom:1.4rem;">Vi har sett vad som händer när ett team inte fungerar och när det plötsligt gör det. Vi har sett en ungdom gå in genom en dörr som en och komma ut som någon helt annan. De där ögonblicken går inte att köpa eller planera. Men de går att skapa.</p>
-      <p style="color:var(--white); font-size:1.05rem; line-height:1.85; font-weight:600; margin-bottom:3rem;">Det är vad Resolve står för. Att varje människa som kommer till oss går därifrån med en starkare bild av sig själv än den de kom med.</p>
-    </div>
-  </div>
-</section>
-
-<section id="eld" style="background:var(--dark2);">
-  <div style="margin-bottom:3rem;">
-    <div class="section-tag">Vår grund</div>
-    <h2>ELDEN SOM DRIVER</h2>
-  </div>
-  <div class="eld-grid">
-    <div class="eld-card">
-      <div class="eld-number">01</div>
-      <h3>Rakryggad i motvind 🛡️</h3>
-      <p>Yttre belöningar bleknar. Det som håller dig igång år efter år är en glöd som brinner inifrån. <strong>Vi hjälper dig att hitta den och vårda den.</strong></p>
-    </div>
-    <div class="eld-card">
-      <div class="eld-number">02</div>
-      <h3>Styrka genom motstånd 🔥</h3>
-      <p>Det är inte de lätta dagarna som formar dig. Det är dagen du <strong>väljer att fortsätta</strong> när allt i dig vill ge upp. Den dagen är du Resolve.</p>
-    </div>
-    <div class="eld-card">
-      <div class="eld-number">03</div>
-      <h3>Viljan att aldrig ge upp ⚡️</h3>
-      <p>Inte som ett tomt löfte utan som en <strong>daglig handling</strong>. Att kliva upp. Att visa upp. Att köra ett pass till. Det är det vi bygger hos dig.</p>
-    </div>
-  </div>
-</section>
-</div>
-
-<div id="page-tjanster" class="page">
-<section id="tjanster">
-  <div class="services-intro reveal">
-    <div class="section-tag">Vad vi erbjuder</div>
-    <h2>TVÅ SPÅR. ETT MÅL.</h2>
-    <p>Vi har specialiserat oss på två målgrupper med varsitt skräddarsytt utbud. Oavsett om du är 16 eller 46 – elden tänds på samma sätt.</p>
-  </div>
-  <div class="services-grid">
-    <div class="service-card reveal">
-      <span class="service-emoji">🏃</span>
-      <h3>Ungdomar & Föreningar</h3>
-      <p>Vi stärker unga med program som bygger mer än muskler – vi bygger karaktär, beslutsamhet och en vilja att aldrig ge upp. För föreningar och ungdomsgrupper som är redo att ta nästa steg.</p>
-      <ul class="service-features">
-        <li>Skräddarsydda träningsprogram per åldersgrupp</li>
-        <li>Motivations- och ledarskapsworkshops</li>
-        <li>Säsongplanering och periodisering</li>
-        <li>Mental styrka och viljestyrketräning</li>
-        <li>Individuell uppföljning och progressspårning</li>
-      </ul>
-    </div>
-    <div class="service-card reveal">
-      <span class="service-emoji">🏢</span>
-      <h3>Företag & Team</h3>
-      <p>För er som vill investera i medarbetarnas hälsa och välmående. Våra företagstjänster är även perfekta som kick-off med massor av träning och kluriga utmaningar som stärker sammanhållningen.</p>
-      <ul class="service-features">
-        <li>Flexibla friskvårdspaket för hela företaget</li>
-        <li>Gruppträning anpassad efter era scheman</li>
-        <li>Aktivitetsutmaningar och teamtävlingar</li>
-        <li>Energi- och stresshanteringscoachning</li>
-        <li>Mätbara mål och kontinuerlig rapportering</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<section id="eld" style="background:var(--dark2);">
-  <div style="margin-bottom:3rem;">
-    <div class="section-tag">Vår grund</div>
-    <h2>ELDEN SOM DRIVER</h2>
-  </div>
-  <div class="eld-grid">
-    <div class="eld-card">
-      <div class="eld-number">01</div>
-      <h3>Rakryggad i motvind 🛡️</h3>
-      <p>Yttre belöningar bleknar. Det som håller dig igång år efter år är en glöd som brinner inifrån. <strong>Vi hjälper dig att hitta den och vårda den.</strong></p>
-    </div>
-    <div class="eld-card">
-      <div class="eld-number">02</div>
-      <h3>Styrka genom motstånd 🔥</h3>
-      <p>Det är inte de lätta dagarna som formar dig. Det är dagen du <strong>väljer att fortsätta</strong> när allt i dig vill ge upp. Den dagen är du Resolve.</p>
-    </div>
-    <div class="eld-card">
-      <div class="eld-number">03</div>
-      <h3>Viljan att aldrig ge upp ⚡️</h3>
-      <p>Inte som ett tomt löfte utan som en <strong>daglig handling</strong>. Att kliva upp. Att visa upp. Att köra ett pass till. Det är det vi bygger hos dig.</p>
+      <a href="#" onclick="showPage('paket'); return false;" class="btn-primary">Se företagspaket</a>
+      <a href="#" onclick="showPage('kontakt'); return false;" class="btn-outline">Boka konsultation</a>
     </div>
   </div>
 </section>
@@ -586,253 +212,90 @@
 <section id="paket">
   <div class="reveal">
     <div class="section-tag">Priser & Paket</div>
-    <h2>VÄLJ DITT PAKET</h2>
+    <h2>VÄLJ DEN NIVÅ SOM PASSAR ER</h2>
+    <p style="color:var(--gray); margin-bottom: 2rem;">Investera i personalens hälsa och teamets sammanhållning. Priser exklusive moms.</p>
   </div>
   <div class="packages-tabs reveal">
-    <button class="tab-btn active" onclick="switchTab('ungdom', this)">🏃 Ungdomar & Föreningar</button>
-    <button class="tab-btn" onclick="switchTab('foretag', this)">🏢 Företag & Team</button>
+    <button class="tab-btn active" onclick="switchTab('foretag', this)">🏢 Företag & Team</button>
+    <button class="tab-btn" onclick="switchTab('ungdom', this)">🏃 Ungdomar & Föreningar</button>
   </div>
 
-  <div id="tab-ungdom" class="tab-panel active">
+  <div id="tab-foretag" class="tab-panel active">
+    <div class="pkg-card reveal">
+      <div class="pkg-name">Kickstart</div>
+      <div class="pkg-price">29 500 <span>kr</span></div>
+      <div class="pkg-desc">Perfekt för företaget som vill väcka energin och skapa rörelseglädje i gruppen.</div>
+      <ul class="pkg-features">
+        <li><span class="check">✓</span> 8 st Ledda träningspass på plats</li>
+        <li><span class="check">✓</span> Grundläggande behovsanalys</li>
+        <li><span class="check">✓</span> Professionell coachning</li>
+        <li><span class="check">✓</span> Avslutande utvärdering</li>
+      </ul>
+      <a href="#" onclick="showPage('kontakt'); return false;" class="btn-outline" style="width:100%;text-align:center;">Boka Kickstart</a>
+      <p class="pkg-vat">Avdragsgill personalvård</p>
+    </div>
+
+    <div class="pkg-card featured reveal">
+      <div class="pkg-badge">Mest valda – Bäst resultat</div>
+      <div class="pkg-name">Transformation</div>
+      <div class="pkg-price">45 500 <span>kr</span></div>
+      <div class="pkg-desc">Ett helhetsgrepp för teamet som vill ha mätbara resultat och hållbar förändring.</div>
+      <ul class="pkg-features">
+        <li><span class="check">✓</span> <strong>12 st Ledda träningspass</strong></li>
+        <li><span class="check">✓</span> <strong>Individuell hälsoenkät (Före/Efter)</strong></li>
+        <li><span class="check">✓</span> <strong>1 st Inspirationsworkshop (Kost/Sömn)</strong></li>
+        <li><span class="check">✓</span> <strong>Weekly Boost – Digitalt stöd mellan passen</strong></li>
+        <li><span class="check">✓</span> <strong>ROI-Rapport till ledningen</strong></li>
+        <li><span class="check">✓</span> The Resolve Challenge – Intern tävling</li>
+        <li><span class="check">✓</span> Prioriterad VIP-support</li>
+      </ul>
+      <a href="#" onclick="showPage('kontakt'); return false;" class="btn-primary" style="width:100%;text-align:center;">Välj Transformation</a>
+      <p class="pkg-vat">Maximerar er friskvårdsinvestering</p>
+    </div>
+
+    <div class="pkg-card reveal">
+      <div class="pkg-name">Enterprise</div>
+      <div class="pkg-price">Offert <span></span></div>
+      <div class="pkg-desc">Fullt skräddarsydd helhetslösning för hela organisationen eller större avdelningar.</div>
+      <ul class="pkg-features">
+        <li><span class="check">✓</span> Obegränsat antal medarbetare</li>
+        <li><span class="check">✓</span> Dedikerad Resolve-strateg</li>
+        <li><span class="check">✓</span> HR-integration & Rapportering</li>
+        <li><span class="check">✓</span> Stresshanterings-program</li>
+      </ul>
+      <a href="#" onclick="showPage('kontakt'); return false;" class="btn-outline" style="width:100%;text-align:center;">Begär offert</a>
+    </div>
+  </div>
+
+  <div id="tab-ungdom" class="tab-panel">
     <div class="pkg-card reveal">
       <div class="pkg-name">Starter</div>
       <div class="pkg-price">7 500 <span>kr/mån</span></div>
-      <div class="pkg-desc">Tänd den första gnistan. Perfekt för föreningar som vill börja strukturerat.</div>
       <ul class="pkg-features">
         <li><span class="check">✓</span> Upp till 10 ungdomar</li>
         <li><span class="check">✓</span> 1 träningspass vecka</li>
-        <li><span class="check">✓</span> Träningsprogram online</li>
-        <li><span class="check">✓</span> Månatlig uppföljning</li>
       </ul>
-      <a href="#kontakt" class="btn-outline" style="width:100%;text-align:center;">Kontakta oss</a>
+      <a href="#" onclick="showPage('kontakt'); return false;" class="btn-outline" style="width:100%;text-align:center;">Kontakta oss</a>
     </div>
     <div class="pkg-card featured reveal">
-      <div class="pkg-badge">Mest populär</div>
+      <div class="pkg-badge">Populär</div>
       <div class="pkg-name">Pro</div>
       <div class="pkg-price">12 500 <span>kr/mån</span></div>
-      <div class="pkg-desc">För föreningar som vill bygga verklig viljestyrka och beslutsamhet hos sina ungdomar.</div>
       <ul class="pkg-features">
         <li><span class="check">✓</span> Upp till 15 ungdomar</li>
-        <li><span class="check">✓</span> Mer flexibel träningsfrekvens – vi ser till att optimera upplägget utifrån gruppens dagsform & kapacitet.</li>
-        <li><span class="check">✓</span> Viljestyrka dialog</li>
-        <li><span class="check">✓</span> Individuell progressplan</li>
-        <li><span class="check">✓</span> Säsongplanering</li>
+        <li><span class="check">✓</span> Flexibel frekvens</li>
       </ul>
-      <a href="#kontakt" class="btn-primary" style="width:100%;text-align:center;">Kom igång</a>
-    </div>
-    <div class="pkg-card reveal">
-      <div class="pkg-name">Elite</div>
-      <div class="pkg-price">Offert</div>
-      <div class="pkg-desc">Fullt skräddarsytt. Inga kompromisser. Dedikerad coach som går hela vägen med er.</div>
-      <ul class="pkg-features">
-        <li><span class="check">✓</span> Obegränsat antal deltagare</li>
-        <li><span class="check">✓</span> Dedikerad Resolve-coach</li>
-        <li><span class="check">✓</span> Fullständig säsongplanering</li>
-        <li><span class="check">✓</span> Föreläsningar & event</li>
-        <li><span class="check">✓</span> Tävlingsförberedelse</li>
-        <li><span class="check">✓</span> Prioriterad support</li>
-      </ul>
-      <a href="#kontakt" class="btn-outline" style="width:100%;text-align:center;">Begär offert</a>
-    </div>
-  </div>
-
-  <div id="tab-foretag" class="tab-panel">
-    <div class="pkg-card reveal">
-      <div class="pkg-name">Team Aktiv</div>
-      <div class="pkg-price">29 500 <span>kr/mån</span></div>
-      <div class="pkg-desc">Sätt rörelsen i system. Friskvård som dina medarbetare faktiskt använder.</div>
-      <ul class="pkg-features">
-        <li><span class="check">✓</span> Upp till 20 medarbetare</li>
-        <li><span class="check">✓</span> 2 gruppträningspass/vecka</li>
-        <li><span class="check">✓</span> Aktivitetsutmaning/månad</li>
-        <li><span class="check">✓</span> Kvartalsvisa mätningar</li>
-      </ul>
-      <a href="#kontakt" class="btn-outline" style="width:100%;text-align:center;">Kontakta oss</a>
-    </div>
-    <div class="pkg-card featured reveal">
-      <div class="pkg-badge">Mest populär</div>
-      <div class="pkg-name">Team Pro</div>
-      <div class="pkg-price">45 500 <span>kr/mån</span></div>
-      <div class="pkg-desc">Komplett program för team som vill prestera rakryggat även under press.</div>
-      <ul class="pkg-features">
-        <li><span class="check">✓</span> Upp till 50 medarbetare</li>
-        <li><span class="check">✓</span> Mer flexibel träningsfrekvens, vi ser till att optimera och skräddarsy upplägget utifrån gruppens dagsform & kapacitet.</li>
-        <li><span class="check">✓</span> Team building</li>
-        <li><span class="check">✓</span> Månadens Challenge</li>
-        <li><span class="check">✓</span> Energiworkshop (1/mån)</li>
-        <li><span class="check">✓</span> Individuella hälsomål</li>
-      </ul>
-      <a href="#kontakt" class="btn-primary" style="width:100%;text-align:center;">Kom igång</a>
-    </div>
-    <div class="pkg-card reveal">
-      <div class="pkg-name">Enterprise</div>
-      <div class="pkg-price">Offert</div>
-      <div class="pkg-desc">Fullt skräddarsytt. Inga kompromisser. Er organisation – vår helhetslösning.</div>
-      <ul class="pkg-features">
-        <li><span class="check">✓</span> Obegränsat antal medarbetare</li>
-        <li><span class="check">✓</span> Dedikerad Resolve-coach</li>
-        <li><span class="check">✓</span> Anpassade program per avdelning</li>
-        <li><span class="check">✓</span> Stresshanteringsworkshops</li>
-        <li><span class="check">✓</span> Full rapportering & HR-integration</li>
-        <li><span class="check">✓</span> Prioriterad support dygnet runt</li>
-      </ul>
-      <a href="#kontakt" class="btn-outline" style="width:100%;text-align:center;">Begär offert</a>
+      <a href="#" onclick="showPage('kontakt'); return false;" class="btn-primary" style="width:100%;text-align:center;">Kom igång</a>
     </div>
   </div>
 </section>
 </div>
-
-<div id="page-testimonials" class="page">
-
-<!-- INSTAGRAM SECTION -->
-<section id="instagram-section" style="background:var(--dark); padding:7rem 5vw;">
-  <div class="reveal" style="text-align:center; margin-bottom:3.5rem;">
-    <div class="section-tag">Resolve i verkligheten</div>
-    <h2>SÅ SER DET UT.</h2>
-    <p style="color:var(--gray); max-width:500px; margin:1rem auto 0; font-size:1rem;">Inga ord slår bilder. Följ resan i realtid.</p>
-  </div>
-
-  <!-- Instagram embed via Elfsight or fallback grid -->
-  <div class="ig-feed-wrap reveal">
-    <!-- Elfsight Instagram widget – byt ut APP_ID när du skapat widget på elfsight.com -->
-    <script src="https://static.elfsight.com/platform/platform.js" async></script>
-    <div class="elfsight-app-placeholder" id="ig-placeholder">
-      <!-- Fallback visas om skriptet inte laddar -->
-      <div class="ig-fallback">
-        <div class="ig-fallback-inner">
-          <div class="ig-handle-box">
-            <span class="ig-icon">📸</span>
-            <div>
-              <div class="ig-handle">@teamresolve.se</div>
-              <div class="ig-sub">Följ oss på Instagram</div>
-            </div>
-          </div>
-          <a href="https://www.instagram.com/teamresolve.se" target="_blank" rel="noopener" class="btn-primary ig-follow-btn">
-            Följ @teamresolve.se →
-          </a>
-        </div>
-       
-      </div>
-    </div>
-  </div>
-
-  <!-- CTA under flödet -->
-  <div class="reveal" style="text-align:center; margin-top:3rem;">
-    <a href="https://www.instagram.com/teamresolve.se" target="_blank" rel="noopener" class="btn-outline">
-      Se alla inlägg på Instagram →
-    </a>
-  </div>
-</section>
-
-<!-- SOCIAL PROOF – ärlig version -->
-<section id="testimonials" style="background:var(--dark2); padding:7rem 5vw;">
-  <div class="reveal">
-    <div class="section-tag">Varför Resolve</div>
-    <h2>BYGGT PÅ ÄKTA GRUND.</h2>
-    <p style="color:var(--gray); max-width:600px; margin:1rem 0 4rem; font-size:1.05rem;">Inte ett gym till. Inte en kurs till. Resolve är grundat av två personer som levt det de lär ut — och som sett med egna ögon vad som händer när någon äntligen tror på sin egen förmåga.</p>
-  </div>
-
-  <div class="proof-grid">
-    <div class="proof-card reveal">
-      <div class="proof-icon">🪖</div>
-      <h3>Mer än ett decennium i Försvarsmakten</h3>
-      <p>Disciplin, lojalitet och förmågan att hålla ihop ett lag när det är som tuffast. Det är inte teori — det är erfarenhet från situationer de flesta aldrig ens föreställer sig.</p>
-    </div>
-    <div class="proof-card reveal">
-      <div class="proof-icon">🥋</div>
-      <h3>Landslagsnivå inom kampsport</h3>
-      <p>År av att forma karaktär under press. En djup förståelse för vad en människa faktiskt klarar av — och hur man som ledare får fram det ur någon annan.</p>
-    </div>
-    <div class="proof-card reveal">
-      <div class="proof-icon">🔥</div>
-      <h3>150+ ungdomar har gått igenom programmet</h3>
-      <p>Vi bygger upp. Varje säsong, varje ungdom, varje förening lämnar med en starkare bild av sig själva än den de kom med. Det är vad vi är här för.</p>
-    </div>
-  </div>
-
-  <!-- Kommande referenser -->
-  <div class="reveal coming-soon-block">
-    <div class="cs-inner">
-      <span class="cs-tag">PÅ GÅNG</span>
-      <p class="cs-text">Redo att bli en av de första föreningarna som berättar om sin resa med Resolve?</p>
-      <a href="#" onclick="showPage('kontakt'); return false;" class="btn-primary">Boka en kostnadsfri konsultation</a>
-    </div>
-  </div>
-</section>
-
-</div>
-
-<div id="page-kontakt" class="page">
-<section id="kontakt">
-  <div class="contact-grid">
-    <div class="contact-info reveal">
-      <div class="section-tag">Ta nästa steg</div>
-      <h2>LÖSER VI DET TILLSAMMANS.</h2>
-      <p>Redo att agera? Fyll i formuläret så återkommer vi inom 24 timmar för en kostnadsfri konsultation.</p>
-      <div class="contact-details">
-        <div class="contact-item"><span>📍</span><span>Stockholm, Sverige</span></div>
-      </div>
-    </div>
-    <form class="contact-form reveal" action="https://formspree.io/f/xgoppvzy">
-      <div class="form-row">
-        <div class="form-group">
-          <label for="name">Namn</label>
-          <input type="text" id="name" placeholder="Ditt namn" required>
-        </div>
-        <div class="form-group">
-          <label for="email">E-post</label>
-          <input type="email" id="email" placeholder="din@email.se" required>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="type">Jag representerar</label>
-        <select id="type" required>
-          <option value="" disabled selected>Välj målgrupp</option>
-          <option value="forening">En idrottsförening / ungdomsgrupp</option>
-          <option value="foretag">Ett företag / organisation</option>
-          <option value="annan">Annat</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="org">Organisation / Förening</label>
-        <input type="text" id="org" placeholder="Namn på er organisation">
-      </div>
-      <div class="form-group">
-        <label for="message">Meddelande</label>
-        <textarea id="message" placeholder="Berätta om er och vad ni vill uppnå..."></textarea>
-      </div>
-      <button type="submit" class="btn-primary" style="width:100%;">Skicka förfrågan →</button>
-    </form>
-  </div>
-</section>
-</div>
-
-<footer>
-  <a href="#" class="logo">RESOL<span>VE</span></a>
-  <p style="color:var(--gray); font-size:0.82rem; font-family:'Barlow Condensed',sans-serif; letter-spacing:0.12em; text-transform:uppercase;">Bestämd &nbsp;·&nbsp; Löser det. &nbsp;·&nbsp; Aldrig ge upp.</p>
-  <p>© 2025 Resolve. Stockholm, Sverige.</p>
-</footer>
 
 <script>
-  function toggleMenu() {
-    const menu = document.getElementById('mobile-menu');
-    const burger = document.getElementById('hamburger');
-    menu.classList.toggle('open');
-    burger.classList.toggle('open');
-  }
-
-  function closeMenu() {
-    document.getElementById('mobile-menu').classList.remove('open');
-    document.getElementById('hamburger').classList.remove('open');
-  }
-
   function showPage(id) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     const target = document.getElementById('page-' + id);
     if (target) { target.classList.add('active'); }
-    document.querySelectorAll('nav ul a').forEach(a => a.classList.remove('nav-active'));
-    const activeLink = document.querySelector('nav ul a[onclick*="' + id + '"]');
-    if (activeLink) activeLink.classList.add('nav-active');
     window.scrollTo(0, 0);
   }
 
@@ -843,21 +306,15 @@
     btn.classList.add('active');
   }
 
-  window.addEventListener('scroll', () => {
-    const nav = document.querySelector('nav');
-    nav.style.background = window.scrollY > 50 ? 'rgba(13,17,23,0.97)' : 'rgba(13,17,23,0.88)';
-  });
-
-  const reveals = document.querySelectorAll('.reveal');
+  // Animationer
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
+    entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        setTimeout(() => entry.target.classList.add('visible'), i * 80);
-        observer.unobserve(entry.target);
+        entry.target.classList.add('visible');
       }
     });
   }, { threshold: 0.1 });
-  reveals.forEach(el => observer.observe(el));
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 </script>
 </body>
 </html>
