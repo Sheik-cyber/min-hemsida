@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Startprofil – Resolve</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #FF5C1A;
+    --dark: #0D1117;
+    --dark2: #151C26;
+    --dark3: #1E2836;
+    --white: #F5F2ED;
+    --gray: #8A95A0;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--dark);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 0 0 4rem;
+  }
+
+  /* HEADER */
+  .form-header {
+    background: var(--dark2);
+    border-bottom: 2px solid var(--orange);
+    padding: 1.5rem 5vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 0.12em; color: var(--white); }
+  .logo span { color: var(--orange); }
+  .form-type-badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--orange);
+    border: 1px solid rgba(255,92,26,0.4);
+    padding: 0.3rem 0.9rem;
+    border-radius: 2px;
+  }
+
+  /* TOGGLE */
+  .toggle-wrap {
+    max-width: 600px;
+    margin: 2.5rem auto 0;
+    padding: 0 5vw;
+  }
+  .toggle-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 0.8rem;
+    display: block;
+  }
+  .toggle-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--dark3);
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.08);
+    overflow: hidden;
+  }
+  .toggle-btn {
+    background: none;
+    border: none;
+    color: var(--gray);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.85rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 700;
+  }
+  .toggle-btn.active {
+    background: var(--orange);
+    color: var(--white);
+  }
+
+  /* FORM CONTAINER */
+  .form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem 5vw 0;
+  }
+
+  .form-intro {
+    background: var(--dark3);
+    border-left: 3px solid var(--orange);
+    border-radius: 0 6px 6px 0;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .form-intro p {
+    color: var(--gray);
+    font-size: 0.95rem;
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  .form-section { display: none; }
+  .form-section.active { display: block; }
+
+  /* QUESTIONS */
+  .question {
+    margin-bottom: 2rem;
+    animation: fadeUp 0.4s ease both;
+  }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+  .question-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    margin-bottom: 0.7rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+  .q-num {
+    background: var(--orange);
+    color: var(--white);
+    font-size: 0.72rem;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.08em;
+    padding: 0.15rem 0.45rem;
+    border-radius: 2px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .q-optional {
+    font-size: 0.78rem;
+    color: var(--gray);
+    font-weight: 400;
+    margin-left: 0.3rem;
+  }
+
+  /* INPUTS */
+  input[type="text"],
+  input[type="number"],
+  textarea {
+    width: 100%;
+    background: var(--dark3);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px;
+    padding: 0.85rem 1rem;
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input[type="text"]:focus,
+  textarea:focus { border-color: var(--orange); }
+  input::placeholder, textarea::placeholder { color: var(--gray); }
+  textarea { resize: vertical; min-height: 90px; }
+
+  /* RADIO / SCALE */
+  .radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .radio-group.scale { gap: 0.5rem; }
+
+  .radio-option input { display: none; }
+  .radio-option label {
+    display: block;
+    background: var(--dark3);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px;
+    padding: 0.6rem 1.1rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    color: var(--gray);
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .radio-option input:checked + label {
+    background: var(--orange);
+    border-color: var(--orange);
+    color: var(--white);
+  }
+  .radio-option label:hover { border-color: var(--orange); color: var(--white); }
+
+  .scale-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.4rem;
+    padding: 0 2px;
+  }
+  .scale-labels span {
+    font-size: 0.75rem;
+    color: var(--gray);
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.05em;
+  }
+
+  /* SUBMIT */
+  .submit-wrap { margin-top: 3rem; }
+  .btn-submit {
+    width: 100%;
+    background: var(--orange);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    padding: 1rem 2rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-submit:hover { background: #FF7A3D; transform: translateY(-2px); }
+
+  /* SUCCESS */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+  .success-screen.show { display: block; }
+  .success-icon { font-size: 3.5rem; margin-bottom: 1.5rem; }
+  .success-screen h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: 0.06em;
+    color: var(--orange);
+    margin-bottom: 1rem;
+  }
+  .success-screen p { color: var(--gray); font-size: 1rem; max-width: 400px; margin: 0 auto; }
+
+  /* PROGRESS */
+  .progress-bar {
+    height: 3px;
+    background: rgba(255,92,26,0.15);
+    margin-bottom: 2rem;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--orange);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  @media (max-width: 500px) {
+    .radio-group.scale { gap: 0.35rem; }
+    .radio-option label { padding: 0.55rem 0.8rem; font-size: 0.9rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="form-header">
+  <div class="logo">RESOL<span>VE</span></div>
+  <div class="form-type-badge">Startprofil — Förening</div>
+</div>
+
+<div class="toggle-wrap">
+  <span class="toggle-label">Välj formulär</span>
+  <div class="toggle-btns">
+    <button class="toggle-btn active" onclick="showSection('fore', this)">Före programmet</button>
+    <button class="toggle-btn" onclick="showSection('efter', this)">Efter programmet</button>
+  </div>
+</div>
+
+<div class="form-container">
+
+  <!-- FÖRE -->
+  <div class="form-section active" id="section-fore">
+    <div class="form-intro">
+      <p>Hej! Det här tar max 3 minuter. Dina svar hjälper din coach att anpassa programmet just för dig. Bara du och din coach ser dina svar.</p>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fore" style="width:0%"></div></div>
+    <form id="form-fore" onsubmit="submitForm(event, 'fore')">
+
+      <div class="question">
+        <div class="question-label"><span class="q-num">01</span> Skapa din personliga kod</div>
+        <input type="text" name="kod" placeholder="Ditt förnamn och födelsedag, t.ex. Alex1408" required>
+        <div style="color:var(--gray);font-size:0.8rem;margin-top:0.5rem;">Använd samma kod i efterformuläret så vi kan se din utveckling.</div>
+      </div>
+
+      <div class="question">
+        <div class="question-label"><span class="q-num">02</span> Vilken sport tränar du?</div>
+        <input type="text" name="sport" placeholder="T.ex. fotboll, handboll, kampsport..." required>
+      </div>
+
+      <div class="question">
+        <div class="question-label"><span class="q-num">03</span> Hur många gånger i veckan tränar du just nu?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="traning_freq" id="f1" value="1" required><label for="f1">1 gång</label></div>
+          <div class="radio-option"><input type="radio" name="traning_freq" id="f2" value="2-3"><label for="f2">2 till 3 gånger</label></div>
+          <div class="radio-option"><input type="radio" name="traning_freq" id="f3" value="4+"><label for="f3">4 eller fler</label></div>
+        </div>
+      </div>
+
+      <div class="question">
+        <div class="question-label"><span class="q-num">04</span> Hur många timmar sover du ungefär per natt?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="somn" id="s1" value="under6" required><label for="s1">Under 6 tim</label></div>
+          <div class="radio-option"><input type="radio" name="somn" id="s2" value="6-7"><label for="s2">6 till 7 tim</label></div>
+          <div class="radio-option"><input type="radio" name="somn" id="s3" value="8+"><label for="s3">8 tim eller mer</label></div>
+        </div>
+      </div>
+
+      <div class="question">
+        <div class="question-label"><span class="q-num">05</span> Hur känner du dig fysiskt just nu?</div>
+        <div class="radio-group scale">
+          <div class="radio-option"><input type="radio" name="fysisk" id="fy1" value="1" required><label for="fy1">1</label></div>
+          <div class="radio-option"><input type="radio" name="fysisk" id="fy2" value="2"><label for="fy2">2</label></div>
+          <div class="radio-option"><input type="radio" name="fysisk" id="fy3" value="3"><label for="fy3">3</label></div>
+          <div class="radio-option"><input type="radio" name="fysisk" id="fy4" value="4"><label for="fy4">4</label></div>
+          <div class="radio-option"><input type="radio" name="fysisk" id="fy5" value="5"><label for="fy5">5</label></div>
+        </div>
+        <div class="scale-labels"><span>Inte alls bra</span><span>Toppen</span></div>
+      </div>
+
+      <div class="question">
+        <div class="question-label"><span class="q-num">06</span> Hur känner du dig i huvudet just nu?</div>
+        <div class="radio-group scale">
+          <div class="radio-option"><input type="radio" name="mental" id="m1" value="1" required><label for="m1">1</label></div>
+          <div class="radio-option"><input type="radio" name="mental" id="m2" value="2"><label for="m2">2</label></div>
+          <div class="radio-option"><input type="radio" name="mental" id="m3" value="3"><label for="m3">3</label></div>
+          <div class="radio-option"><input type="radio" name="mental" id="m4" value="4"><label for="m4">4</label></div>
+          <div class="radio-option"><input type="radio" name="mental" id="m5" value="5"><label for="m5">5</label></div>
+        </div>
+        <div class="scale-labels"><span>Tungt</span><span>Starkt</span></div>
+      </div>
+
+      <div class="question">
+        <div class="question-label"><span class="q-num">07</span> Hur bra är sammanhållningen i ditt lag just nu?</div>
+        <div class="radio-group scale">
+          <div class="radio-option"><input type="radio" name="sammanhallning" id="sh1" value="1" required><label for="sh1">1</label></div>
+          <div class="radio-option"><input type="radio" name="sammanhallning" id="sh2" value="2"><label for="sh2">2</label></div>
+          <div class="radio-option"><input type="radio" name="sammanhallning" id="sh3" value="3"><label for="sh3">3</label></div>
+          <div class="radio-option"><input type="radio" name="sammanhallning" id="sh4" value="4"><label for="sh4">4</label></div>
+          <div class="radio-option"><input type="radio" name="sammanhallning" id="sh5" value="5"><label for="sh5">5</label></div>
+        </div>
+        <div class="scale-labels"><span>Svag</span><span>Stark</span></div>
+      </div>
+
+      <div class="question">
+        <div class="question-label"><span class="q-num">08</span> Vad är ditt största mål den här säsongen?</div>
+        <textarea name="mal" placeholder="En mening räcker..." required></textarea>
+      </div>
+
+      <div class="question">
+        <div class="question-label"><span class="q-num">09</span> Är det något din coach bör veta innan träningen börjar? <span class="q-optional">(valfritt)</span></div>
+        <textarea name="coach_info" placeholder="T.ex. skador, saker som påverkar dig just nu..."></textarea>
+      </div>
+
+      <div class="submit-wrap">
+        <button type="submit" class="btn-submit">Skicka min startprofil →</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- EFTER -->
+  <div class="form-section" id="section-efter">
+    <div class="form-intro">
+      <p>Bra jobbat. Det här tar 3 minuter. Dina svar visar hur långt du kommit.</p>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-efter" style="width:0%"></div></div>
+    <form id="form-efter" onsubmit="submitForm(event, 'efter')">
+
+      <div class="question">
+        <div class="question-label"><span class="q-num">01</span> Skriv in samma kod som du använde sist</div>
+        <input type="text" name="kod" placeholder="T.ex. Alex1408" required>
+      </div>
+
+      <div class="question">
+        <div class="question-label"><span class="q-num">02</span> Hur många timmar sover du ungefär per natt nu?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="somn_efter" id="se1" value="under6" required><label for="se1">Under 6 tim</label></div>
+          <div class="radio-option"><input type="radio" name="somn_efter" id="se2" value="6-7"><label for="se2">6 till 7 tim</label></div>
+          <div class="radio-option"><input type="radio" name="somn_efter" id="se3" value="8+"><label for="se3">8 tim eller mer</label></div>
+        </div>
+      </div>
+
+      <div class="question">
+        <div class="question-label"><span class="q-num">03</span> Hur känner du dig fysiskt nu?</div>
+        <div class="radio-group scale">
+          <div class="radio-option"><input type="radio" name="fysisk_efter" id="fye1" value="1" required><label for="fye1">1</label></div>
+          <div class="radio-option"><input type="radio" name="fysisk_efter" id="fye2" value="2"><label for="fye2">2</label></div>
+          <div class="radio-option"><input type="radio" name="fysisk_efter" id="fye3" value="3"><label for="fye3">3</label></div>
+          <div class="radio-option"><input type="radio" name="fysisk_efter" id="fye4" value="4"><label for="fye4">4</label></div>
+          <div class="radio-option"><input type="radio" name="fysisk_efter" id="fye5" value="5"><label for="fye5">5</label></div>
+        </div>
+        <div class="scale-labels"><span>Inte alls bra</span><span>Toppen</span></div>
+      </div>
+
+      <div class="question">
+        <div class="question-label"><span class="q-num">04</span> Hur känner du dig i huvudet nu?</div>
+        <div class="radio-group scale">
+          <div class="radio-option"><input type="radio" name="mental_efter" id="me1" value="1" required><label for="me1">1</label></div>
+          <div class="radio-option"><input type="radio" name="mental_efter" id="me2" value="2"><label for="me2">2</label></div>
+          <div class="radio-option"><input type="radio" name="mental_efter" id="me3" value="3"><label for="me3">3</label></div>
+          <div class="radio-option"><input type="radio" name="mental_efter" id="me4" value="4"><label for="me4">4</label></div>
+          <div class="radio-option"><input type="radio" name="mental_efter" id="me5" value="5"><label for="me5">5</label></div>
+        </div>
+        <div class="scale-labels"><span>Tungt</span><span>Starkt</span></div>
+      </div>
+
+      <div class="question">
+        <div class="question-label"><span class="q-num">05</span> Hur bra är sammanhållningen i laget nu?</div>
+        <div class="radio-group scale">
+          <div class="radio-option"><input type="radio" name="sammanhallning_efter" id="she1" value="1" required><label for="she1">1</label></div>
+          <div class="radio-option"><input type="radio" name="sammanhallning_efter" id="she2" value="2"><label for="she2">2</label></div>
+          <div class="radio-option"><input type="radio" name="sammanhallning_efter" id="she3" value="3"><label for="she3">3</label></div>
+          <div class="radio-option"><input type="radio" name="sammanhallning_efter" id="she4" value="4"><label for="she4">4</label></div>
+          <div class="radio-option"><input type="radio" name="sammanhallning_efter" id="she5" value="5"><label for="she5">5</label></div>
+        </div>
+        <div class="scale-labels"><span>Svag</span><span>Stark</span></div>
+      </div>
+
+      <div class="question">
+        <div class="question-label"><span class="q-num">06</span> Hur känner du dig inför resten av säsongen jämfört med innan programmet?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="kansla_sasong" id="ks1" value="starkare" required><label for="ks1">Starkare</label></div>
+          <div class="radio-option"><input type="radio" name="kansla_sasong" id="ks2" value="ungefar_samma"><label for="ks2">Ungefär samma</label></div>
+          <div class="radio-option"><input type="radio" name="kansla_sasong" id="ks3" value="osaker"><label for="ks3">Osäker</label></div>
+        </div>
+      </div>
+
+      <div class="question">
+        <div class="question-label"><span class="q-num">07</span> Vad är det bästa du tar med dig från programmet?</div>
+        <textarea name="basta" placeholder="En mening räcker..." required></textarea>
+      </div>
+
+      <div class="question">
+        <div class="question-label"><span class="q-num">08</span> Vad skulle du vilja ha mer av eller annorlunda? <span class="q-optional">(valfritt)</span></div>
+        <textarea name="forbattring" placeholder="Din åsikt hjälper oss bli bättre..."></textarea>
+      </div>
+
+      <div class="question">
+        <div class="question-label"><span class="q-num">09</span> Skulle du rekommendera Resolve till ett annat lag?</div>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="rekommendera" id="r1" value="ja" required><label for="r1">Ja</label></div>
+          <div class="radio-option"><input type="radio" name="rekommendera" id="r2" value="nej"><label for="r2">Nej</label></div>
+          <div class="radio-option"><input type="radio" name="rekommendera" id="r3" value="vet_inte"><label for="r3">Vet inte</label></div>
+        </div>
+      </div>
+
+      <div class="submit-wrap">
+        <button type="submit" class="btn-submit">Skicka min slutprofil →</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success-screen" id="success-screen">
+    <div class="success-icon">🔥</div>
+    <h2>TACK. RESOLVE.</h2>
+    <p>Dina svar är sparade. Din coach ser dem och återkommer om det behövs.</p>
+  </div>
+
+</div>
+
+<script>
+  function showSection(type, btn) {
+    document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('section-' + type).classList.add('active');
+    btn.classList.add('active');
+    document.getElementById('success-screen').classList.remove('show');
+  }
+
+  // Progress bar
+  function updateProgress(formId, progressId) {
+    const form = document.getElementById(formId);
+    if (!form) return;
+    const required = form.querySelectorAll('[required]');
+    let filled = 0;
+    const seen = new Set();
+    required.forEach(el => {
+      if (el.type === 'radio') {
+        if (!seen.has(el.name)) {
+          seen.add(el.name);
+          if (form.querySelector('input[name="' + el.name + '"]:checked')) filled++;
+        }
+      } else if (el.value.trim()) {
+        filled++;
+      }
+    });
+    const total = seen.size + form.querySelectorAll('[required]:not([type="radio"])').length;
+    const pct = total > 0 ? Math.round((filled / total) * 100) : 0;
+    document.getElementById(progressId).style.width = pct + '%';
+  }
+
+  document.getElementById('form-fore').addEventListener('change', () => updateProgress('form-fore', 'progress-fore'));
+  document.getElementById('form-fore').addEventListener('input', () => updateProgress('form-fore', 'progress-fore'));
+  document.getElementById('form-efter').addEventListener('change', () => updateProgress('form-efter', 'progress-efter'));
+  document.getElementById('form-efter').addEventListener('input', () => updateProgress('form-efter', 'progress-efter'));
+
+  function submitForm(e, type) {
+    e.preventDefault();
+    const form = e.target;
+    const data = new FormData(form);
+    const obj = { type, timestamp: new Date().toISOString() };
+    data.forEach((v, k) => obj[k] = v);
+
+    // Save to localStorage with timestamp
+    const key = 'resolve_forening_' + type + '_' + Date.now();
+    try { localStorage.setItem(key, JSON.stringify(obj)); } catch(err) {}
+
+    // Hide forms, show success
+    document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('success-screen').classList.add('show');
+    window.scrollTo(0, 0);
+
+    console.log('Resolve Startprofil (' + type + '):', obj);
+  }
+</script>
+</body>
+</html>
