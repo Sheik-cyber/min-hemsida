@@ -367,6 +367,7 @@
     .hamburger.open span:nth-child(2) { opacity: 0; }
     .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
     .about-grid, .services-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .services-grid { grid-template-columns: 1fr !important; }
     .tab-panel.active { grid-template-columns: 1fr; }
     .testimonials-grid { grid-template-columns: 1fr; }
     .eld-grid { grid-template-columns: 1fr; }
@@ -447,7 +448,7 @@
     <h1>JAG ÄR <em>BESTÄMD.</em><br>JAG <span class="outline">LÖSER DET.</span></h1>
     <div class="hero-manifesto">
       <p class="lead">JAG GER <span>INTE</span> UPP.</p>
-      <p class="sub-line">Resolve skapar den inre elden som håller dig igång när det är som tuffast. Skräddarsydda program för ungdomar i föreningar och team som vill prestera på riktigt.</p>
+      <p class="sub-line">Friska team presterar. Svaga team kostar. Vi sänker sjukfrånvaron, bygger sammanhållning och levererar resultat som syns på sista raden. För föreningar som vill vinna och företag som förstår värdet av ett lag som håller ihop.</p>
     </div>
     <div class="hero-actions">
       <a href="#paket" class="btn-primary">Se våra paket</a>
@@ -492,7 +493,9 @@
       </div>
       <p style="color:var(--gray); font-size:1.05rem; line-height:1.85; margin-bottom:1.4rem;">Resolve är ett koncept och ett sätt att leva. En övertygelse om att viljestyrka, beslutsamhet och karaktär inte är något man föds med utan något som tränas fram.</p>
       <p style="color:var(--gray); font-size:1.05rem; line-height:1.85; margin-bottom:1.4rem;">Vi har sett vad som händer när ett team inte fungerar och när det plötsligt gör det. Vi har sett en ungdom gå in genom en dörr som en och komma ut som någon helt annan. De där ögonblicken går inte att köpa eller planera. Men de går att skapa.</p>
-      <p style="color:var(--white); font-size:1.05rem; line-height:1.85; font-weight:600; margin-bottom:3rem;">Det är vad Resolve står för. Att varje människa som kommer till oss går därifrån med en starkare bild av sig själv än den de kom med.</p>
+      <p style="color:var(--white); font-size:1.05rem; line-height:1.85; font-weight:600; margin-bottom:1.4rem;">Det är vad Resolve står för. Att varje människa som kommer till oss går därifrån med en starkare bild av sig själv än den de kom med.</p>
+      <p style="color:var(--gray); font-size:1.05rem; line-height:1.85; margin-bottom:1.4rem;">För föreningen som vill bygga mer än ett lag. För ungdomen som behöver hitta sin riktning, oavsett var den resan börjar. För företaget som förstår att ett team som litar på varandra presterar på en helt annan nivå.</p>
+      <p style="font-family:'Bebas Neue',sans-serif; font-size:clamp(1.6rem,3vw,2.4rem); letter-spacing:0.06em; color:var(--orange); margin-bottom:3rem;">Karaktär tränas. Det föds inte.</p>
     </div>
   </div>
 </section>
@@ -526,34 +529,50 @@
 <section id="tjanster">
   <div class="services-intro reveal">
     <div class="section-tag">Vad vi erbjuder</div>
-    <h2>TVÅ SPÅR. ETT MÅL.</h2>
-    <p>Vi har specialiserat oss på två målgrupper med varsitt skräddarsytt utbud. Oavsett om du är 16 eller 46 – elden tänds på samma sätt.</p>
+    <h2>VI TRÄNAR LAGET SOM VILL VINNA.<br>VI STÖTTAR UNGDOMEN SOM BEHÖVER RIKTNING.</h2>
+    <p>Samma kärna. Samma krav. Oavsett varifrån du kommer eller vart du är på väg.</p>
   </div>
-  <div class="services-grid">
+  <div class="services-grid" style="grid-template-columns: repeat(3, 1fr);">
+
     <div class="service-card reveal">
-      <span class="service-emoji">🏃</span>
-      <h3>Ungdomar & Föreningar</h3>
-      <p>Vi stärker unga med program som bygger mer än muskler – vi bygger karaktär, beslutsamhet och en vilja att aldrig ge upp. För föreningar och ungdomsgrupper som är redo att ta nästa steg.</p>
+      <span class="service-emoji">🏆</span>
+      <h3>Prestationsföreningen</h3>
+      <p>För laget som siktar högre den här säsongen. Vi kombinerar fysisk träning med mental styrka och lagbyggande som gör skillnad när det verkligen gäller. Ungdomarna lämnar säsongen starkare, mer fokuserade och med en vilja att aldrig ge upp.</p>
       <ul class="service-features">
-        <li>Skräddarsydda träningsprogram per åldersgrupp</li>
-        <li>Motivations- och ledarskapsworkshops</li>
-        <li>Säsongplanering och periodisering</li>
-        <li>Mental styrka och viljestyrketräning</li>
-        <li>Individuell uppföljning och progressspårning</li>
+        <li>Fysisk träning anpassad efter sport och säsong</li>
+        <li>Mental styrka och prestationspsykologi</li>
+        <li>Lagbyggande som håller under press</li>
+        <li>Individuell startprofil och progressrapport</li>
+        <li>Säsongsplanering och periodisering</li>
       </ul>
     </div>
+
     <div class="service-card reveal">
-      <span class="service-emoji">🏢</span>
-      <h3>Företag & Team</h3>
-      <p>För er som vill investera i medarbetarnas hälsa och välmående. Våra företagstjänster är även perfekta som kick-off med massor av träning och kluriga utmaningar som stärker sammanhållningen.</p>
+      <span class="service-emoji">🧭</span>
+      <h3>Den socialt ansvariga föreningen</h3>
+      <p>Träning är vårt verktyg men det vi bygger är något större. Vi för aktiva dialoger med ungdomarna om val, riktning och vad som formar en människa på lång sikt. För föreningen som vet att det händer saker utanför planen och vill göra skillnad på riktigt.</p>
       <ul class="service-features">
-        <li>Flexibla friskvårdspaket för hela företaget</li>
-        <li>Gruppträning anpassad efter era scheman</li>
-        <li>Aktivitetsutmaningar och teamtävlingar</li>
-        <li>Energi- och stresshanteringscoachning</li>
-        <li>Mätbara mål och kontinuerlig rapportering</li>
+        <li>Strukturerad dialog om livsstil och val</li>
+        <li>Gemenskap och tillhörighet som alternativ</li>
+        <li>Individuell uppföljning för varje ungdom</li>
+        <li>Verktyg för ledare att fortsätta arbetet</li>
+        <li>Samarbete med föräldrar och föreningsledning</li>
       </ul>
     </div>
+
+    <div class="service-card reveal">
+      <span class="service-emoji">📈</span>
+      <h3>Företag och Team</h3>
+      <p>Vi vet att friska medarbetare presterar bättre. Men vi vet också att träning bara ger resultat om den faktiskt blir av. Därför fokuserar Resolve på tröskellös träning och högsta möjliga engagemang. Vi säljer inte timmar. Vi levererar mätbara resultat och rapporten som bevisar dem.</p>
+      <ul class="service-features">
+        <li>ROI-rapport med mätbar effekt till ledningen</li>
+        <li>Träning anpassad för alla nivåer och scheman</li>
+        <li>Stresshantering och mental prestationsförmåga</li>
+        <li>Teambuilding som syns i vardagen efteråt</li>
+        <li>Hälsoprofil före och efter programmet</li>
+      </ul>
+    </div>
+
   </div>
 </section>
 
@@ -589,71 +608,119 @@
     <h2>VÄLJ DITT PAKET</h2>
   </div>
   <div class="packages-tabs reveal">
-    <button class="tab-btn active" onclick="switchTab('ungdom', this)">🏃 Ungdomar & Föreningar</button>
+    <button class="tab-btn active" onclick="switchTab('ungdom', this)">🏃 Föreningar & Ungdomar</button>
     <button class="tab-btn" onclick="switchTab('foretag', this)">🏢 Företag & Team</button>
   </div>
 
+  <!-- FÖRENINGSPAKET -->
   <div id="tab-ungdom" class="tab-panel active">
     <div class="pkg-card reveal">
-      <div class="pkg-name">Starter</div>
-      <div class="pkg-price">7 500 <span>kr/mån</span></div>
-      <div class="pkg-desc">Tänd den första gnistan. Perfekt för föreningar som vill börja strukturerat.</div>
+      <div class="pkg-name">SPARK</div>
+      <div class="pkg-price">9 900 <span>kr</span></div>
+      <div class="pkg-desc">För föreningen som vill ge ungdomarna en flygande start inför säsongen. Fokus på fysisk grund, mental förberedelse och lagkänsla.</div>
       <ul class="pkg-features">
-        <li><span class="check">✓</span> Upp till 10 ungdomar</li>
-        <li><span class="check">✓</span> 1 träningspass vecka</li>
-        <li><span class="check">✓</span> Träningsprogram online</li>
-        <li><span class="check">✓</span> Månatlig uppföljning</li>
+        <li><span class="check">✓</span> 6 ledda träningspass anpassade efter åldersgrupp och sport</li>
+        <li><span class="check">✓</span> Gruppanalys av lagets styrkor och svagheter som kollektiv</li>
+        <li><span class="check">✓</span> Mental förberedelse inför säsong: fokus, motivation och målsättning</li>
+        <li><span class="check">✓</span> Individuell startprofil för varje deltagare</li>
+        <li><span class="check">✓</span> Avslutande rapport till tränare och föräldrar</li>
       </ul>
-      <a href="#kontakt" class="btn-outline" style="width:100%;text-align:center;">Kontakta oss</a>
+      <a href="#" onclick="showPage('kontakt'); return false;" class="btn-outline" style="width:100%;text-align:center;">Kontakta oss</a>
     </div>
+
     <div class="pkg-card featured reveal">
       <div class="pkg-badge">Mest populär</div>
-      <div class="pkg-name">Pro</div>
-      <div class="pkg-price">12 500 <span>kr/mån</span></div>
-      <div class="pkg-desc">För föreningar som vill bygga verklig viljestyrka och beslutsamhet hos sina ungdomar.</div>
+      <div class="pkg-name">FORMATION</div>
+      <div class="pkg-price">16 500 <span>kr</span></div>
+      <div class="pkg-desc">För föreningen som vill bygga ett riktigt lag. Inte bara bättre spelare utan ungdomar som håller ihop när det är tungt, på planen och utanför den.</div>
       <ul class="pkg-features">
-        <li><span class="check">✓</span> Upp till 15 ungdomar</li>
-        <li><span class="check">✓</span> Mer flexibel träningsfrekvens – vi ser till att optimera upplägget utifrån gruppens dagsform & kapacitet.</li>
-        <li><span class="check">✓</span> Viljestyrka dialog</li>
-        <li><span class="check">✓</span> Individuell progressplan</li>
-        <li><span class="check">✓</span> Säsongplanering</li>
+        <li><span class="check">✓</span> 12 ledda träningspass med progressionsupplägg</li>
+        <li><span class="check">✓</span> Individuell startprofil inför start</li>
+        <li><span class="check">✓</span> Lagbyggande sessioner: kommunikation, tillit och ansvar inom gruppen</li>
+        <li><span class="check">✓</span> Dialog om livsstil, val och vad som bygger eller bryter ett lag</li>
+        <li><span class="check">✓</span> Weekly Boost: digitala utskick med mentala övningar och pepp</li>
+        <li><span class="check">✓</span> Säsongsrapport med individuell och gruppvis progress</li>
       </ul>
-      <a href="#kontakt" class="btn-primary" style="width:100%;text-align:center;">Kom igång</a>
+      <a href="#" onclick="showPage('kontakt'); return false;" class="btn-primary" style="width:100%;text-align:center;">Kom igång</a>
     </div>
+
     <div class="pkg-card reveal">
-      <div class="pkg-name">Elite</div>
+      <div class="pkg-name">RESOLVE ELITE</div>
       <div class="pkg-price">Offert</div>
-      <div class="pkg-desc">Fullt skräddarsytt. Inga kompromisser. Dedikerad coach som går hela vägen med er.</div>
+      <div class="pkg-desc">För föreningen som vill bygga en vinnande kultur på lång sikt. Dedikerad coach, fullständig säsongsplanering och individuell uppföljning för varje ungdom.</div>
       <ul class="pkg-features">
-        <li><span class="check">✓</span> Obegränsat antal deltagare</li>
-        <li><span class="check">✓</span> Dedikerad Resolve-coach</li>
-        <li><span class="check">✓</span> Fullständig säsongplanering</li>
-        <li><span class="check">✓</span> Föreläsningar & event</li>
-        <li><span class="check">✓</span> Tävlingsförberedelse</li>
-        <li><span class="check">✓</span> Prioriterad support</li>
+        <li><span class="check">✓</span> Obegränsat antal ungdomar</li>
+        <li><span class="check">✓</span> Dedikerad Resolve-coach genom hela säsongen</li>
+        <li><span class="check">✓</span> Fullständig säsongsplanering och periodisering</li>
+        <li><span class="check">✓</span> Individuell coachning för varje deltagare</li>
+        <li><span class="check">✓</span> Föreläsning för föräldrar och ledare</li>
+        <li><span class="check">✓</span> Krisstöd och dialog vid behov utanför träningen</li>
+        <li><span class="check">✓</span> Slutrapport med rekommendationer inför nästa säsong</li>
       </ul>
-      <a href="#kontakt" class="btn-outline" style="width:100%;text-align:center;">Begär offert</a>
+      <a href="#" onclick="showPage('kontakt'); return false;" class="btn-outline" style="width:100%;text-align:center;">Begär offert</a>
     </div>
   </div>
 
+  <!-- FÖRETAGSPAKET -->
   <div id="tab-foretag" class="tab-panel">
     <div class="pkg-card reveal">
-      <div class="pkg-name">Team Aktiv</div>
-      <div class="pkg-price">29 500 <span>kr/mån</span></div>
-      <div class="pkg-desc">Sätt rörelsen i system. Friskvård som dina medarbetare faktiskt använder.</div>
+      <div class="pkg-name">KICKSTART</div>
+      <div class="pkg-price">29 500 <span>kr exkl. moms</span></div>
+      <div class="pkg-desc">För företaget som vill väcka energin och skapa en rolig gemensam aktivitet. Fokus på rörelseglädje och gemenskap.</div>
       <ul class="pkg-features">
-        <li><span class="check">✓</span> Upp till 20 medarbetare</li>
-        <li><span class="check">✓</span> 2 gruppträningspass/vecka</li>
-        <li><span class="check">✓</span> Aktivitetsutmaning/månad</li>
-        <li><span class="check">✓</span> Kvartalsvisa mätningar</li>
+        <li><span class="check">✓</span> 8 ledda träningspass på plats hos er eller utomhus</li>
+        <li><span class="check">✓</span> Grundläggande behovsanalys för gruppen</li>
+        <li><span class="check">✓</span> Professionell coachning anpassad för alla nivåer</li>
+        <li><span class="check">✓</span> Hälsoprofil före och efter programmet</li>
+        <li><span class="check">✓</span> Uppföljningsrapport efter avslutat program</li>
       </ul>
-      <a href="#kontakt" class="btn-outline" style="width:100%;text-align:center;">Kontakta oss</a>
+      <a href="#" onclick="showPage('kontakt'); return false;" class="btn-outline" style="width:100%;text-align:center;">Kontakta oss</a>
     </div>
+
     <div class="pkg-card featured reveal">
-      <div class="pkg-badge">Mest populär</div>
-      <div class="pkg-name">Team Pro</div>
-      <div class="pkg-price">45 500 <span>kr/mån</span></div>
-      <div class="pkg-desc">Komplett program för team som vill prestera rakryggat även under press.</div>
+      <div class="pkg-badge">Rekommenderas</div>
+      <div class="pkg-name">TRANSFORMATION</div>
+      <div class="pkg-price">45 500 <span>kr exkl. moms</span></div>
+      <div class="pkg-desc">För företaget som ser hälsa som en investering med mätbart resultat. Vi tar ett helhetsgrepp om teamets hälsa och levererar siffror som syns på sista raden.</div>
+      <ul class="pkg-features">
+        <li><span class="check">✓</span> ROI-rapport till ledningen med före och efter analys</li>
+        <li><span class="check">✓</span> 12 ledda träningspass med långsiktig progressionsplan</li>
+        <li><span class="check">✓</span> Individuell hälsoprofil inför start</li>
+        <li><span class="check">✓</span> Inspirationsworkshop: kost, sömn och stresshantering</li>
+        <li><span class="check">✓</span> Weekly Boost: digitala utskick med övningar och mental träning</li>
+        <li><span class="check">✓</span> The Resolve Challenge: intern lagtävling som skapar engagemang</li>
+        <li><span class="check">✓</span> Personlig kontaktperson för alla deltagare</li>
+      </ul>
+      <a href="#" onclick="showPage('kontakt'); return false;" class="btn-primary" style="width:100%;text-align:center;">Kom igång</a>
+    </div>
+
+    <div class="pkg-card reveal">
+      <div class="pkg-name">ENTERPRISE</div>
+      <div class="pkg-price">Offert</div>
+      <div class="pkg-desc">För organisationen som vill göra hälsa till en del av sin företagskultur. Fullt skräddarsytt utan kompromisser.</div>
+      <ul class="pkg-features">
+        <li><span class="check">✓</span> Obegränsat antal medarbetare</li>
+        <li><span class="check">✓</span> Dedikerad Resolve-coach</li>
+        <li><span class="check">✓</span> Skräddarsytt program per avdelning eller team</li>
+        <li><span class="check">✓</span> Stresshanteringsworkshops</li>
+        <li><span class="check">✓</span> Ledarskapscoachning för chefer</li>
+        <li><span class="check">✓</span> Löpande rapportering och HR-integration</li>
+        <li><span class="check">✓</span> Prioriterad support</li>
+      </ul>
+      <a href="#" onclick="showPage('kontakt'); return false;" class="btn-outline" style="width:100%;text-align:center;">Begär offert</a>
+    </div>
+  </div>
+
+  <!-- FOTNOT -->
+  <div class="reveal" style="margin-top:3rem; padding:1.5rem 2rem; background:var(--dark3); border-radius:6px; border-left:3px solid rgba(255,92,26,0.4);">
+    <p style="color:var(--gray); font-size:0.88rem; margin:0;">Samtliga priser är exklusive moms. Tjänsten är avdragsgill som friskvård eller personalvård. Inga dolda avgifter eller startkostnader tillkommer.</p>
+  </div>
+
+  <!-- BORTKOMMENTERAT GAMMALT INNEHÅLL - ersatt ovan -->
+  <!-- DUMMY START för att hålla rätt struktur -->
+  <div id="tab-foretag-old" style="display:none;">
+    <div class="pkg-card">
+      <div class="pkg-name">Team Aktiv</div>
       <ul class="pkg-features">
         <li><span class="check">✓</span> Upp till 50 medarbetare</li>
         <li><span class="check">✓</span> Mer flexibel träningsfrekvens, vi ser till att optimera och skräddarsy upplägget utifrån gruppens dagsform & kapacitet.</li>
@@ -669,14 +736,7 @@
       <div class="pkg-price">Offert</div>
       <div class="pkg-desc">Fullt skräddarsytt. Inga kompromisser. Er organisation – vår helhetslösning.</div>
       <ul class="pkg-features">
-        <li><span class="check">✓</span> Obegränsat antal medarbetare</li>
-        <li><span class="check">✓</span> Dedikerad Resolve-coach</li>
-        <li><span class="check">✓</span> Anpassade program per avdelning</li>
-        <li><span class="check">✓</span> Stresshanteringsworkshops</li>
-        <li><span class="check">✓</span> Full rapportering & HR-integration</li>
-        <li><span class="check">✓</span> Prioriterad support dygnet runt</li>
       </ul>
-      <a href="#kontakt" class="btn-outline" style="width:100%;text-align:center;">Begär offert</a>
     </div>
   </div>
 </section>
@@ -711,7 +771,7 @@
             Följ @teamresolve.se →
           </a>
         </div>
-       
+        <p class="ig-note">Aktivera Instagram-flödet: gå till <strong style="color:var(--white);">elfsight.com</strong>, skapa ett gratis Instagram Feed-widget med kontot <strong style="color:var(--white);">@teamresolve.se</strong> och klistra in app-ID:t ovan.</p>
       </div>
     </div>
   </div>
@@ -729,14 +789,14 @@
   <div class="reveal">
     <div class="section-tag">Varför Resolve</div>
     <h2>BYGGT PÅ ÄKTA GRUND.</h2>
-    <p style="color:var(--gray); max-width:600px; margin:1rem 0 4rem; font-size:1.05rem;">Inte ett gym till. Inte en kurs till. Resolve är grundat av två personer som levt det de lär ut — och som sett med egna ögon vad som händer när någon äntligen tror på sin egen förmåga.</p>
+    <p style="color:var(--gray); max-width:600px; margin:1rem 0 4rem; font-size:1.05rem;">Inte ett gym till. Inte en kurs till. Resolve är grundat av två personer som levt det de lär ut och som sett med egna ögon vad som händer när någon äntligen tror på sin egen förmåga.</p>
   </div>
 
   <div class="proof-grid">
     <div class="proof-card reveal">
       <div class="proof-icon">🪖</div>
       <h3>Mer än ett decennium i Försvarsmakten</h3>
-      <p>Disciplin, lojalitet och förmågan att hålla ihop ett lag när det är som tuffast. Det är inte teori — det är erfarenhet från situationer de flesta aldrig ens föreställer sig.</p>
+      <p>Disciplin, lojalitet och förmågan att hålla ihop ett lag när det är som tuffast. Det är inte teori utan erfarenhet från situationer de flesta aldrig ens föreställer sig.</p>
     </div>
     <div class="proof-card reveal">
       <div class="proof-icon">🥋</div>
