@@ -45,6 +45,19 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer}
 .ng{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .nb{background:var(--s2);border:1px solid var(--bd);color:var(--tx);padding:20px;border-radius:12px;font-size:17px;font-weight:700;transition:all .2s}
 .nb:active{border-color:var(--or);color:var(--or)}
+.save-dialog{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;align-items:flex-end;justify-content:center;z-index:250}
+.save-dialog.open{display:flex}
+.save-dlg-box{background:var(--s1);border:1px solid var(--bd);border-radius:18px 18px 0 0;width:100%;max-width:640px;padding:24px 18px 40px}
+.save-dlg-box h3{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;margin-bottom:6px}
+.save-dlg-box p{font-size:13px;color:var(--mu);margin-bottom:20px}
+.sdlg-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sdlg-btn{border:1px solid var(--bd);border-radius:12px;padding:18px 12px;text-align:center;cursor:pointer;transition:all .2s;background:var(--s2)}
+.sdlg-btn:active{transform:scale(.97)}
+.sdlg-btn.private{border-color:var(--mu)}
+.sdlg-btn.shared{border-color:var(--or);background:rgba(255,98,0,.06)}
+.sdlg-icon{font-size:28px;margin-bottom:8px}
+.sdlg-label{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1.5px}
+.sdlg-sub{font-size:11px;color:var(--mu);margin-top:4px;line-height:1.4}
 .msg-banner{background:rgba(255,98,0,.08);border:1px solid rgba(255,98,0,.35);border-radius:11px;padding:13px 15px;margin-bottom:14px;display:flex;gap:10px;align-items:flex-start}
 .msg-animal{font-size:22px;flex-shrink:0;line-height:1.3}
 .msg-from{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--or);margin-bottom:4px}
@@ -282,16 +295,16 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer}
 .mode-slider{position:absolute;top:3px;left:3px;height:calc(100% - 6px);background:var(--or);border-radius:24px;transition:transform .25s cubic-bezier(.4,0,.2,1),width .25s;pointer-events:none;z-index:0}
 .mode-opt{position:relative;z-index:1;padding:8px 0;flex:1;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1.5px;color:var(--mu);cursor:pointer;border-radius:24px;transition:color .2s;user-select:none;text-align:center}
 .mode-opt.active{color:#fff}
-.tim-body{flex:1;width:100%;max-width:400px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px}
-.big-time{font-family:'Bebas Neue',sans-serif;font-size:90px;color:var(--tx);letter-spacing:2px;line-height:1;text-align:center;margin-bottom:4px}
-.ms-disp{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--mu);letter-spacing:2px;margin-bottom:32px}
+.tim-body{flex:1;width:100%;max-width:400px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 16px;overflow-y:auto}
+.big-time{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,18vw,90px);color:var(--tx);letter-spacing:2px;line-height:1;text-align:center;margin-bottom:4px}
+.ms-disp{font-family:'Bebas Neue',sans-serif;font-size:clamp(20px,7vw,30px);color:var(--mu);letter-spacing:2px;margin-bottom:24px}
 .int-settings{background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:14px;width:100%;margin-bottom:20px;transition:opacity .3s,max-height .4s;overflow:hidden}
 .int-settings.hidden{opacity:0;pointer-events:none;max-height:0;padding:0;border:none;margin:0}
 .int-settings.visible{opacity:1;max-height:200px}
 .int-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .int-row:last-child{margin-bottom:0}
 .if label{display:block;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--mu);margin-bottom:4px;text-align:center}
-.if input{width:100%;background:var(--bg);border:1px solid var(--bd);border-radius:9px;color:var(--tx);font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:1px;text-align:center;padding:9px;outline:none;transition:border-color .2s}
+.if input{width:100%;background:var(--bg);border:1px solid var(--bd);border-radius:9px;color:var(--tx);font-family:'Bebas Neue',sans-serif;font-size:clamp(20px,7vw,30px);letter-spacing:1px;text-align:center;padding:9px;outline:none;transition:border-color .2s}
 .if input:focus{border-color:var(--or)}
 .phase-ind{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;min-height:26px}
 .phase-dot{width:9px;height:9px;border-radius:50%;background:var(--mu);transition:background .3s}
@@ -301,23 +314,23 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer}
 .phase-lbl{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;color:var(--mu);transition:color .3s}
 .phase-lbl.work{color:var(--gr)}
 .phase-lbl.rest{color:var(--re)}
-.ring-wrap{position:relative;width:190px;height:190px;margin:0 auto 24px}
+.ring-wrap{position:relative;width:min(190px,55vw);height:min(190px,55vw);margin:0 auto 20px}
 .ring-svg{transform:rotate(-90deg)}
 .ring-bg{fill:none;stroke:var(--s3);stroke-width:8}
 .ring-fill{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .1s linear,stroke .3s}
 .ring-txt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.ring-big{font-family:'Bebas Neue',sans-serif;font-size:52px;line-height:1;letter-spacing:2px}
+.ring-big{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,10vw,52px);line-height:1;letter-spacing:2px}
 .ring-sm{font-size:11px;color:var(--mu);letter-spacing:1px;text-transform:uppercase}
 .rounds-dots{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-bottom:14px;max-width:280px}
 .rd{width:9px;height:9px;border-radius:50%;background:var(--s3);border:1px solid var(--bd);transition:all .2s}
 .rd.done{background:var(--gr);border-color:var(--gr)}
 .rd.cur{background:var(--or);border-color:var(--or)}
 .ctrls{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:24px}
-.btn-main{width:76px;height:76px;border-radius:50%;border:none;font-size:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.btn-main{width:min(76px,18vw);height:min(76px,18vw);border-radius:50%;border:none;font-size:clamp(24px,8vw,34px);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s;box-shadow:0 4px 20px rgba(0,0,0,.4)}
 .btn-main:active{transform:scale(.92)}
 .btn-start{background:var(--gr);color:#fff}
 .btn-stop{background:var(--re);color:#fff}
-.btn-sec{width:56px;height:56px;border-radius:50%;border:1px solid var(--bd);background:var(--s2);color:var(--tx);font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.btn-sec{width:min(56px,14vw);height:min(56px,14vw);border-radius:50%;border:1px solid var(--bd);background:var(--s2);color:var(--tx);font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
 .btn-sec:active{border-color:var(--or);color:var(--or)}
 .btn-reset{font-size:20px}
 .laps-list{width:100%;max-height:180px;overflow-y:auto}
@@ -353,6 +366,26 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer}
     <div class="ng">
       <button class="nb" onclick="login('Liam')">🦅 Liam</button>
       <button class="nb" onclick="login('Navid')">🦁 Navid</button>
+    </div>
+  </div>
+</div>
+
+<!-- SAVE DIALOG -->
+<div class="save-dialog" id="saveDialog">
+  <div class="save-dlg-box">
+    <h3>SPARA PASS</h3>
+    <p>Välj om passet ska delas med din partner eller sparas privat.</p>
+    <div class="sdlg-grid">
+      <div class="sdlg-btn private" onclick="confirmSave(false)">
+        <div class="sdlg-icon">🔒</div>
+        <div class="sdlg-label">PRIVAT</div>
+        <div class="sdlg-sub">Bara du ser detta pass</div>
+      </div>
+      <div class="sdlg-btn shared" onclick="confirmSave(true)">
+        <div class="sdlg-icon">🔗</div>
+        <div class="sdlg-label">DELA</div>
+        <div class="sdlg-sub">Syns direkt för din partner</div>
+      </div>
     </div>
   </div>
 </div>
@@ -442,7 +475,7 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer}
     <div id="avslutslot"></div>
     <button class="bcust" style="margin-bottom:4px" onclick="addCustomSlot('avslut')">+ Lägg till manuellt som avslutning</button>
 
-    <button class="bsave" onclick="savePass()">SPARA OCH DELA PASS</button>
+    <button class="bsave" onclick="openSaveDialog()">SPARA PASS</button>
   </div>
 
   <!-- HISTORIK -->
@@ -474,9 +507,9 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer}
     <button class="mcl" onclick="closeM('libmodal')">✕</button>
     <h3>VÄLJ ÖVNING</h3>
     <div class="qf-row">
-      <div class="qf-btn active" id="qf-fav" onclick="setQF('fav')"><span class="qf-icon">⭐</span>Favoriter</div>
+      <div class="qf-btn active" id="qf-all" onclick="setQF('all')"><span class="qf-icon">📚</span>Alla</div>
       <div class="qf-btn" id="qf-recent" onclick="setQF('recent')"><span class="qf-icon">🕐</span>Senaste</div>
-      <div class="qf-btn" id="qf-all" onclick="setQF('all')"><span class="qf-icon">📚</span>Alla</div>
+      <div class="qf-btn" id="qf-fav" onclick="setQF('fav')"><span class="qf-icon">⭐</span>Favoriter</div>
     </div>
     <div class="search-w" style="margin-bottom:10px"><span class="si">🔍</span><input type="text" id="libmsearch" placeholder="Sök..." oninput="renderLibModal()"/></div>
     <div id="libmodalcats" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px"></div>
@@ -952,14 +985,24 @@ function addCustomFromModal(){
 // ═══════════════════════
 // SPARA PASS
 // ═══════════════════════
-async function savePass(){
+function openSaveDialog(){
+  const namn=document.getElementById('pnamn').value.trim();
+  if(!namn){toast('Ange ett passnamn');return}
+  if(!SL){toast('Välj en start');return}
+  if(!AL){toast('Välj en avslutning');return}
+  if(!OVS.length){toast('Lägg till minst en övning');return}
+  document.getElementById('saveDialog').classList.add('open');
+}
+
+async function savePass(shared=true){
+  document.getElementById('saveDialog').classList.remove('open');
   const namn=document.getElementById('pnamn').value.trim();
   if(!namn){toast('Ange ett passnamn');return}
   if(!SL){toast('Välj en start');return}
   if(!AL){toast('Välj en avslutning');return}
   if(!OVS.length){toast('Lägg till minst en övning');return}
   const pass={
-    namn,target:TARGET,skapare:CU,
+    namn,target:TARGET,skapare:CU,shared,
     grupp:document.getElementById('pgrupp').value||'',
     datum:document.getElementById('pdatum').value||'',
     totalTid:parseInt(document.getElementById('ptid').value)||45,
@@ -995,28 +1038,52 @@ function loadPass(){
     });
   }else{allPassCache=getLoc();rHistList(allPassCache);}
 }
+let histMerged=false;
+function toggleHistMerge(){
+  histMerged=!histMerged;
+  const btn=document.getElementById('histMergeBtn');
+  if(btn)btn.textContent=histMerged?'Visa separata':'Visa alla';
+  rHistList(allPassCache);
+}
+
+function passCard(p){
+  const all=[p.startOv,...(p.ovningar||[]),p.avslutOv];
+  const u=all.reduce((s,o)=>s+(parseInt(o?.tid)||0),0);
+  const enc=encodeURIComponent(JSON.stringify(p));
+  const isUng=p.target==='ungdom'||!p.target;
+  const animal=p.skapare==='Liam'?'🦅':'🦁';
+  const lockIcon=p.shared===false?'🔒 ':'';
+  return`<div class="pcard" onclick="openHistDet('${enc}')">
+    <div class="pc-top"><div class="pc-name">${lockIcon}${p.namn}</div><div class="pc-date">${p.datum||''}</div></div>
+    <div class="pc-meta">${p.grupp||'Ingen grupp'} · ${u} min · ${(p.ovningar||[]).length} övningar</div>
+    <div class="pc-row">
+      <span class="${isUng?'tbadge-ung':'tbadge-fbl'}">${isUng?'UNGDOM':'FÖRETAG'}</span>
+      <span class="pc-author">${animal} ${p.skapare}</span>
+    </div>
+    <div class="pc-pills">
+      <span class="pp ${isUng?'hi-ung':'hi-fbl'}">▶ ${p.startOv?.namn||'?'}</span>
+      ${(p.ovningar||[]).map(o=>`<span class="pp">${o.namn}</span>`).join('')}
+      <span class="pp ${isUng?'hi-ung':'hi-fbl'}">■ ${p.avslutOv?.namn||'?'}</span>
+    </div>
+  </div>`;
+}
+
 function rHistList(pass){
   const list=document.getElementById('hist-list');
   if(!pass||!pass.length){list.innerHTML='<div class="empty"><h3>INGEN HISTORIK</h3><p>Bygg och spara ditt första pass</p></div>';return}
-  list.innerHTML=pass.map(p=>{
-    const all=[p.startOv,...(p.ovningar||[]),p.avslutOv];
-    const u=all.reduce((s,o)=>s+(parseInt(o?.tid)||0),0);
-    const enc=encodeURIComponent(JSON.stringify(p));
-    const isUng=p.target==='ungdom'||!p.target;
-    return`<div class="pcard" onclick="openHistDet('${enc}')">
-      <div class="pc-top"><div class="pc-name">${p.namn}</div><div class="pc-date">${p.datum||''}</div></div>
-      <div class="pc-meta">${p.grupp||'Ingen grupp'} · ${u} min · ${(p.ovningar||[]).length} övningar</div>
-      <div class="pc-row">
-        <span class="${isUng?'tbadge-ung':'tbadge-fbl'}">${isUng?'UNGDOM':'FÖRETAG'}</span>
-        <span class="pc-author">${p.skapare}</span>
-      </div>
-      <div class="pc-pills">
-        <span class="pp ${isUng?'hi-ung':'hi-fbl'}">▶ ${p.startOv?.namn||'?'}</span>
-        ${(p.ovningar||[]).map(o=>`<span class="pp">${o.namn}</span>`).join('')}
-        <span class="pp ${isUng?'hi-ung':'hi-fbl'}">■ ${p.avslutOv?.namn||'?'}</span>
-      </div>
-    </div>`;
-  }).join('');
+  // Filter: only show shared passes to other user, own passes always visible
+  const visible=pass.filter(p=>p.skapare===CU||p.shared!==false);
+  if(!visible.length){list.innerHTML='<div class="empty"><h3>INGEN HISTORIK</h3><p>Inga delade pass ännu</p></div>';return}
+  if(histMerged){
+    list.innerHTML=`<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button id="histMergeBtn" class="bsm" onclick="toggleHistMerge()">Visa separata</button></div>`+visible.map(passCard).join('');
+    return;
+  }
+  const ungPass=visible.filter(p=>p.target==='ungdom'||!p.target);
+  const fblPass=visible.filter(p=>p.target==='foretag');
+  let html=`<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button id="histMergeBtn" class="bsm" onclick="toggleHistMerge()">Visa alla</button></div>`;
+  if(ungPass.length){html+=`<div style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--ung);margin-bottom:8px;margin-top:4px">🏃 UNGDOM</div>`;html+=ungPass.map(passCard).join('');}
+  if(fblPass.length){html+=`<div style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--fbl);margin-bottom:8px;margin-top:14px">🏢 FÖRETAG</div>`;html+=fblPass.map(passCard).join('');}
+  list.innerHTML=html;
 }
 
 function openHistDet(enc){
@@ -1057,6 +1124,7 @@ function openHistDet(enc){
       </div>`;
     }).join('')}
     <button class="use-again-btn" onclick="useAgain('${enc}')">ANVÄND DETTA PASS IGEN</button>
+    ${p.shared===false?`<button class="bsm" style="width:100%;padding:12px;border-radius:10px;margin-top:8px" onclick="sharePassNow('${p._key||p.id}')">🔗 Dela med din partner</button>`:''}
     <button class="bdel" style="width:100%;padding:12px;border-radius:10px;margin-top:8px" onclick="delPass('${p._key||p.id}')">Ta bort pass</button>`;
 }
 
@@ -1248,10 +1316,10 @@ function addRecent(id){
 // ═══════════════════════
 // QUICK FILTER STATE
 // ═══════════════════════
-let QF='fav';
+let QF='all';
 function setQF(mode){
   QF=mode;
-  ['fav','recent','all'].forEach(m=>{
+  ['all','recent','fav'].forEach(m=>{
     const el=document.getElementById('qf-'+m);
     if(el)el.classList.toggle('active',m===mode);
   });
@@ -1390,6 +1458,24 @@ function addCustomSlot(slot){
 }
 
 // ═══════════════════════
+// SAVE DIALOG
+// ═══════════════════════
+function confirmSave(shared){
+  savePass(shared);
+}
+
+// Share private pass later
+function sharePassNow(key){
+  if(FBR&&window._db&&isNaN(Number(key))){
+    window._set(window._ref(window._db,'pass/'+key+'/shared'),true).then(()=>toast('Pass delat med din partner'));
+  } else {
+    const all=getLoc().map(p=>String(p.id)===String(key)?{...p,shared:true}:p);
+    localStorage.setItem('rp',JSON.stringify(all));
+    toast('Pass delat');loadPass();
+  }
+}
+
+// ═══════════════════════
 // TOAST
 // ═══════════════════════
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}
@@ -1451,7 +1537,7 @@ function showQuoteScreen(name, cb) {
   qs.innerHTML = '<div class="qs-animal">'+animal+'</div><div class="qs-name">'+name.toUpperCase()+'</div><div class="qs-text">"'+quote+'"</div><div class="qs-bar"><div class="qs-fill" id="qsfill"></div></div>';
   qs.classList.add('show');
   setTimeout(() => { const f = document.getElementById('qsfill'); if(f) f.style.width = '100%'; }, 50);
-  setTimeout(() => { qs.classList.remove('show'); cb(); }, 5000);
+  setTimeout(() => { qs.classList.remove('show'); cb(); }, 3000);
 }
 
 // INIT
