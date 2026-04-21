@@ -45,6 +45,15 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer}
 .ng{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .nb{background:var(--s2);border:1px solid var(--bd);color:var(--tx);padding:20px;border-radius:12px;font-size:17px;font-weight:700;transition:all .2s}
 .nb:active{border-color:var(--or);color:var(--or)}
+.dquote{font-size:13px;color:#aaa;font-style:italic;line-height:1.6;margin-bottom:28px;min-height:40px;padding:0 10px;border-left:2px solid var(--or);text-align:left}
+#quote-screen{position:fixed;inset:0;background:#080808;display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px 32px;z-index:999;text-align:center}
+#quote-screen.show{display:flex}
+.qs-animal{font-size:64px;margin-bottom:24px;animation:fadeUp .6s ease}
+.qs-name{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:4px;color:var(--or);margin-bottom:32px;animation:fadeUp .6s ease .1s both}
+.qs-text{font-size:18px;color:var(--tx);line-height:1.7;max-width:340px;font-style:italic;animation:fadeUp .6s ease .2s both}
+.qs-bar{width:200px;height:2px;background:var(--s3);border-radius:2px;margin-top:48px;overflow:hidden;animation:fadeUp .4s ease .3s both}
+.qs-fill{height:100%;background:var(--or);border-radius:2px;width:0%;transition:width 5s linear}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
 /* APP */
 #app{display:none;min-height:100vh}
@@ -304,11 +313,14 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer}
     <div class="llogo">TEAM <span>RESOLVE</span></div>
     <div class="lsub">Intern Passbyggare</div>
     <div class="ng">
-      <button class="nb" onclick="login('Liam')">Liam</button>
-      <button class="nb" onclick="login('Navid')">Navid</button>
+      <button class="nb" onclick="login('Liam')">🦅 Liam</button>
+      <button class="nb" onclick="login('Navid')">🦁 Navid</button>
     </div>
   </div>
 </div>
+
+<!-- QUOTE SCREEN -->
+<div id="quote-screen"></div>
 
 <!-- APP -->
 <div id="app">
@@ -527,6 +539,7 @@ function activeBib(){return TARGET==='ungdom'?[...BIB_UNGDOM,...customBib.filter
 // LOGIN
 // ═══════════════════════
 function login(n){
+  showQuoteScreen(n, () => {
   CU=n; customBib=getCustomBib();
   document.getElementById('ls').style.display='none';
   document.getElementById('app').style.display='block';
@@ -535,6 +548,7 @@ function login(n){
   setTarget('ungdom'); rslot('startslot','start'); rslot('avslutslot','avslut'); rOVS(); updBar();
   setLibTarget('ungdom'); loadPass();
   setTimeout(()=>setTMode('stopwatch'),100);
+  });
 }
 function logout(){
   CU=null;SL=null;AL=null;OVS=[];
@@ -1103,6 +1117,66 @@ function fmtT(ms){const s=Math.floor(ms/1000);const m=Math.floor(s/60);const h=M
 // TOAST
 // ═══════════════════════
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}
+
+// QUOTES PER PERSON
+const QUOTES_LIAM = [
+  "En ledare går först när det är svårast.",
+  "Strategi utan handling är bara en dröm.",
+  "Du bygger inte lag med ord. Du bygger dem med närvaro.",
+  "Disciplin är friheten du inte ser förrän efteråt.",
+  "Den som håller huvudet kallt vinner när andra tappar det.",
+  "Resultat kräver handling. Inte tankar.",
+  "Att leda är att bära mer än de andra utan att klaga.",
+  "Karaktär syns tydligast under press.",
+  "Resolve är inte ett namn. Det är ett beslut.",
+  "Det du gör idag formar vem de blir imorgon.",
+  "En dålig dag är fortfarande en dag du visade upp.",
+  "Stark och fri. Det tar du ingen ifrån dig.",
+  "Laget vinner när ledaren tror på varje person i det.",
+  "Ingen stor rörelse startade med perfekta förutsättningar.",
+  "Det spelar ingen roll var du börjar. Det spelar roll att du börjar.",
+  "Den som tränar när ingen ser vinner när alla tittar.",
+  "Vad du gör idag avgör vem du är imorgon.",
+  "Aldrig ge upp. Det är så enkelt och så svårt.",
+  "Rädsla är okej. Stillastående är inte det.",
+  "Idag är en ny chans. Ta den."
+];
+const QUOTES_NAVID = [
+  "Viljestyrka tränas. Inte föds.",
+  "Det är lätt att ge upp. Gör inte det.",
+  "Kampen börjar i huvudet. Kroppen följer efter.",
+  "Ingen kämpar ensam. Men du måste ta det första steget.",
+  "Smärtan är tillfällig. Det du bygger är permanent.",
+  "Rädslan försvinner inte. Du lär dig att röra dig trots den.",
+  "En förlust är bara information om vad du behöver träna mer.",
+  "Respekt förtjänas på golvet. Inte i orden.",
+  "Laget är starkare än individen. Alltid.",
+  "Du är starkare än du tror. Bevisa det idag.",
+  "Karaktär byggs inte i lugnet. Den byggs under press.",
+  "En dålig träning är bättre än ingen träning.",
+  "Aldrig ge upp. Det är så enkelt och så svårt.",
+  "Det handlar inte om att vinna. Det handlar om att inte sluta.",
+  "Resolve är inte ett namn. Det är ett beslut.",
+  "Stark och fri. Det tar du ingen ifrån dig.",
+  "Kamp lär dig mer om dig själv än någon annan sak.",
+  "Disciplin slår motivation varje dag.",
+  "Den som tränar hårdast när ingen ser är den som håller ut.",
+  "Idag är en ny chans. Ta den."
+];
+
+function showQuoteScreen(name, cb) {
+  const isLiam = name === 'Liam';
+  const quotes = isLiam ? QUOTES_LIAM : QUOTES_NAVID;
+  const day = new Date().getDate() + (new Date().getMonth() * 31);
+  const quote = quotes[day % quotes.length];
+  const animal = isLiam ? '🦅' : '🦁';
+
+  const qs = document.getElementById('quote-screen');
+  qs.innerHTML = '<div class="qs-animal">'+animal+'</div><div class="qs-name">'+name.toUpperCase()+'</div><div class="qs-text">"'+quote+'"</div><div class="qs-bar"><div class="qs-fill" id="qsfill"></div></div>';
+  qs.classList.add('show');
+  setTimeout(() => { const f = document.getElementById('qsfill'); if(f) f.style.width = '100%'; }, 50);
+  setTimeout(() => { qs.classList.remove('show'); cb(); }, 5000);
+}
 
 // INIT
 rslot('startslot','start');rslot('avslutslot','avslut');updBar();
