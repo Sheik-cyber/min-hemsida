@@ -45,6 +45,15 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer}
 .ng{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .nb{background:var(--s2);border:1px solid var(--bd);color:var(--tx);padding:20px;border-radius:12px;font-size:17px;font-weight:700;transition:all .2s}
 .nb:active{border-color:var(--or);color:var(--or)}
+.msg-banner{background:rgba(255,98,0,.08);border:1px solid rgba(255,98,0,.35);border-radius:11px;padding:13px 15px;margin-bottom:14px;display:flex;gap:10px;align-items:flex-start}
+.msg-animal{font-size:22px;flex-shrink:0;line-height:1.3}
+.msg-from{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--or);margin-bottom:4px}
+.msg-text{font-size:13px;color:var(--tx);line-height:1.6}
+.qf-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:12px}
+.qf-btn{background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:10px 6px;text-align:center;font-size:11px;font-weight:700;color:var(--mu);cursor:pointer;transition:all .2s}
+.qf-btn.active{border-color:var(--or);color:var(--or);background:rgba(255,98,0,.08)}
+.qf-btn:active{border-color:var(--or);color:var(--or)}
+.qf-icon{font-size:18px;display:block;margin-bottom:3px}
 /* STAR FAVORITE */
 .star-btn{background:transparent;border:none;font-size:16px;cursor:pointer;padding:2px 4px;transition:transform .2s}
 .star-btn:active{transform:scale(1.3)}
@@ -420,6 +429,7 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer}
 
     <div class="sh"><h3>▶ START</h3></div>
     <div id="startslot"></div>
+    <button class="bcust" style="margin-bottom:4px" onclick="addCustomSlot('start')">+ Lägg till manuellt som start</button>
 
     <div class="sh"><h3>💪 ÖVNINGAR</h3><button class="bai" onclick="openAI('övningar')">✦ AI-idéer</button></div>
     <div id="ovcont"></div>
@@ -430,6 +440,7 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer}
 
     <div class="sh"><h3>■ AVSLUTNING</h3></div>
     <div id="avslutslot"></div>
+    <button class="bcust" style="margin-bottom:4px" onclick="addCustomSlot('avslut')">+ Lägg till manuellt som avslutning</button>
 
     <button class="bsave" onclick="savePass()">SPARA OCH DELA PASS</button>
   </div>
@@ -462,8 +473,14 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer}
   <div class="mbox">
     <button class="mcl" onclick="closeM('libmodal')">✕</button>
     <h3>VÄLJ ÖVNING</h3>
+    <div class="qf-row">
+      <div class="qf-btn active" id="qf-fav" onclick="setQF('fav')"><span class="qf-icon">⭐</span>Favoriter</div>
+      <div class="qf-btn" id="qf-recent" onclick="setQF('recent')"><span class="qf-icon">🕐</span>Senaste</div>
+      <div class="qf-btn" id="qf-all" onclick="setQF('all')"><span class="qf-icon">📚</span>Alla</div>
+    </div>
     <div class="search-w" style="margin-bottom:10px"><span class="si">🔍</span><input type="text" id="libmsearch" placeholder="Sök..." oninput="renderLibModal()"/></div>
     <div id="libmodalcats" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px"></div>
+    <button class="bcust" style="margin-bottom:10px" onclick="addCustomFromModal()">+ Skapa ny övning manuellt</button>
     <div id="libmodalitems"></div>
   </div>
 </div>
@@ -658,16 +675,18 @@ function ocard(o,slot,idx){
       <span class="oarr">▼</span>
     </div>
     <div class="ob">
-      <div class="odesc">${o.beskrivning||'Ingen beskrivning.'}</div>
+      <div class="mi" style="margin-bottom:7px"><label>Beskrivning (redigera fritt — ändrar bara detta pass)</label><textarea style="width:100%;background:var(--bg);border:1px solid var(--bd);border-radius:7px;color:var(--tx);padding:8px 10px;font-family:'DM Sans',sans-serif;font-size:12px;outline:none;resize:none;min-height:60px;margin-top:3px;line-height:1.5;transition:border-color .2s" onfocus="this.style.borderColor='var(--or)'" onblur="this.style.borderColor='var(--bd)'" oninput="updf('${slot}',${idx},'beskrivning',this.value)">${o.beskrivning||''}</textarea></div>
       <div class="or2">
         <div class="mi"><label>Tid (min)</label><input type="number" value="${o.tid}" min="1" max="90" oninput="updf('${slot}',${idx},'tid',this.value)"/></div>
         <div class="mi"><label>Varv</label><input type="number" value="${o.varv||''}" placeholder="–" min="1" oninput="updf('${slot}',${idx},'varv',this.value)"/></div>
       </div>
-      <div class="mi" style="margin-bottom:8px"><label>Anpassning</label><input type="text" value="${o.notering||''}" placeholder="t.ex. lättare variant" oninput="updf('${slot}',${idx},'notering',this.value)"/></div>
+      <div class="mi" style="margin-bottom:8px"><label>Extra instruktioner för detta pass</label><input type="text" value="${o.notering||''}" placeholder="t.ex. kör lättare variant, fokus på teknik..." oninput="updf('${slot}',${idx},'notering',this.value)"/></div>
       <div class="oacts">
         <button class="bdel" onclick="remOV('${slot}',${idx})">Ta bort</button>
-        <button class="bswap" onclick="toggleSwap('${slot}',${idx})">⇄ Byt övning</button>
-        <button class="bai" onclick="openAI('${(o.namn||'').replace(/'/g,'&#39;')}')">✦ AI-tips</button>
+        <button class="bswap" onclick="toggleSwap('${slot}',${idx})">⇄ Byt</button>
+        <button class="bai" onclick="openAI('${(o.namn||'').replace(/'/g,'&#39;')}')">✦ AI</button>
+        <button class="star-btn" style="font-size:14px;border:1px solid var(--bd);border-radius:7px;padding:5px 9px;background:var(--s3)" onclick="toggleFavByName('${(o.namn||'').replace(/'/g,'&#39;')}',${o.id||0})" title="Favorit">${isFavByName(o.namn)?'⭐':'☆'}</button>
+        <button class="bsm" onclick="saveToBib('${slot}',${idx})" style="font-size:10px">+ Bibliotek</button>
       </div>
       ${swapOpen?`<div class="swap-dd">${swapItems}</div>`:''}
     </div>
@@ -754,10 +773,21 @@ function setLibMCat(cat,btn){
 function renderLibModal(){
   const q=(document.getElementById('libmsearch')?.value||'').toLowerCase();
   let items=activeBib();
-  if(libModalCat!=='alla')items=items.filter(b=>b.kat===libModalCat);
-  if(LIBT==='start')items=items.filter(b=>b.kat==='start'||libModalCat!=='alla');
-  if(LIBT==='avslut')items=items.filter(b=>b.kat==='avslutning'||libModalCat!=='alla');
-  if(q)items=items.filter(b=>b.namn.toLowerCase().includes(q)||b.beskrivning.toLowerCase().includes(q));
+  // Quick filter
+  if(QF==='fav'){
+    const favs=getFavs();
+    const all=[...BIB_UNGDOM,...BIB_FORETAG,...customBib];
+    items=all.filter(b=>favs.includes(b.id));
+  } else if(QF==='recent'){
+    const recent=getRecent();
+    const all=[...BIB_UNGDOM,...BIB_FORETAG,...customBib];
+    items=recent.map(id=>all.find(b=>b.id===id)).filter(Boolean);
+  } else {
+    if(libModalCat!=='alla')items=items.filter(b=>b.kat===libModalCat);
+    if(LIBT==='start')items=items.filter(b=>b.kat==='start'||libModalCat!=='alla');
+    if(LIBT==='avslut')items=items.filter(b=>b.kat==='avslutning'||libModalCat!=='alla');
+  }
+  if(q)items=items.filter(b=>b.namn?.toLowerCase().includes(q)||b.beskrivning?.toLowerCase().includes(q));
   document.getElementById('libmodalitems').innerHTML=items.map(it=>`
     <div class="lcard">
       <div class="ltop">
@@ -769,6 +799,7 @@ function renderLibModal(){
 }
 function addFromLib(id){
   const it=activeBib().find(b=>b.id===id);if(!it)return;
+  addRecent(it.id);
   const c={...JSON.parse(JSON.stringify(it)),notering:''};
   if(LIBT==='start'){SL=c;rslot('startslot','start')}
   else if(LIBT==='avslut'){AL=c;rslot('avslutslot','avslut')}
@@ -815,6 +846,7 @@ function renderLib(){
     </div>`).join('')||'<div class="empty"><h3>INGA TRÄFFAR</h3></div>';
 }
 function addLibToPass(id,t){
+  addRecent(id);
   const bib=t==='ungdom'?[...BIB_UNGDOM,...customBib.filter(c=>c.target==='ungdom')]:[...BIB_FORETAG,...customBib.filter(c=>c.target==='foretag')];
   const it=bib.find(b=>b.id===id);if(!it)return;
   // Switch target if needed
@@ -901,6 +933,22 @@ async function openAI(ctx){
 function addAI(idea){OVS.push({...idea,notering:'',varv:null});rOVS();updBar();closeM('aimodal');toast(idea.namn+' tillagd')}
 function closeM(id){document.getElementById(id).classList.add('hidden')}
 
+function addCustomFromModal(){
+  const o={namn:'Ny övning',tid:10,varv:null,beskrivning:'Beskriv övningen...',notering:'',kat:'main'};
+  if(LIBT==='start'){SL=o;rslot('startslot','start')}
+  else if(LIBT==='avslut'){AL=o;rslot('avslutslot','avslut')}
+  else{OVS.push(o);rOVS()}
+  updBar();closeM('libmodal');
+  setTimeout(()=>{
+    let card;
+    if(LIBT==='start')card=document.querySelector('#startslot .oc');
+    else if(LIBT==='avslut')card=document.querySelector('#avslutslot .oc');
+    else{const cards=document.querySelectorAll('#ovcont .oc');card=cards[cards.length-1]}
+    if(card){card.classList.add('open');card.scrollIntoView({behavior:'smooth'})}
+  },50);
+  toast('Ny övning tillagd — fyll i detaljerna');
+}
+
 // ═══════════════════════
 // SPARA PASS
 // ═══════════════════════
@@ -978,8 +1026,10 @@ function openHistDet(enc){
   const all=[{...p.startOv,_s:'start'},...(p.ovningar||[]).map(o=>({...o,_s:'main'})),{...p.avslutOv,_s:'avslut'}];
   const u=all.reduce((s,o)=>s+(parseInt(o.tid)||0),0);
   const isUng=p.target==='ungdom'||!p.target;
+  const skaparAnimal=p.skapare==='Liam'?'🦅':'🦁';
   det.innerHTML=`
     <button class="backbtn" onclick="closeHistDet()">← Historik</button>
+    ${p.notering?`<div class="msg-banner"><div class="msg-animal">${skaparAnimal}</div><div><div class="msg-from">${p.skapare}</div><div class="msg-text">${p.notering}</div></div></div>`:''}
     <div class="deth">
       <h2>${p.namn}</h2>
       <div class="detm">
@@ -1160,6 +1210,12 @@ function fmtT(ms){const s=Math.floor(ms/1000);const m=Math.floor(s/60);const h=M
 function getFavs(){try{return JSON.parse(localStorage.getItem('rp_favs'))||[]}catch{return[]}}
 function saveFavs(f){localStorage.setItem('rp_favs',JSON.stringify(f))}
 function isFav(id){return getFavs().includes(id)}
+function isFavByName(namn){
+  const favs=getFavs();
+  const all=[...BIB_UNGDOM,...BIB_FORETAG,...customBib];
+  const match=all.find(b=>b.namn===namn);
+  return match?favs.includes(match.id):false;
+}
 function toggleFav(id,e){
   e.stopPropagation();
   const favs=getFavs();
@@ -1167,6 +1223,39 @@ function toggleFav(id,e){
   if(idx===-1){favs.push(id);toast('Tillagd i favoriter ⭐')}
   else{favs.splice(idx,1);toast('Borttagen från favoriter')}
   saveFavs(favs);renderLib();
+}
+function toggleFavByName(namn,id){
+  const all=[...BIB_UNGDOM,...BIB_FORETAG,...customBib];
+  const match=all.find(b=>b.namn===namn)||{id};
+  const favs=getFavs();
+  const idx=favs.indexOf(match.id);
+  if(idx===-1){favs.push(match.id);toast('Tillagd i favoriter ⭐')}
+  else{favs.splice(idx,1);toast('Borttagen från favoriter')}
+  saveFavs(favs);rOVS();
+}
+
+// ═══════════════════════
+// RECENTLY USED
+// ═══════════════════════
+function getRecent(){try{return JSON.parse(localStorage.getItem('rp_recent'))||[]}catch{return[]}}
+function addRecent(id){
+  let r=getRecent().filter(x=>x!==id);
+  r.unshift(id);
+  if(r.length>10)r=r.slice(0,10);
+  localStorage.setItem('rp_recent',JSON.stringify(r));
+}
+
+// ═══════════════════════
+// QUICK FILTER STATE
+// ═══════════════════════
+let QF='fav';
+function setQF(mode){
+  QF=mode;
+  ['fav','recent','all'].forEach(m=>{
+    const el=document.getElementById('qf-'+m);
+    if(el)el.classList.toggle('active',m===mode);
+  });
+  renderLibModal();
 }
 
 // ═══════════════════════
@@ -1262,6 +1351,42 @@ function saveReflLoc(key,txt){
   const all=getLoc().map(p=>String(p.id)===String(key)?{...p,reflection:txt}:p);
   localStorage.setItem('rp',JSON.stringify(all));
   toast('Reflektion sparad');
+}
+
+// ═══════════════════════
+// SAVE TO LIBRARY FROM PASS
+// ═══════════════════════
+function saveToBib(slot,idx){
+  let o;
+  if(slot==='start')o=SL;
+  else if(slot==='avslut')o=AL;
+  else o=OVS[idx];
+  if(!o)return;
+  const existing=customBib.find(b=>b.namn===o.namn&&b.target===TARGET);
+  if(existing){toast('Finns redan i biblioteket');return}
+  const newOv={
+    id:Date.now(),_custom:true,target:TARGET,
+    namn:o.namn,kat:o.kat||'main',
+    tid:parseInt(o.tid)||10,sv:o.sv||'Medel',
+    mat:o.mat||'',varv:o.varv||null,
+    beskrivning:o.beskrivning||''
+  };
+  customBib.push(newOv);saveCustomBib();
+  toast(o.namn+' sparad i biblioteket');
+}
+
+// ═══════════════════════
+// ADD CUSTOM TO SLOT
+// ═══════════════════════
+function addCustomSlot(slot){
+  const o={namn:'Ny '+(slot==='start'?'start':'avslutning'),tid:slot==='start'?8:5,varv:null,beskrivning:'Beskriv här...',notering:'',kat:slot==='start'?'start':'avslutning'};
+  if(slot==='start'){SL=o;rslot('startslot','start')}
+  else{AL=o;rslot('avslutslot','avslut')}
+  updBar();
+  setTimeout(()=>{
+    const card=document.querySelector('#'+(slot==='start'?'startslot':'avslutslot')+' .oc');
+    if(card){card.classList.add('open');card.scrollIntoView({behavior:'smooth'})}
+  },50);
 }
 
 // ═══════════════════════
