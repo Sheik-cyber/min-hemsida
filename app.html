@@ -45,6 +45,35 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer}
 .ng{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .nb{background:var(--s2);border:1px solid var(--bd);color:var(--tx);padding:20px;border-radius:12px;font-size:17px;font-weight:700;transition:all .2s}
 .nb:active{border-color:var(--or);color:var(--or)}
+/* STAR FAVORITE */
+.star-btn{background:transparent;border:none;font-size:16px;cursor:pointer;padding:2px 4px;transition:transform .2s}
+.star-btn:active{transform:scale(1.3)}
+/* REFLECTION */
+.refl-box{background:var(--s3);border:1px solid var(--bd);border-radius:9px;padding:10px 12px;margin-top:10px;font-size:12px;color:#aaa;font-style:italic;line-height:1.6}
+.refl-input{width:100%;background:var(--bg);border:1px solid var(--bd);border-radius:8px;color:var(--tx);padding:9px 11px;font-family:"DM Sans",sans-serif;font-size:13px;outline:none;resize:none;min-height:70px;margin-top:8px}
+.refl-input:focus{border-color:var(--or)}
+/* SHARE OVERLAY */
+#shareOv{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:400;display:none;align-items:center;justify-content:center;padding:20px}
+#shareOv.open{display:flex}
+.share-box{background:var(--s1);border:1px solid var(--bd);border-radius:16px;padding:24px 20px;width:100%;max-width:400px;text-align:center}
+.share-box h3{font-family:"Bebas Neue",sans-serif;font-size:22px;letter-spacing:2px;margin-bottom:14px;color:var(--or)}
+.share-url{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:10px 12px;font-size:12px;color:#aaa;word-break:break-all;margin-bottom:14px;text-align:left}
+.share-close{background:var(--s3);border:1px solid var(--bd);color:var(--mu);padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;margin-top:6px}
+/* PRINT */
+@media print{
+  #timerOv,#shareOv,.topbar,.tabs,#quote-screen{display:none!important}
+  body{background:#fff;color:#000}
+  .page{display:block!important;padding:10px}
+  .oc{background:#fff;border:1px solid #ddd;break-inside:avoid}
+  .ob{display:block!important}
+  .oacts,.bsave,.blib,.bcust,.oarr{display:none!important}
+  .on{background:#FF6200}
+  .deth h2{color:#000}
+  .dov{background:#fff;border:1px solid #ddd}
+}
+/* HIST SEARCH */
+.hist-search{width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:9px;color:var(--tx);padding:10px 12px 10px 34px;font-family:"DM Sans",sans-serif;font-size:13px;outline:none;margin-bottom:12px}
+.hist-search:focus{border-color:var(--or)}
 .dquote{font-size:13px;color:#aaa;font-style:italic;line-height:1.6;margin-bottom:28px;min-height:40px;padding:0 10px;border-left:2px solid var(--or);text-align:left}
 #quote-screen{position:fixed;inset:0;background:#080808;display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px 32px;z-index:999;text-align:center}
 #quote-screen.show{display:flex}
@@ -319,6 +348,16 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer}
   </div>
 </div>
 
+<!-- SHARE OVERLAY -->
+<div id="shareOv">
+  <div class="share-box">
+    <h3>DELA PASS</h3>
+    <div class="share-url" id="shareUrl"></div>
+    <button class="bsave" style="font-size:16px;padding:12px;margin-top:0;width:100%" onclick="copyShareUrl()">KOPIERA LÄNK</button>
+    <button class="share-close" onclick="document.getElementById('shareOv').classList.remove('open')">Stäng</button>
+  </div>
+</div>
+
 <!-- QUOTE SCREEN -->
 <div id="quote-screen"></div>
 
@@ -398,6 +437,7 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer}
   <!-- HISTORIK -->
   <div class="page" id="page-historik">
     <div class="ph"><h2>HISTORIK</h2><p><span class="ldot"></span>Alla genomförda pass</p></div>
+    <div style="position:relative"><span style="position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--mu);font-size:13px;pointer-events:none">🔍</span><input class="hist-search" id="histsearch" placeholder="Sök pass, grupp eller övning..." oninput="filterHist()"/></div>
     <div id="hist-list"></div>
     <div id="hist-det" style="display:none"></div>
   </div>
@@ -685,7 +725,7 @@ function rslot(elId,slot){
 }
 function rOVS(){document.getElementById('ovcont').innerHTML=OVS.map((o,i)=>ocard(o,'main',i)).join('')}
 function addCustom(){
-  OVS.push({namn:'Ny övning',tid:10,varv:null,beskrivning:'Beskriv övningen...',notering:'',kat:'main'});
+  OVS.push({namn:'Ny övning',tid:10,varv:null,beskrivning:'Beskriv övningen...',notering:'',kat:'main',_saveToLib:false});
   rOVS();updBar();
   setTimeout(()=>{const c=document.querySelectorAll('#ovcont .oc');if(c.length){c[c.length-1].classList.add('open');c[c.length-1].scrollIntoView({behavior:'smooth'})}},50);
 }
@@ -747,7 +787,7 @@ function setLibTarget(t){
 }
 function buildCatFilts(){
   const cats=libTarget==='ungdom'?CATS_UNGDOM:CATS_FORETAG;
-  document.getElementById('catfilts').innerHTML=cats.map(c=>`<button class="cf ${c===libCat?'active':''}" onclick="setLibCat('${c}',this)">${CAT_LABELS[c]||c}</button>`).join('');
+  document.getElementById('catfilts').innerHTML=cats.map(c=>`<button class="cf ${c===libCat?'active':''}" onclick="setLibCat('${c}',this)">${CAT_LABELS[c]||c}</button>`).join('')+`<button class="cf ${libCat==='favoriter'?'active':''}" onclick="setLibCat('favoriter',this)">⭐ Favoriter</button>`;
 }
 function setLibCat(cat,btn){
   libCat=cat;
@@ -765,6 +805,7 @@ function renderLib(){
         <div><div class="lnm">${it.namn}${it._custom?` <span style="font-size:9px;background:rgba(59,130,246,.15);color:var(--bl);padding:1px 6px;border-radius:6px;font-weight:700">EGEN</span>`:''}</div>
         <div class="lsub2">${it.tid} min · ${it.sv} · ${CAT_LABELS[it.kat]||it.kat}</div></div>
         <div class="libacts">
+          <button class="star-btn" onclick="toggleFav(${it.id},event)" title="Favorit">${isFav(it.id)?'⭐':'☆'}</button>
           <button class="badd" onclick="addLibToPass(${it.id},'${libTarget}')">+ Pass</button>
           ${it._custom?`<button class="bsm" onclick="delCustom(${it.id})" style="color:var(--re)">✕</button>`:''}
         </div>
@@ -902,9 +943,9 @@ function loadPass(){
     window._onValue(window._ref(window._db,'pass'),snap=>{
       const d=snap.val();
       const p=d?Object.entries(d).map(([k,v])=>({...v,_key:k})).reverse():[];
-      rHistList(p);
+      allPassCache=p;rHistList(p);
     });
-  }else rHistList(getLoc());
+  }else{allPassCache=getLoc();rHistList(allPassCache);}
 }
 function rHistList(pass){
   const list=document.getElementById('hist-list');
@@ -1112,6 +1153,116 @@ function renderLaps(b,w){
   return[...TM.laps].reverse().map((l,ri)=>{const i=TM.laps.length-1-ri;const cls=i===b?'best':i===w?'worst':'';return`<div class="lap-row"><span class="lap-n">Varv ${i+1}</span><span class="lap-t ${cls}">${fmtT(l.elapsed)}</span><span class="lap-split">+${fmtT(l.split)}</span></div>`}).join('');
 }
 function fmtT(ms){const s=Math.floor(ms/1000);const m=Math.floor(s/60);const h=Math.floor(m/60);if(h>0)return`${h}:${String(m%60).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;return`${String(m).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`}
+
+// ═══════════════════════
+// FAVORITES
+// ═══════════════════════
+function getFavs(){try{return JSON.parse(localStorage.getItem('rp_favs'))||[]}catch{return[]}}
+function saveFavs(f){localStorage.setItem('rp_favs',JSON.stringify(f))}
+function isFav(id){return getFavs().includes(id)}
+function toggleFav(id,e){
+  e.stopPropagation();
+  const favs=getFavs();
+  const idx=favs.indexOf(id);
+  if(idx===-1){favs.push(id);toast('Tillagd i favoriter ⭐')}
+  else{favs.splice(idx,1);toast('Borttagen från favoriter')}
+  saveFavs(favs);renderLib();
+}
+
+// ═══════════════════════
+// RENDERLIB WITH FAVS
+// ═══════════════════════
+const _origRenderLib = renderLib;
+
+// patch renderLib to support favoriter filter
+const __rlOrig = renderLib;
+function renderLib(){
+  const bib=libTarget==='ungdom'?[...BIB_UNGDOM,...customBib.filter(c=>c.target==='ungdom')]:[...BIB_FORETAG,...customBib.filter(c=>c.target==='foretag')];
+  const q=(document.getElementById('libsearch')?.value||'').toLowerCase();
+  let items;
+  if(libCat==='favoriter'){
+    const favs=getFavs();
+    items=[...BIB_UNGDOM,...BIB_FORETAG,...customBib].filter(b=>favs.includes(b.id));
+  } else {
+    items=libCat==='alla'?bib:bib.filter(b=>b.kat===libCat);
+  }
+  if(q)items=items.filter(b=>b.naam?.toLowerCase().includes(q)||b.namn?.toLowerCase().includes(q)||b.beskrivning?.toLowerCase().includes(q));
+  document.getElementById('liblist').innerHTML=items.map(it=>`
+    <div class="lcard ${it._custom?'':''}">
+      <div class="ltop">
+        <div><div class="lnm">${it.namn}${it._custom?` <span style="font-size:9px;background:rgba(59,130,246,.15);color:var(--bl);padding:1px 6px;border-radius:6px;font-weight:700">EGEN</span>`:''}</div>
+        <div class="lsub2">${it.tid} min · ${it.sv} · ${CAT_LABELS[it.kat]||it.kat}</div></div>
+        <div class="libacts">
+          <button class="star-btn" onclick="toggleFav(${it.id},event)">${isFav(it.id)?'⭐':'☆'}</button>
+          <button class="badd" onclick="addLibToPass(${it.id},'${libTarget}')">+ Pass</button>
+          ${it._custom?`<button class="bsm" onclick="delCustom(${it.id})" style="color:var(--re)">✕</button>`:''}
+        </div>
+      </div>
+      <div class="ldesc">${it.beskrivning}</div>
+      <div class="ltags"><span class="ltag or">${CAT_LABELS[it.kat]||it.kat}</span>${it.mat?`<span class="ltag">🎒 ${it.mat}</span>`:''}${it.varv?`<span class="ltag">${it.varv} varv</span>`:''}</div>
+    </div>`).join('')||'<div class="empty"><h3>INGA TRÄFFAR</h3></div>';
+}
+
+// ═══════════════════════
+// COPY ÖVNING TO PASS
+// ═══════════════════════
+function copyOvToPass(o){
+  OVS.push({...o,notering:''});
+  rOVS();updBar();sw('bygg');toast(o.namn+' kopierad till passet');
+}
+
+// ═══════════════════════
+// HIST SEARCH
+// ═══════════════════════
+let allPassCache=[];
+function filterHist(){
+  const q=(document.getElementById('histsearch')?.value||'').toLowerCase();
+  if(!q){rHistList(allPassCache);return}
+  const filtered=allPassCache.filter(p=>
+    (p.namn||'').toLowerCase().includes(q)||
+    (p.grupp||'').toLowerCase().includes(q)||
+    (p.datum||'').includes(q)||
+    (p.ovningar||[]).some(o=>(o.namn||'').toLowerCase().includes(q))
+  );
+  rHistList(filtered);
+}
+
+// ═══════════════════════
+// SHARE PASS
+// ═══════════════════════
+function sharePass(enc){
+  const url=window.location.href.split('?')[0]+'?pass='+enc;
+  document.getElementById('shareUrl').textContent=url;
+  document.getElementById('shareOv').classList.add('open');
+}
+function copyShareUrl(){
+  const url=document.getElementById('shareUrl').textContent;
+  navigator.clipboard.writeText(url).then(()=>toast('Länk kopierad!')).catch(()=>toast('Kopiera länken manuellt'));
+}
+
+// ═══════════════════════
+// PRINT PASS
+// ═══════════════════════
+function printPass(){window.print()}
+
+// ═══════════════════════
+// REFLECTION
+// ═══════════════════════
+async function saveReflection(key){
+  const txt=(document.getElementById('reflInput')?.value||'').trim();
+  if(!txt){toast('Skriv en reflektion först');return}
+  if(FBR&&window._db&&isNaN(Number(key))){
+    try{
+      await window._set(window._ref(window._db,'pass/'+key+'/reflection'),txt);
+      toast('Reflektion sparad');
+    }catch{saveReflLoc(key,txt)}
+  }else{saveReflLoc(key,txt)}
+}
+function saveReflLoc(key,txt){
+  const all=getLoc().map(p=>String(p.id)===String(key)?{...p,reflection:txt}:p);
+  localStorage.setItem('rp',JSON.stringify(all));
+  toast('Reflektion sparad');
+}
 
 // ═══════════════════════
 // TOAST
