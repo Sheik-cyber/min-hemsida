@@ -2,203 +2,250 @@
 <html lang="sv">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Team Resolve – Workshop Vuxna & Myndigheter</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
   --orange: #FF5C1A;
   --navy: #0D1117;
-  --navy2: #111820;
   --white: #F5F2ED;
   --card: #141A22;
   --border: rgba(255,92,26,0.18);
-  --muted: rgba(245,242,237,0.45);
+  --muted: rgba(245,242,237,0.72);
   --orange-dim: rgba(255,92,26,0.10);
 }
-* { margin:0; padding:0; box-sizing:border-box; }
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html, body { width:100%; height:100%; overflow:hidden; background:var(--navy); color:var(--white); font-family:'Barlow',sans-serif; }
 
-/* SLIDE ENGINE */
-.slide { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:44px 64px 100px; opacity:0; pointer-events:none; transition:opacity 0.55s ease; overflow:hidden; }
+/* TRANSITION OVERLAY */
+#overlay { position:fixed; inset:0; background:var(--navy); z-index:500; opacity:0; pointer-events:none; transition:opacity 0.22s ease; }
+#overlay.on { opacity:1; pointer-events:all; }
+
+/* SLIDES */
+.slide {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding: clamp(44px,6vh,60px) clamp(16px,5vw,64px) clamp(88px,12vh,110px);
+  opacity:0; pointer-events:none;
+  overflow-y:auto; -webkit-overflow-scrolling:touch;
+}
 .slide.active { opacity:1; pointer-events:all; }
 
 /* FIXED UI */
-.progress-bar { position:fixed; top:0; left:0; height:3px; background:var(--orange); transition:width 0.5s ease; z-index:300; }
-.logo-fixed { position:fixed; top:18px; left:24px; font-family:'Bebas Neue',sans-serif; font-size:12px; letter-spacing:6px; color:var(--orange); opacity:0.55; z-index:200; }
-.timer-fixed { position:fixed; top:18px; right:24px; font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:3px; color:var(--muted); z-index:200; }
+.progress-bar { position:fixed; top:0; left:0; height:3px; background:var(--orange); transition:width 0.5s ease; z-index:400; }
+.logo-fixed {
+  position:fixed;
+  top:max(16px, env(safe-area-inset-top, 16px));
+  left:max(20px, env(safe-area-inset-left, 20px));
+  font-family:'Bebas Neue',sans-serif; font-size:12px; letter-spacing:6px;
+  color:var(--orange); opacity:0.8; z-index:300;
+}
+.timer-fixed {
+  position:fixed;
+  top:max(16px, env(safe-area-inset-top, 16px));
+  right:max(20px, env(safe-area-inset-right, 20px));
+  font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:3px;
+  color:rgba(245,242,237,0.6); z-index:300;
+}
 
 /* NAV */
-.nav { position:fixed; bottom:26px; left:50%; transform:translateX(-50%); display:flex; gap:12px; z-index:200; align-items:center; }
-.nav-btn { background:transparent; border:1.5px solid var(--orange); color:var(--orange); font-family:'Bebas Neue',sans-serif; font-size:16px; letter-spacing:2.5px; padding:9px 24px; cursor:pointer; transition:all 0.2s; }
-.nav-btn:hover, .nav-btn.p { background:var(--orange); color:var(--navy); }
-.counter { font-family:'Barlow Condensed',sans-serif; font-size:12px; color:rgba(245,242,237,0.3); letter-spacing:3px; min-width:50px; text-align:center; }
+.nav {
+  position:fixed; bottom:0; left:0; right:0;
+  display:flex; gap:12px; z-index:400;
+  align-items:center; justify-content:center;
+  padding:12px 20px;
+  padding-bottom:max(20px, calc(env(safe-area-inset-bottom, 0px) + 12px));
+  background:linear-gradient(to top, rgba(13,17,23,0.98) 60%, transparent);
+}
+.nav-btn {
+  background:transparent; border:2px solid var(--orange); color:var(--orange);
+  font-family:'Bebas Neue',sans-serif; font-size:15px; letter-spacing:2.5px;
+  padding:10px 22px; cursor:pointer; transition:background 0.15s, color 0.15s;
+  min-height:48px; min-width:52px; border-radius:0; -webkit-appearance:none;
+  touch-action:manipulation;
+}
+.nav-btn:active, .nav-btn.p { background:var(--orange); color:var(--navy); }
+.counter { font-family:'Barlow Condensed',sans-serif; font-size:13px; color:rgba(245,242,237,0.6); letter-spacing:3px; min-width:52px; text-align:center; }
 
 /* ANIMATIONS */
-@keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
-.slide.active .a { animation: fadeUp 0.5s ease forwards; opacity:0; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+@keyframes punch { from { opacity:0; transform:scale(0.84); } to { opacity:1; transform:scale(1); } }
+
+.a { opacity:0; }
+.slide.active .a { animation:fadeUp 0.5s ease forwards; }
 .slide.active .a:nth-child(1) { animation-delay:0.05s; }
 .slide.active .a:nth-child(2) { animation-delay:0.15s; }
 .slide.active .a:nth-child(3) { animation-delay:0.25s; }
 .slide.active .a:nth-child(4) { animation-delay:0.35s; }
 .slide.active .a:nth-child(5) { animation-delay:0.45s; }
 .slide.active .a:nth-child(6) { animation-delay:0.55s; }
+.slide.active .a.punch { animation-name:punch; }
 
-/* ============ TYPOGRAPHY SYSTEM ============ */
-.eyebrow { font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:7px; color:var(--orange); text-transform:uppercase; }
-.display { font-family:'Bebas Neue',sans-serif; font-size:clamp(52px,8vw,100px); line-height:0.92; }
+/* TYPOGRAPHY */
+.eyebrow { font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:7px; color:var(--orange); text-transform:uppercase; }
+.display { font-family:'Bebas Neue',sans-serif; font-size:clamp(44px,7vw,96px); line-height:0.92; }
 .display span { color:var(--orange); }
-.display-sm { font-family:'Bebas Neue',sans-serif; font-size:clamp(36px,5.5vw,68px); line-height:0.95; }
+.display-sm { font-family:'Bebas Neue',sans-serif; font-size:clamp(34px,5vw,66px); line-height:0.95; }
 .display-sm span { color:var(--orange); }
-.divider { width:50px; height:2px; background:var(--orange); margin:20px 0; }
-.body-text { font-size:15px; color:var(--muted); line-height:1.8; }
+.divider { width:50px; height:2px; background:var(--orange); margin:18px 0; }
+.body-text { font-size:clamp(14px,1.6vw,16px); color:var(--muted); line-height:1.8; }
 .body-text strong { color:var(--white); font-weight:600; }
 
-/* ============ LAYOUT COMPONENTS ============ */
-.two-col { display:grid; grid-template-columns:1fr 1fr; gap:16px; width:100%; }
-.three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; width:100%; }
-.four-col { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:12px; width:100%; }
+/* RESPONSIVE GRIDS */
 .max-w { max-width:960px; width:100%; }
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:14px; width:100%; }
+.three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; width:100%; }
+.four-col { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; width:100%; }
 
 /* CARDS */
-.card { background:var(--card); border:1px solid var(--border); padding:22px 24px; }
-.card-orange { background:var(--card); border-left:3px solid var(--orange); padding:20px 24px; }
-.card h3 { font-family:'Barlow Condensed',sans-serif; font-size:16px; font-weight:700; letter-spacing:1.5px; margin-bottom:8px; }
-.card p, .card-orange p { font-size:13.5px; color:var(--muted); line-height:1.7; }
-.card .icon { font-size:24px; margin-bottom:10px; display:block; }
+.card { background:var(--card); border:1px solid var(--border); padding:18px 20px; }
+.card-orange { background:var(--card); border-left:3px solid var(--orange); padding:18px 20px; }
+.card h3 { font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:700; letter-spacing:1.5px; margin-bottom:7px; }
+.card p, .card-orange p { font-size:clamp(13px,1.5vw,14px); color:var(--muted); line-height:1.7; }
+.card .icon { font-size:22px; margin-bottom:9px; display:block; }
 .card .tag { font-family:'Barlow Condensed',sans-serif; font-size:10px; letter-spacing:4px; color:var(--orange); margin-bottom:6px; }
 .card ul { list-style:none; }
-.card ul li { font-size:13px; color:var(--muted); padding:5px 0; border-bottom:1px solid rgba(245,242,237,0.05); line-height:1.5; }
+.card ul li { font-size:clamp(12px,1.4vw,13px); color:var(--muted); padding:5px 0; border-bottom:1px solid rgba(245,242,237,0.05); line-height:1.55; }
 .card ul li::before { content:'→ '; color:var(--orange); }
 .card ul li:last-child { border-bottom:none; }
 
 /* WARNING CARD */
-.warn-card { background:var(--card); border:1px solid rgba(255,92,26,0.25); padding:20px; }
-.warn-card .w-icon { font-size:28px; margin-bottom:10px; display:block; }
-.warn-card h3 { font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:700; letter-spacing:1px; color:var(--orange); margin-bottom:8px; }
+.warn-card { background:var(--card); border:1px solid rgba(255,92,26,0.25); padding:18px; }
+.warn-card .w-icon { font-size:26px; margin-bottom:9px; display:block; }
+.warn-card h3 { font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:700; letter-spacing:1px; color:var(--orange); margin-bottom:7px; }
 .warn-card ul { list-style:none; }
-.warn-card ul li { font-size:12.5px; color:var(--muted); padding:4px 0; line-height:1.5; }
+.warn-card ul li { font-size:clamp(12px,1.3vw,13px); color:var(--muted); padding:4px 0; line-height:1.5; }
 .warn-card ul li::before { content:'• '; color:var(--orange); }
 
-/* QUOTE BLOCK */
-.quote { border-left:3px solid var(--orange); padding:18px 24px; background:var(--orange-dim); }
-.quote p { font-family:'Barlow Condensed',sans-serif; font-size:20px; letter-spacing:0.5px; line-height:1.5; }
-.quote cite { font-size:12px; color:var(--muted); letter-spacing:2px; margin-top:8px; display:block; font-style:normal; font-family:'Barlow Condensed',sans-serif; }
+/* QUOTE */
+.quote { border-left:3px solid var(--orange); padding:16px 22px; background:var(--orange-dim); }
+.quote p { font-family:'Barlow Condensed',sans-serif; font-size:clamp(16px,2vw,20px); letter-spacing:0.5px; line-height:1.5; }
+.quote cite { font-size:11px; color:rgba(245,242,237,0.55); letter-spacing:2px; margin-top:7px; display:block; font-style:normal; font-family:'Barlow Condensed',sans-serif; }
 
 /* CHECKLIST */
 .checklist { list-style:none; }
-.checklist li { display:flex; align-items:flex-start; gap:12px; padding:10px 0; border-bottom:1px solid rgba(245,242,237,0.06); font-size:14px; color:var(--muted); line-height:1.6; }
+.checklist li { display:flex; align-items:flex-start; gap:10px; padding:9px 0; border-bottom:1px solid rgba(245,242,237,0.06); font-size:clamp(13px,1.5vw,14px); color:var(--muted); line-height:1.6; }
 .checklist li strong { color:var(--white); }
-.checklist li .check { color:var(--orange); font-size:16px; min-width:20px; }
+.checklist li .check { color:var(--orange); font-size:15px; min-width:18px; }
 
 /* FAQ */
-.faq-item { border-bottom:1px solid rgba(245,242,237,0.08); padding:18px 0; }
-.faq-q { font-family:'Barlow Condensed',sans-serif; font-size:17px; font-weight:700; letter-spacing:0.5px; margin-bottom:8px; }
-.faq-q span { color:var(--orange); margin-right:10px; }
-.faq-a { font-size:13.5px; color:var(--muted); line-height:1.7; }
+.faq-item { border-bottom:1px solid rgba(245,242,237,0.08); padding:16px 0; }
+.faq-q { font-family:'Barlow Condensed',sans-serif; font-size:clamp(15px,2vw,17px); font-weight:700; letter-spacing:0.5px; margin-bottom:7px; }
+.faq-q span { color:var(--orange); margin-right:8px; }
+.faq-a { font-size:clamp(13px,1.5vw,14px); color:var(--muted); line-height:1.75; }
 .faq-a strong { color:var(--white); }
 
 /* TIMELINE */
 .timeline { display:flex; gap:0; width:100%; }
-.tl-step { flex:1; padding:20px 18px; border-left:2px solid var(--border); position:relative; }
+.tl-step { flex:1; padding:18px 14px; border-left:2px solid var(--border); }
 .tl-step:first-child { border-left:2px solid var(--orange); }
-.tl-num { font-family:'Bebas Neue',sans-serif; font-size:40px; color:var(--orange); line-height:1; }
-.tl-title { font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:700; letter-spacing:1px; margin:6px 0; }
-.tl-desc { font-size:12.5px; color:var(--muted); line-height:1.6; }
+.tl-num { font-family:'Bebas Neue',sans-serif; font-size:38px; color:var(--orange); line-height:1; }
+.tl-title { font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:1px; margin:5px 0; }
+.tl-desc { font-size:clamp(12px,1.3vw,13px); color:var(--muted); line-height:1.6; }
 
 /* RESOURCE TABLE */
 .res-table { width:100%; border-collapse:collapse; }
-.res-table th { font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:4px; color:var(--orange); text-align:left; padding:10px 14px; border-bottom:1px solid var(--border); }
-.res-table td { font-size:13px; color:var(--muted); padding:12px 14px; border-bottom:1px solid rgba(245,242,237,0.05); vertical-align:top; }
+.res-table th { font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:4px; color:var(--orange); text-align:left; padding:9px 12px; border-bottom:1px solid var(--border); white-space:nowrap; }
+.res-table td { font-size:clamp(12px,1.4vw,13px); color:var(--muted); padding:10px 12px; border-bottom:1px solid rgba(245,242,237,0.05); vertical-align:top; }
 .res-table td strong { color:var(--white); font-weight:600; }
 .res-table tr:hover td { background:rgba(255,92,26,0.04); }
 
-/* SCENARIO PRO */
-.scenario-pro { background:var(--card); border:1px solid var(--border); padding:28px 32px; max-width:900px; width:100%; }
+/* SCENARIO */
+.scenario-pro { background:var(--card); border:1px solid var(--border); padding:clamp(18px,3vw,30px); max-width:900px; width:100%; }
 .sp-tag { font-family:'Bebas Neue',sans-serif; font-size:10px; letter-spacing:5px; color:var(--orange); margin-bottom:8px; }
-.sp-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(28px,4vw,48px); margin-bottom:14px; }
-.sp-text { font-size:14px; color:var(--muted); line-height:1.8; margin-bottom:20px; }
+.sp-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(26px,4vw,46px); margin-bottom:12px; }
+.sp-text { font-size:clamp(13px,1.6vw,15px); color:var(--muted); line-height:1.8; margin-bottom:18px; }
 .sp-text strong { color:var(--white); }
 .sp-discuss { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-.sp-dq { background:var(--navy); border-left:2px solid var(--orange); padding:12px 16px; font-size:13px; color:var(--muted); line-height:1.5; }
+.sp-dq { background:var(--navy); border-left:2px solid var(--orange); padding:11px 14px; font-size:clamp(12px,1.4vw,13px); color:var(--muted); line-height:1.5; }
 
-/* STATS ROW */
-.stats-row { display:flex; gap:32px; justify-content:center; margin:24px 0; }
+/* STATS */
+.stats-row { display:flex; gap:clamp(20px,4vw,40px); justify-content:center; margin:22px 0; flex-wrap:wrap; }
 .stat-item { text-align:center; }
-.stat-big { font-family:'Bebas Neue',sans-serif; font-size:clamp(48px,7vw,80px); color:var(--orange); line-height:1; }
-.stat-desc { font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:3px; color:var(--muted); margin-top:4px; max-width:130px; }
-
-/* SCALE */
-.scale-bar { display:flex; height:40px; width:100%; border-radius:0; overflow:hidden; margin:16px 0; }
-.scale-seg { display:flex; align-items:center; justify-content:center; font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:2px; font-weight:700; }
+.stat-big { font-family:'Bebas Neue',sans-serif; font-size:clamp(44px,6vw,76px); color:var(--orange); line-height:1; }
+.stat-desc { font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:3px; color:rgba(245,242,237,0.55); margin-top:4px; max-width:130px; line-height:1.4; }
 
 /* HIGHLIGHT BOX */
-.highlight-box { background:var(--orange); color:var(--navy); padding:18px 24px; }
-.highlight-box h3 { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:2px; margin-bottom:6px; }
-.highlight-box p { font-size:13px; font-weight:600; line-height:1.6; }
+.highlight-box { background:var(--orange); color:var(--navy); padding:16px 22px; }
+.highlight-box h3 { font-family:'Bebas Neue',sans-serif; font-size:clamp(18px,2.5vw,22px); letter-spacing:2px; margin-bottom:5px; }
+.highlight-box p { font-size:clamp(12px,1.4vw,13px); font-weight:600; line-height:1.6; }
 
 /* PHASE CARD */
-.phase-card { background:var(--card); border-top:3px solid var(--orange); padding:18px; }
-.phase-num { font-family:'Bebas Neue',sans-serif; font-size:40px; color:var(--orange); line-height:1; }
-.phase-title { font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:700; letter-spacing:1px; margin:4px 0 8px; }
+.phase-card { background:var(--card); border-top:3px solid var(--orange); padding:16px; }
+.phase-num { font-family:'Bebas Neue',sans-serif; font-size:36px; color:var(--orange); line-height:1; }
+.phase-title { font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:1px; margin:4px 0 7px; }
 .phase-list { list-style:none; }
-.phase-list li { font-size:12.5px; color:var(--muted); padding:3px 0; }
+.phase-list li { font-size:clamp(11px,1.3vw,12.5px); color:var(--muted); padding:3px 0; }
 .phase-list li::before { content:'– '; color:var(--orange); }
+
+/* MOBILE BREAKPOINTS */
+@media (max-width:768px) {
+  .two-col { grid-template-columns:1fr; }
+  .three-col { grid-template-columns:1fr 1fr; }
+  .four-col { grid-template-columns:1fr 1fr; }
+  .timeline { flex-direction:column; gap:8px; }
+  .tl-step { border-left:2px solid var(--orange); border-top:none; padding:14px; }
+  .sp-discuss { grid-template-columns:1fr; }
+  .res-table thead { display:none; }
+  .res-table, .res-table tbody, .res-table tr, .res-table td { display:block; width:100%; }
+  .res-table tr { border-bottom:1px solid var(--border); padding:10px 0; }
+  .res-table td { padding:4px 8px; border-bottom:none; font-size:13px; }
+  .res-table td:first-child { font-weight:700; color:var(--white); }
+  .slide { padding:48px 14px calc(env(safe-area-inset-bottom, 0px) + 95px); justify-content:flex-start; padding-top:56px; }
+}
+
+@media (max-width:480px) {
+  .three-col { grid-template-columns:1fr; }
+  .four-col { grid-template-columns:1fr; }
+  .display { font-size:clamp(38px,10vw,60px); }
+  .display-sm { font-size:clamp(30px,9vw,48px); }
+}
 </style>
 </head>
 <body>
 
+<div id="overlay"></div>
 <div class="progress-bar" id="progress"></div>
 <div class="logo-fixed">TEAM RESOLVE</div>
 <div class="timer-fixed" id="timer">00:00</div>
 <div class="nav">
-  <button class="nav-btn" onclick="prevSlide()">← TILLBAKA</button>
+  <button class="nav-btn" onclick="nav(-1)">← TILLBAKA</button>
   <span class="counter" id="counter">1 / 16</span>
-  <button class="nav-btn p" onclick="nextSlide()">NÄSTA →</button>
+  <button class="nav-btn p" onclick="nav(1)">NÄSTA →</button>
 </div>
 
-<!-- ========== SLIDE 1 – COVER ========== -->
+<!-- ========== S1 – COVER ========== -->
 <div class="slide active" id="s1">
   <div class="max-w">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,5vw,60px);align-items:center;">
       <div>
-        <div class="eyebrow a">TEAM RESOLVE · WORKSHOP 2024</div>
-        <div style="height:16px;"></div>
-        <div class="display a">UNGA,<br>GÄNG<span>&</span><br>VÄGEN UT</div>
+        <div class="eyebrow a">TEAM RESOLVE · WORKSHOP 2025</div>
+        <div style="height:14px;"></div>
+        <div class="display a punch">UNGA,<br>GÄNG<span>&</span><br>VÄGEN UT</div>
         <div class="divider a"></div>
         <div class="body-text a">En workshop för kommuner, myndigheter, föräldrar och professionella som arbetar med unga i riskzon. Baserad på forskning och erfarenhet från fältet.</div>
-        <div style="margin-top:24px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:4px;color:var(--muted);" class="a">TEAMRESOLVE.SE · FORTIS ET LIBER</div>
+        <div style="margin-top:20px;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:4px;color:rgba(245,242,237,0.5);" class="a">FÖRELÄSARE: NAVID YOUSEFI · TEAMRESOLVE.SE</div>
       </div>
-      <div style="border-left:1px solid var(--border);padding-left:40px;">
-        <div class="eyebrow a" style="margin-bottom:20px;">IDAG GÅR VI IGENOM</div>
+      <div style="border-left:1px solid var(--border);padding-left:clamp(16px,3vw,40px);">
+        <div class="eyebrow a" style="margin-bottom:18px;">IDAG GÅR VI IGENOM</div>
         <div style="display:flex;flex-direction:column;gap:12px;" class="a">
-          <div style="display:flex;gap:14px;align-items:center;">
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--orange);min-width:36px;">01</div>
-            <div>
-              <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;">FAKTA OCH KONTEXT</div>
-              <div style="font-size:12px;color:var(--muted);">Rekryteringsprocessen och varningstecken · 15 min</div>
-            </div>
+          <div style="display:flex;gap:12px;align-items:center;">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--orange);min-width:34px;">01</div>
+            <div><div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;">FAKTA OCH KONTEXT</div><div style="font-size:12px;color:var(--muted);">Rekryteringsprocessen och varningstecken · 15 min</div></div>
           </div>
-          <div style="display:flex;gap:14px;align-items:center;">
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--orange);min-width:36px;">02</div>
-            <div>
-              <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;">HANDBOK FÖR VUXNA</div>
-              <div style="font-size:12px;color:var(--muted);">Kommunikation, skyddsfaktorer, checklistor · 20 min</div>
-            </div>
+          <div style="display:flex;gap:12px;align-items:center;">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--orange);min-width:34px;">02</div>
+            <div><div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;">HANDBOK FÖR VUXNA</div><div style="font-size:12px;color:var(--muted);">Kommunikation, skyddsfaktorer, checklistor · 20 min</div></div>
           </div>
-          <div style="display:flex;gap:14px;align-items:center;">
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--orange);min-width:36px;">03</div>
-            <div>
-              <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;">CASE OCH FAQ</div>
-              <div style="font-size:12px;color:var(--muted);">Verkliga scenarios och de vanligaste frågorna · 15 min</div>
-            </div>
+          <div style="display:flex;gap:12px;align-items:center;">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--orange);min-width:34px;">03</div>
+            <div><div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;">CASE OCH FAQ</div><div style="font-size:12px;color:var(--muted);">Verkliga scenarios och vanligaste frågorna · 15 min</div></div>
           </div>
-          <div style="display:flex;gap:14px;align-items:center;">
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--orange);min-width:36px;">04</div>
-            <div>
-              <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;">RESURSER OCH NÄSTA STEG</div>
-              <div style="font-size:12px;color:var(--muted);">Samhällsinstanser, kontaktvägar, Team Resolve · 10 min</div>
-            </div>
+          <div style="display:flex;gap:12px;align-items:center;">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--orange);min-width:34px;">04</div>
+            <div><div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;">RESURSER OCH NÄSTA STEG</div><div style="font-size:12px;color:var(--muted);">Samhällsinstanser, kontaktvägar · 10 min</div></div>
           </div>
         </div>
       </div>
@@ -206,598 +253,295 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--navy); c
   </div>
 </div>
 
-<!-- ========== SLIDE 2 – KONTEXT ========== -->
+<!-- ========== S2 – KONTEXT ========== -->
 <div class="slide" id="s2">
   <div class="max-w">
     <div class="eyebrow a">VARFÖR ÄR VI HÄR</div>
-    <div style="height:12px;"></div>
-    <div class="display a">LÄGET<br>I <span>SVERIGE</span></div>
-    <div style="height:20px;"></div>
+    <div style="height:10px;"></div>
+    <div class="display a punch">LÄGET<br>I <span>SVERIGE</span></div>
+    <div style="height:16px;"></div>
     <div class="stats-row a">
-      <div class="stat-item">
-        <div class="stat-big">14</div>
-        <div class="stat-desc">GENOMSNITTSÅLDER VID FÖRSTA KONTAKT MED KRIMINELLT NÄTVERK</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-big">40+</div>
-        <div class="stat-desc">AKTIVA KRIMINELLA NÄTVERK IDENTIFIERADE AV POLISEN I SVERIGE</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-big">75%</div>
-        <div class="stat-desc">AV DE REKRYTERADE KÄNDE NÅGON INIFRÅN SEDAN TIDIGARE</div>
-      </div>
+      <div class="stat-item"><div class="stat-big">14</div><div class="stat-desc">GENOMSNITTSÅLDER VID FÖRSTA KONTAKT</div></div>
+      <div class="stat-item"><div class="stat-big">40+</div><div class="stat-desc">AKTIVA KRIMINELLA NÄTVERK I SVERIGE</div></div>
+      <div class="stat-item"><div class="stat-big">75%</div><div class="stat-desc">KÄNDE NÅGON INIFRÅN SEDAN TIDIGARE</div></div>
     </div>
-    <div class="two-col a" style="margin-top:8px;">
+    <div class="two-col a" style="margin-top:10px;">
       <div class="quote">
         <p>Rekryteringen sker sällan med hot. Den sker med omsorg, tillhörighet och löften. Det är en välplanerad social manipulation riktad mot unga som söker något de saknar.</p>
         <cite>BROTTSFÖREBYGGANDE RÅDET · BRÅ</cite>
       </div>
       <div class="card-orange">
         <div class="tag">VARFÖR DET BERÖR OSS ALLA</div>
-        <p>Gängkriminalitet är inte ett problem som stannar i utkanten. Det påverkar skolor, bostadsområden, trygghet och tillit i hela samhället. Förebyggande arbete är samhällsekonomiskt effektivt och mänskligt nödvändigt. <strong>Varje ung person vi når tidigt sparar ett liv.</strong></p>
+        <p>Gängkriminalitet stannar inte i utkanten. Det påverkar skolor, bostadsområden och tillit i hela samhället. Förebyggande arbete är samhällsekonomiskt effektivt och mänskligt nödvändigt. <strong>Varje ung person vi når tidigt sparar ett liv.</strong></p>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ========== SLIDE 3 – REKRYTERINGSPROCESSEN ========== -->
+<!-- ========== S3 – REKRYTERINGSPROCESSEN ========== -->
 <div class="slide" id="s3">
   <div class="max-w">
     <div class="eyebrow a">DEL 1 · FÖRSTÅ MEKANISMERNA</div>
-    <div style="height:12px;"></div>
-    <div class="display-sm a">HUR<br><span>REKRYTERINGEN</span><br>FAKTISKT FUNGERAR</div>
-    <div style="height:20px;"></div>
+    <div style="height:10px;"></div>
+    <div class="display-sm a punch">HUR<br><span>REKRYTERINGEN</span><br>FAKTISKT FUNGERAR</div>
+    <div style="height:16px;"></div>
     <div class="timeline a">
-      <div class="tl-step">
-        <div class="tl-num">1</div>
-        <div class="tl-title">IDENTIFIERING</div>
-        <div class="tl-desc">Den unge söks upp aktivt. Tecken på ensamhet, svaga vuxna relationer, ekonomiska svårigheter eller konflikt med skola används för att hitta rätt person.</div>
-      </div>
-      <div class="tl-step">
-        <div class="tl-num">2</div>
-        <div class="tl-title">INTEGRATION</div>
-        <div class="tl-desc">Vänskap, tillhörighet och materiella saker erbjuds. Gänget fyller ett tomrum. Relationen byggs upp under månader och känns genuin.</div>
-      </div>
-      <div class="tl-step">
-        <div class="tl-num">3</div>
-        <div class="tl-title">TESTNING</div>
-        <div class="tl-desc">Små uppgifter med låg risk ges. Håll en väska. Skicka ett meddelande. Lojalitet och tystnad testas och belönas. Skuld och beroende byggs sakta upp.</div>
-      </div>
-      <div class="tl-step">
-        <div class="tl-num">4</div>
-        <div class="tl-title">BINDNING</div>
-        <div class="tl-desc">Den unge är nu delaktig i något olagligt. Lojalitetskravet utnyttjas. Att lämna upplevs som farligare än att stanna. Vägen ut är nu ett eget projekt.</div>
-      </div>
+      <div class="tl-step"><div class="tl-num">1</div><div class="tl-title">IDENTIFIERING</div><div class="tl-desc">Den unge söks upp aktivt. Ensamhet, svaga vuxna relationer eller konflikt med skolan används för att hitta rätt person.</div></div>
+      <div class="tl-step"><div class="tl-num">2</div><div class="tl-title">INTEGRATION</div><div class="tl-desc">Vänskap, tillhörighet och materiella saker erbjuds. Gänget fyller ett tomrum. Relationen byggs upp under månader och känns genuin.</div></div>
+      <div class="tl-step"><div class="tl-num">3</div><div class="tl-title">TESTNING</div><div class="tl-desc">Små uppgifter med låg risk ges. Håll ett pack. Springa ett ärende. Lojalitet testas och belönas. Skuld och beroende byggs sakta upp.</div></div>
+      <div class="tl-step"><div class="tl-num">4</div><div class="tl-title">BINDNING</div><div class="tl-desc">Den unge är nu delaktig i något olagligt. Att lämna upplevs som farligare än att stanna. Vägen ut är ett eget projekt.</div></div>
     </div>
-    <div class="highlight-box a" style="margin-top:14px;">
+    <div class="highlight-box a" style="margin-top:12px;">
       <h3>NYCKELN ÄR ATT INGRIPA TIDIGT</h3>
-      <p>Fas 1 och 2 är de enda faserna där traditionellt stöd, vuxenkontakt och alternativa miljöer har reell effekt utan specialiserade avhopparinsatser. Tid är den avgörande faktorn.</p>
+      <p>Fas 1 och 2 är de enda faserna där vuxenkontakt och alternativa miljöer har reell effekt utan specialiserade avhopparinsatser. Tid är den avgörande faktorn.</p>
     </div>
   </div>
 </div>
 
-<!-- ========== SLIDE 4 – VARNINGSTECKEN ========== -->
+<!-- ========== S4 – VARNINGSTECKEN ========== -->
 <div class="slide" id="s4">
   <div class="max-w">
     <div class="eyebrow a">HANDBOK FÖR VUXNA · AVSNITT 1</div>
-    <div style="height:12px;"></div>
-    <div class="display-sm a"><span>VARNINGSTECKEN</span><br>ATT KÄNNA IGEN</div>
-    <div style="height:16px;"></div>
+    <div style="height:10px;"></div>
+    <div class="display-sm a punch"><span>VARNINGSTECKEN</span><br>ATT KÄNNA IGEN</div>
+    <div style="height:14px;"></div>
     <div class="four-col a">
-      <div class="warn-card">
-        <span class="w-icon">🧍</span>
-        <h3>BETEENDE</h3>
-        <ul>
-          <li>Plötslig tillbakadragenhet</li>
-          <li>Förändrade sovvanor</li>
-          <li>Uteblivna från skolan</li>
-          <li>Vägrar berätta var de är</li>
-          <li>Aggressivt försvar av integritet</li>
-          <li>Nya och okända vänner</li>
-        </ul>
-      </div>
-      <div class="warn-card">
-        <span class="w-icon">💸</span>
-        <h3>EKONOMI</h3>
-        <ul>
-          <li>Nya dyra föremål utan förklaring</li>
-          <li>Pengar utan känd källa</li>
-          <li>Bär kontanter</li>
-          <li>Köper saker till vänner</li>
-          <li>Vägrar förklara varifrån</li>
-          <li>Ger vaga svar om "jobb"</li>
-        </ul>
-      </div>
-      <div class="warn-card">
-        <span class="w-icon">💬</span>
-        <h3>SPRÅK OCH KONTAKT</h3>
-        <ul>
-          <li>Nytt kodat språkbruk</li>
-          <li>Tar inga samtal hemma</li>
-          <li>Raderar meddelanden</li>
-          <li>Extra telefon utan förklaring</li>
-          <li>Nämner namn du inte känner</li>
-          <li>Talar negativt om vuxna</li>
-        </ul>
-      </div>
-      <div class="warn-card">
-        <span class="w-icon">⏰</span>
-        <h3>TID OCH RUM</h3>
-        <ul>
-          <li>Sena nätter utan förklaring</li>
-          <li>Okänd vistelseort</li>
-          <li>Förändrade rutiner snabbt</li>
-          <li>Vägrar ta med kompisar hem</li>
-          <li>Nya tatueringar eller symboler</li>
-          <li>Tecken på skador eller stress</li>
-        </ul>
-      </div>
+      <div class="warn-card"><span class="w-icon">🧍</span><h3>BETEENDE</h3><ul><li>Plötslig tillbakadragenhet</li><li>Förändrade sovvanor</li><li>Uteblivna från skolan</li><li>Vägrar berätta var de är</li><li>Aggressivt försvar av integritet</li><li>Nya och okända vänner</li></ul></div>
+      <div class="warn-card"><span class="w-icon">💸</span><h3>EKONOMI</h3><ul><li>Nya dyra föremål utan förklaring</li><li>Pengar utan känd källa</li><li>Bär kontanter</li><li>Köper saker till vänner</li><li>Vägrar förklara varifrån</li><li>Ger vaga svar om jobb</li></ul></div>
+      <div class="warn-card"><span class="w-icon">💬</span><h3>SPRÅK OCH KONTAKT</h3><ul><li>Nytt kodat språkbruk</li><li>Tar inga samtal hemma</li><li>Raderar meddelanden</li><li>Extra telefon utan förklaring</li><li>Nämner namn du inte känner</li><li>Talar negativt om vuxna</li></ul></div>
+      <div class="warn-card"><span class="w-icon">⏰</span><h3>TID OCH RUM</h3><ul><li>Sena nätter utan förklaring</li><li>Okänd vistelseort</li><li>Förändrade rutiner snabbt</li><li>Vägrar ta med kompisar hem</li><li>Nya tatueringar eller symboler</li><li>Tecken på skador eller stress</li></ul></div>
     </div>
-    <div class="card-orange a" style="margin-top:12px;">
-      <p><strong>Viktigt:</strong> Enskilda tecken kan ha andra förklaringar. Det är kombinationen, snabbheten i förändringen och intensiteten som avgör om det är tid att agera. Lita på din magkänsla som vuxen.</p>
+    <div class="card-orange a" style="margin-top:10px;">
+      <p><strong>Viktigt:</strong> Enskilda tecken kan ha andra förklaringar. Det är kombinationen, snabbheten i förändringen och intensiteten som avgör om det är tid att agera. Lita på din magkänsla.</p>
     </div>
   </div>
 </div>
 
-<!-- ========== SLIDE 5 – KOMMUNIKATION ========== -->
+<!-- ========== S5 – KOMMUNIKATION ========== -->
 <div class="slide" id="s5">
   <div class="max-w">
     <div class="eyebrow a">HANDBOK FÖR VUXNA · AVSNITT 2</div>
-    <div style="height:12px;"></div>
-    <div class="display-sm a">HUR MAN<br><span>PRATAR</span><br>OM DET HÄR</div>
-    <div style="height:16px;"></div>
+    <div style="height:10px;"></div>
+    <div class="display-sm a punch">HUR MAN<br><span>PRATAR</span><br>OM DET HÄR</div>
+    <div style="height:14px;"></div>
     <div class="two-col a">
-      <div class="card">
-        <div class="tag">GÖR DET HÄR</div>
-        <ul>
-          <li>Välj ett neutralt ögonblick, inte efter en konflikt</li>
-          <li>Börja med observation, inte anklagelse: <strong>"Jag har märkt att..."</strong></li>
-          <li>Ställ öppna frågor och lyssna mer än du pratar</li>
-          <li>Bekräfta känslan innan du ifrågasätter handlingen</li>
-          <li>Berätta att du frågar för att du bryr dig, inte kontrollerar</li>
-          <li>Acceptera tystnad, pressa inte fram svar direkt</li>
-          <li>Återkom till samtalet, en gång räcker sällan</li>
-          <li>Håll dörren öppen: <strong>"Du kan alltid prata med mig"</strong></li>
-        </ul>
-      </div>
-      <div class="card">
-        <div class="tag">UNDVIK DET HÄR</div>
-        <ul>
-          <li>Ultimatum och direkta konfrontationer tidigt</li>
-          <li>Förbjuda utan att förklara varför</li>
-          <li>Jämföra med syskon eller andras barn</li>
-          <li>Ta mobil eller friheter som straff utan dialog</li>
-          <li>Involvera andra vuxna utan att berätta det i förväg</li>
-          <li>Tolka tystnad som skuldbevis</li>
-          <li>Säga <strong>"Du är precis som..."</strong> om negativa förebilder</li>
-          <li>Skuldbelägga utan att erbjuda en väg framåt</li>
-        </ul>
-      </div>
+      <div class="card"><div class="tag">GÖR DET HÄR</div><ul><li>Välj ett neutralt ögonblick, inte efter en konflikt</li><li>Börja med observation: <strong>"Jag har märkt att..."</strong></li><li>Ställ öppna frågor och lyssna mer än du pratar</li><li>Bekräfta känslan innan du ifrågasätter handlingen</li><li>Berätta att du frågar för att du bryr dig</li><li>Acceptera tystnad, pressa inte fram svar</li><li>Återkom, en gång räcker sällan</li><li>Håll dörren öppen: <strong>"Du kan alltid prata med mig"</strong></li></ul></div>
+      <div class="card"><div class="tag">UNDVIK DET HÄR</div><ul><li>Ultimatum och direkta konfrontationer tidigt</li><li>Förbjuda utan att förklara varför</li><li>Jämföra med syskon eller andras barn</li><li>Ta mobil som straff utan dialog</li><li>Involvera andra vuxna utan att berätta det</li><li>Tolka tystnad som skuldbevis</li><li><strong>"Du är precis som..."</strong> om negativa förebilder</li><li>Skuldbelägga utan att erbjuda en väg framåt</li></ul></div>
     </div>
     <div class="quote a" style="margin-top:12px;">
-      <p>Relationen är nyckeln. En ung person som litar på en vuxen hemma har statistiskt mycket lägre risk att söka sig till destruktiva grupper för tillhörighet.</p>
+      <p>En ung person som litar på en vuxen hemma har statistiskt mycket lägre risk att söka sig till destruktiva grupper för tillhörighet.</p>
       <cite>FORSKNING INOM ANKNYTNINGSTEORI OCH UNGDOMSKRIMINALITET</cite>
     </div>
   </div>
 </div>
 
-<!-- ========== SLIDE 6 – SKYDDSFAKTORER ========== -->
+<!-- ========== S6 – SKYDDSFAKTORER ========== -->
 <div class="slide" id="s6">
   <div class="max-w">
     <div class="eyebrow a">HANDBOK FÖR VUXNA · AVSNITT 3</div>
+    <div style="height:10px;"></div>
+    <div class="display-sm a punch"><span>SKYDDS</span><br>FAKTORER</div>
     <div style="height:12px;"></div>
-    <div class="display-sm a"><span>SKYDDS</span><br>FAKTORER</div>
-    <div style="height:14px;"></div>
     <div class="three-col a">
-      <div class="phase-card">
-        <div class="phase-num">A</div>
-        <div class="phase-title">RELATIONER</div>
-        <ul class="phase-list">
-          <li>Minst en trygg vuxen relation</li>
-          <li>Positiva vänner med sunda intressen</li>
-          <li>Tydliga men kärleksfulla gränser hemma</li>
-          <li>Regelbundna middagar och samtal</li>
-          <li>Inkluderande familjeklimat</li>
-        </ul>
-      </div>
-      <div class="phase-card">
-        <div class="phase-num">B</div>
-        <div class="phase-title">STRUKTUR</div>
-        <ul class="phase-list">
-          <li>Meningsfull fritid och aktivitet</li>
-          <li>Tydliga rutiner och förväntningar</li>
-          <li>Koppling till skola eller utbildning</li>
-          <li>Tillgång till sport, idrott, konst</li>
-          <li>Klara regler om tider och plats</li>
-        </ul>
-      </div>
-      <div class="phase-card">
-        <div class="phase-num">C</div>
-        <div class="phase-title">IDENTITET</div>
-        <ul class="phase-list">
-          <li>Positiv självbild och självkänsla</li>
-          <li>Känsla av framtidstro och mål</li>
-          <li>Erkännande av styrkor och talanger</li>
-          <li>Kulturell och social förankring</li>
-          <li>Förmåga att hantera press och stress</li>
-        </ul>
-      </div>
+      <div class="phase-card"><div class="phase-num">A</div><div class="phase-title">RELATIONER</div><ul class="phase-list"><li>Minst en trygg vuxen relation</li><li>Positiva vänner med sunda intressen</li><li>Tydliga men kärleksfulla gränser hemma</li><li>Regelbundna middagar och samtal</li><li>Inkluderande familjeklimat</li></ul></div>
+      <div class="phase-card"><div class="phase-num">B</div><div class="phase-title">STRUKTUR</div><ul class="phase-list"><li>Meningsfull fritid och aktivitet</li><li>Tydliga rutiner och förväntningar</li><li>Koppling till skola eller utbildning</li><li>Tillgång till sport, idrott, konst</li><li>Klara regler om tider och plats</li></ul></div>
+      <div class="phase-card"><div class="phase-num">C</div><div class="phase-title">IDENTITET</div><ul class="phase-list"><li>Positiv självbild och självkänsla</li><li>Känsla av framtidstro och mål</li><li>Erkännande av styrkor och talanger</li><li>Kulturell och social förankring</li><li>Förmåga att hantera press</li></ul></div>
     </div>
-    <div class="two-col a" style="margin-top:14px;">
-      <div class="highlight-box">
-        <h3>TEAM RESOLVE BIDRAR HÄR</h3>
-        <p>Vår verksamhet adresserar alla tre kategorier. Fysisk träning bygger struktur och självkänsla, gemenskapen ger trygga relationer och våra coaches fungerar som positiva vuxna förebilder.</p>
-      </div>
-      <div class="card-orange">
-        <div class="tag">ATT TÄNKA PÅ</div>
-        <p>Skyddsfaktorer är kumulativa. Ju fler som finns på plats, desto starkare är motståndskraften. En enda stark faktor kan dock göra avgörande skillnad. <strong>Fokusera på det ni kan påverka, inte det ni inte kan.</strong></p>
-      </div>
+    <div class="two-col a" style="margin-top:12px;">
+      <div class="highlight-box"><h3>TEAM RESOLVE BIDRAR HÄR</h3><p>Vår verksamhet adresserar alla tre kategorier. Fysisk träning bygger struktur och självkänsla, gemenskapen ger trygga relationer och våra coaches är positiva vuxna förebilder.</p></div>
+      <div class="card-orange"><div class="tag">ATT TÄNKA PÅ</div><p>Skyddsfaktorer är kumulativa. Ju fler som finns, desto starkare motståndskraft. En enda stark faktor kan dock göra avgörande skillnad. <strong>Fokusera på det ni kan påverka.</strong></p></div>
     </div>
   </div>
 </div>
 
-<!-- ========== SLIDE 7 – SCENARIO A ========== -->
+<!-- ========== S7 – SCENARIO A ========== -->
 <div class="slide" id="s7">
   <div class="scenario-pro a">
     <div class="sp-tag">CASE FÖR DISKUSSION · A</div>
     <div class="sp-title">FÖRÄLDERN SOM MÄRKER FÖRÄNDRINGEN</div>
-    <div class="sp-text">
-      Maria, 44, ensamstående mamma till Leo, 15 år. Hon har märkt att Leo kommit hem sent flera kvällar, vägrat berätta var han varit och nyligen kommit hem med ett par dyra skor han sa att en kompis gett honom. Han är mer sluten än vanligt och reagerar aggressivt på frågor. <strong>Maria är oroad men vill inte tappa relationen.</strong>
-      <br><br>
-      Hon har försökt prata men Leo lämnar rummet. Marias chef har tipsat henne om att kontakta socialtjänsten men hon är rädd att det ska "förstöra allt".
-    </div>
+    <div class="sp-text">Maria, 44, ensamstående mamma till Leo, 15 år. Hon har märkt att Leo kommit hem sent, vägrat berätta var han varit och nyligen kommit hem med dyra skor han sa att en kompis gett honom. Han är mer sluten och reagerar aggressivt på frågor. <strong>Maria är oroad men vill inte tappa relationen.</strong><br><br>Hon har försökt prata men Leo lämnar rummet. Marias chef har tipsat henne om att kontakta socialtjänsten men hon är rädd att det ska förstöra allt.</div>
     <div class="sp-discuss">
       <div class="sp-dq">Vilka konkreta steg kan Maria ta den närmaste veckan utan att eskalera konflikten?</div>
-      <div class="sp-dq">Är socialtjänsten rätt instans här, eller finns det ett mellansteg? Vad talar för och emot?</div>
+      <div class="sp-dq">Är socialtjänsten rätt instans här, eller finns det ett mellansteg?</div>
       <div class="sp-dq">Vad bör Maria säga och inte säga i nästa samtal med Leo?</div>
-      <div class="sp-dq">Hur kan Marias arbetsgivare eller Leos skola involveras på ett konstruktivt sätt?</div>
+      <div class="sp-dq">Hur kan Marias arbetsgivare eller Leos skola involveras konstruktivt?</div>
     </div>
   </div>
 </div>
 
-<!-- ========== SLIDE 8 – FAQ ========== -->
+<!-- ========== S8 – FAQ DEL 1 ========== -->
 <div class="slide" id="s8">
   <div class="max-w">
     <div class="eyebrow a">VANLIGA FRÅGOR FRÅN FÖRÄLDRAR</div>
-    <div style="height:12px;"></div>
-    <div class="display-sm a">FAQ</div>
-    <div style="height:16px;"></div>
+    <div style="height:10px;"></div>
+    <div class="display-sm a punch">FAQ <span>DEL 1</span></div>
+    <div style="height:14px;"></div>
     <div class="a">
-      <div class="faq-item">
-        <div class="faq-q"><span>Q1</span>Ska jag kontakta polisen om jag misstänker att mitt barn är inblandat i något?</div>
-        <div class="faq-a">Det beror på allvaret. Vid akut fara, ring 112. Vid oro utan akut risk, kontakta socialtjänsten eller skolans kurator först. Polisanmälan kan eskalera situationen och stänga dörrar. <strong>Sök råd innan du agerar.</strong></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q"><span>Q2</span>Mitt barn vägrar prata med mig. Vad gör jag?</div>
-        <div class="faq-a">Fortsätt vara tillgänglig utan att pressa. Etablera kontakt via aktiviteter, inte samtal. Identifiera en annan vuxen ditt barn litar på, en tränare, lärare eller släkting, och involvera dem. <strong>Tystnaden är ofta självskydd, inte avvisning.</strong></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q"><span>Q3</span>Hur berättar jag för min partner om jag är orolig och de inte ser det?</div>
-        <div class="faq-a">Dokumentera konkreta observationer med datum och situation, inte känslor eller gissningar. Presentera dem lugnt. Undvik att rama in det som konflikt om vem som har rätt. <strong>Fokusera på vad ni båda vill: att ert barn ska ha det bra.</strong></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q"><span>Q4</span>Kan skolan hjälpa och i så fall hur?</div>
-        <div class="faq-a">Ja. Skolkuratorn har sekretess och kan arbeta med eleven utan att involvera polisen. Skolan kan också notera frånvaro, beteendeförändringar och nätverksförändringar. <strong>Etablera kontakt med kuratorn tidigt, innan en kris uppstår.</strong></div>
-      </div>
+      <div class="faq-item"><div class="faq-q"><span>Q1</span>Ska jag kontakta polisen om jag misstänker att mitt barn är inblandat?</div><div class="faq-a">Det beror på allvaret. Vid akut fara, ring 112. Vid oro utan akut risk, kontakta socialtjänsten eller skolkuratorn först. Polisanmälan kan eskalera situationen och stänga dörrar. <strong>Sök råd innan du agerar.</strong></div></div>
+      <div class="faq-item"><div class="faq-q"><span>Q2</span>Mitt barn vägrar prata med mig. Vad gör jag?</div><div class="faq-a">Fortsätt vara tillgänglig utan att pressa. Etablera kontakt via aktiviteter, inte samtal. Identifiera en annan vuxen ditt barn litar på och involvera dem. <strong>Tystnaden är ofta självskydd, inte avvisning.</strong></div></div>
+      <div class="faq-item"><div class="faq-q"><span>Q3</span>Hur berättar jag för min partner om jag är orolig och de inte ser det?</div><div class="faq-a">Dokumentera konkreta observationer med datum, inte känslor eller gissningar. Presentera dem lugnt. <strong>Fokusera på vad ni båda vill: att ert barn ska ha det bra.</strong></div></div>
+      <div class="faq-item"><div class="faq-q"><span>Q4</span>Kan skolan hjälpa och i så fall hur?</div><div class="faq-a">Ja. Skolkuratorn har sekretess och kan arbeta med eleven utan att involvera polisen. <strong>Etablera kontakt med kuratorn tidigt, innan en kris uppstår.</strong></div></div>
     </div>
   </div>
 </div>
 
-<!-- ========== SLIDE 9 – FAQ DEL 2 ========== -->
+<!-- ========== S9 – FAQ DEL 2 ========== -->
 <div class="slide" id="s9">
   <div class="max-w">
-    <div class="eyebrow a">VANLIGA FRÅGOR FRÅN FÖRÄLDRAR · FORTSÄTTNING</div>
-    <div style="height:20px;"></div>
+    <div class="eyebrow a">VANLIGA FRÅGOR FRÅN FÖRÄLDRAR</div>
+    <div style="height:10px;"></div>
+    <div class="display-sm a punch">FAQ <span>DEL 2</span></div>
+    <div style="height:14px;"></div>
     <div class="a">
-      <div class="faq-item">
-        <div class="faq-q"><span>Q5</span>Mitt barn säger att gänget är deras "riktiga familj". Hur hanterar jag det?</div>
-        <div class="faq-a">Bekämp inte känslan, bekräfta den. Fråga vad det är de ger som ni kanske kan ge bättre. Tillhörighet är ett grundläggande mänskligt behov. <strong>Att attackera gänget driver barnet närmre dem. Att erbjuda ett alternativ är mer effektivt.</strong></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q"><span>Q6</span>Är det mitt fel som förälder?</div>
-        <div class="faq-a">Rekrytering sker aktivt och är manipulativ. Även barn med starka hemmiljöer rekryteras. Det du kan påverka är framåt. <strong>Skuldbeläggning av dig själv tar energi från det som faktiskt hjälper.</strong></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q"><span>Q7</span>Mitt barn har redan begått något olagligt. Vad händer nu?</div>
-        <div class="faq-a">Ungdomar under 15 är inte straffmyndiga men socialtjänsten involveras. 15 och äldre kan åtalas men ofta sker ungdomsreaktioner som ungdomstjänst eller vård istället för fängelse. <strong>Kontakta en advokat och socialtjänsten parallellt. Var inte ensam om det.</strong></div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q"><span>Q8</span>Hur länge tar det att "komma ur" ett gäng och hur kan jag hjälpa?</div>
-        <div class="faq-a">Det varierar, men avhopparprocessen tar vanligen 1 till 3 år med rätt stöd. Polisen har Avhopparenheten, kommuner har ofta Exit-program och organisationer som Fryshuset arbetar med detta. <strong>Att ha en plan är avgörande. Ta kontakt med rätt instans tidigt.</strong></div>
-      </div>
+      <div class="faq-item"><div class="faq-q"><span>Q5</span>Mitt barn säger att gänget är deras "riktiga familj". Hur hanterar jag det?</div><div class="faq-a">Bekämp inte känslan, bekräfta den. Fråga vad det är de ger som ni kanske kan ge bättre. <strong>Att attackera gänget driver barnet närmre dem. Att erbjuda ett alternativ är mer effektivt.</strong></div></div>
+      <div class="faq-item"><div class="faq-q"><span>Q6</span>Är det mitt fel som förälder?</div><div class="faq-a">Rekrytering sker aktivt och är manipulativ. Även barn med starka hemmiljöer rekryteras. <strong>Skuldbeläggning tar energi från det som faktiskt hjälper.</strong></div></div>
+      <div class="faq-item"><div class="faq-q"><span>Q7</span>Mitt barn har redan begått något olagligt. Vad händer nu?</div><div class="faq-a">Ungdomar under 15 är inte straffmyndiga men socialtjänsten involveras. 15 och äldre kan åtalas men ofta sker ungdomsreaktioner istället för fängelse. <strong>Kontakta en advokat och socialtjänsten parallellt.</strong></div></div>
+      <div class="faq-item"><div class="faq-q"><span>Q8</span>Hur länge tar det att komma ur ett gäng och hur kan jag hjälpa?</div><div class="faq-a">Avhopparprocessen tar vanligen 1 till 3 år med rätt stöd. Polisen har Avhopparenheten, kommuner har Exit-program och Fryshuset arbetar med detta. <strong>Att ha en plan är avgörande. Ta kontakt tidigt.</strong></div></div>
     </div>
   </div>
 </div>
 
-<!-- ========== SLIDE 10 – SCENARIO B ========== -->
+<!-- ========== S10 – SCENARIO B ========== -->
 <div class="slide" id="s10">
   <div class="scenario-pro a">
     <div class="sp-tag">CASE FÖR DISKUSSION · B · PROFESSIONELLA</div>
     <div class="sp-title">LÄRAREN SOM MÄRKER</div>
-    <div class="sp-text">
-      Karin är lärare och har sett att en av hennes elever, Younes, 16, slutat delta i lektionerna, ofta är frånvarande och nyligen kom med märken på armarna som han förklarade med "jag ramlade". En av de andra eleverna berättade för Karin i förtroende att Younes "hänger med farliga människor". <strong>Karin är osäker på vad hon är skyldig att göra och rädd att agera fel.</strong>
-    </div>
+    <div class="sp-text">Karin är lärare och har sett att eleven Younes, 16, slutat delta och nyligen kom med märken på armarna han förklarade med "jag ramlade". En annan elev berättade i förtroende att Younes "hänger med farliga människor". <strong>Karin är osäker på vad hon är skyldig att göra och rädd att agera fel.</strong></div>
     <div class="sp-discuss">
       <div class="sp-dq">Vad är Karins anmälningsskyldighet och hur aktiveras den i praktiken?</div>
       <div class="sp-dq">Hur skyddar hon eleven som berättade i förtroende?</div>
-      <div class="sp-dq">Vad bör nästa steg vara: kurator, rektor, socialtjänst, förälder?</div>
+      <div class="sp-dq">Vad bör nästa steg vara: kurator, rektor, socialtjänst eller förälder?</div>
       <div class="sp-dq">Vilka resurser finns i er organisation för just den här situationen?</div>
     </div>
   </div>
 </div>
 
-<!-- ========== SLIDE 11 – CHECKLISTA ========== -->
+<!-- ========== S11 – CHECKLISTA ========== -->
 <div class="slide" id="s11">
   <div class="max-w">
     <div class="eyebrow a">PRAKTISK CHECKLISTA</div>
+    <div style="height:10px;"></div>
+    <div class="display-sm a punch"><span>OM DU</span><br>ÄR OROLIG</div>
     <div style="height:12px;"></div>
-    <div class="display-sm a"><span>OM DU</span><br>ÄR OROLIG</div>
-    <div style="height:14px;"></div>
     <div class="two-col a">
-      <div class="card">
-        <div class="tag">STEG 1 · DE NÄRMASTE DAGARNA</div>
-        <ul class="checklist">
-          <li><span class="check">☐</span><span>Anteckna vad du observerat med datum och situation</span></li>
-          <li><span class="check">☐</span><span>Ha ett <strong>icke-konfronterande samtal</strong> med barnet</span></li>
-          <li><span class="check">☐</span><span>Kontakta <strong>skolans kurator</strong> för ett rådgivande samtal</span></li>
-          <li><span class="check">☐</span><span>Identifiera en annan vuxen barnet litar på</span></li>
-        </ul>
-      </div>
-      <div class="card">
-        <div class="tag">STEG 2 · VECKA 1–2</div>
-        <ul class="checklist">
-          <li><span class="check">☐</span><span>Ring <strong>Socialrådgivningen 116 111</strong> för anonym rådgivning</span></li>
-          <li><span class="check">☐</span><span>Koppla in <strong>socialtjänsten</strong> om oron inte minskar</span></li>
-          <li><span class="check">☐</span><span>Erbjud alternativ aktivitet: idrott, kurser, Team Resolve</span></li>
-          <li><span class="check">☐</span><span>Dokumentera och fortsätt föra dialog</span></li>
-        </ul>
-      </div>
-      <div class="card">
-        <div class="tag">STEG 3 · OM LÄGET ESKALERAR</div>
-        <ul class="checklist">
-          <li><span class="check">☐</span><span>Kontakta <strong>polisens förebyggandeenhet</strong></span></li>
-          <li><span class="check">☐</span><span>Undersök <strong>avhopparprogram</strong> i kommunen</span></li>
-          <li><span class="check">☐</span><span>Sök juridisk rådgivning om olaglig aktivitet är bekräftad</span></li>
-          <li><span class="check">☐</span><span>Ta hand om dig själv, det är en kris för hela familjen</span></li>
-        </ul>
-      </div>
-      <div class="highlight-box">
-        <h3>VIKTIGAST AV ALLT</h3>
-        <p>Du behöver inte veta allt för att agera. Att söka råd är inte att anmäla. Att kontakta en professionell tidigt är alltid bättre än att vänta tills läget är ohållbart.</p>
-      </div>
+      <div class="card"><div class="tag">STEG 1 · DE NÄRMASTE DAGARNA</div><ul class="checklist"><li><span class="check">☐</span><span>Anteckna vad du observerat med datum och situation</span></li><li><span class="check">☐</span><span>Ha ett <strong>icke-konfronterande samtal</strong> med barnet</span></li><li><span class="check">☐</span><span>Kontakta <strong>skolans kurator</strong> för ett rådgivande samtal</span></li><li><span class="check">☐</span><span>Identifiera en annan vuxen barnet litar på</span></li></ul></div>
+      <div class="card"><div class="tag">STEG 2 · VECKA 1–2</div><ul class="checklist"><li><span class="check">☐</span><span>Ring <strong>116 111</strong> för anonym rådgivning</span></li><li><span class="check">☐</span><span>Koppla in <strong>socialtjänsten</strong> om oron inte minskar</span></li><li><span class="check">☐</span><span>Erbjud alternativ aktivitet: idrott, Team Resolve</span></li><li><span class="check">☐</span><span>Dokumentera och fortsätt föra dialog</span></li></ul></div>
+      <div class="card"><div class="tag">STEG 3 · OM LÄGET ESKALERAR</div><ul class="checklist"><li><span class="check">☐</span><span>Kontakta <strong>polisens förebyggandeenhet</strong></span></li><li><span class="check">☐</span><span>Undersök <strong>avhopparprogram</strong> i kommunen</span></li><li><span class="check">☐</span><span>Sök juridisk rådgivning vid bekräftad olaglig aktivitet</span></li><li><span class="check">☐</span><span>Ta hand om dig själv, det är en kris för hela familjen</span></li></ul></div>
+      <div class="highlight-box"><h3>VIKTIGAST AV ALLT</h3><p>Du behöver inte veta allt för att agera. Att söka råd är inte att anmäla. Att kontakta en professionell tidigt är alltid bättre än att vänta tills läget är ohållbart.</p></div>
     </div>
   </div>
 </div>
 
-<!-- ========== SLIDE 12 – RESURSER ========== -->
+<!-- ========== S12 – RESURSER ========== -->
 <div class="slide" id="s12">
   <div class="max-w">
     <div class="eyebrow a">SAMHÄLLSINSTANSER OCH KONTAKTVÄGAR</div>
-    <div style="height:12px;"></div>
-    <div class="display-sm a">RESURSER<br><span>OCH STÖD</span></div>
-    <div style="height:16px;"></div>
-    <table class="res-table a">
-      <thead>
-        <tr>
-          <th>INSTANS</th>
-          <th>NÄR DU KONTAKTAR DEM</th>
-          <th>KONTAKT</th>
-          <th>SEKRETESS</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Skolkurator</strong></td>
-          <td>Tidigt vid oro, beteendeförändringar</td>
-          <td>Via skolan</td>
-          <td>Ja, med undantag</td>
-        </tr>
-        <tr>
-          <td><strong>Socialtjänsten</strong></td>
-          <td>Oro för barns säkerhet, anmälningsskyldighet</td>
-          <td>Kommunens kontaktcenter</td>
-          <td>Delvis</td>
-        </tr>
-        <tr>
-          <td><strong>BRIS</strong></td>
-          <td>Barnet behöver anonymt stöd direkt</td>
-          <td>116 111</td>
-          <td>Ja, fullt</td>
-        </tr>
-        <tr>
-          <td><strong>Polisens förebyggarenhet</strong></td>
-          <td>Bekräftad kriminell aktivitet eller akut fara</td>
-          <td>114 14</td>
-          <td>Nej</td>
-        </tr>
-        <tr>
-          <td><strong>Fryshuset</strong></td>
-          <td>Avhopparprocess, Exit-program</td>
-          <td>fryshuset.se</td>
-          <td>Ja</td>
-        </tr>
-        <tr>
-          <td><strong>1000 möjligheter</strong></td>
-          <td>Avhopparprogram för unga</td>
-          <td>1000mojligheter.se</td>
-          <td>Ja</td>
-        </tr>
-        <tr>
-          <td><strong>Team Resolve</strong></td>
-          <td>Förebyggande, karaktärsbyggande verksamhet</td>
-          <td>teamresolve.se</td>
-          <td>Ja</td>
-        </tr>
-      </tbody>
-    </table>
+    <div style="height:10px;"></div>
+    <div class="display-sm a punch">RESURSER<br><span>OCH STÖD</span></div>
+    <div style="height:14px;"></div>
+    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;" class="a">
+      <table class="res-table">
+        <thead><tr><th>INSTANS</th><th>NÄR DU KONTAKTAR DEM</th><th>KONTAKT</th><th>SEKRETESS</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Skolkurator</strong></td><td>Tidigt vid oro, beteendeförändringar</td><td>Via skolan</td><td>Ja, med undantag</td></tr>
+          <tr><td><strong>Socialtjänsten</strong></td><td>Oro för barns säkerhet, anmälningsskyldighet</td><td>Kommunens kontaktcenter</td><td>Delvis</td></tr>
+          <tr><td><strong>BRIS</strong></td><td>Barnet behöver anonymt stöd direkt</td><td>116 111</td><td>Ja, fullt</td></tr>
+          <tr><td><strong>Polisens förebyggarenhet</strong></td><td>Bekräftad kriminell aktivitet eller akut fara</td><td>114 14</td><td>Nej</td></tr>
+          <tr><td><strong>Fryshuset</strong></td><td>Avhopparprocess, Exit-program</td><td>fryshuset.se</td><td>Ja</td></tr>
+          <tr><td><strong>1000 möjligheter</strong></td><td>Avhopparprogram för unga</td><td>1000mojligheter.se</td><td>Ja</td></tr>
+          <tr><td><strong>Team Resolve</strong></td><td>Förebyggande, karaktärsbyggande verksamhet</td><td>teamresolve.se</td><td>Ja</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 
-<!-- ========== SLIDE 13 – TEAM RESOLVE ========== -->
+<!-- ========== S13 – TEAM RESOLVE ========== -->
 <div class="slide" id="s13">
   <div class="max-w">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,4vw,48px);align-items:center;">
       <div>
         <div class="eyebrow a">VARFÖR TEAM RESOLVE</div>
-        <div style="height:14px;"></div>
-        <div class="display a">RESOLVE<br>ÄR <span>LÖSNINGEN</span></div>
+        <div style="height:12px;"></div>
+        <div class="display a punch">RESOLVE<br>ÄR <span>LÖSNINGEN</span></div>
         <div class="divider a"></div>
         <div class="body-text a">Vi är en ideell förening i Stockholm med rötter i det svenska försvaret och nationell kampsport. Vi använder fysisk träning som verktyg för att bygga karaktär, viljestyrka och beslutsförmåga hos unga under press.<br><br>Vi är inte ytterligare ett fritidsalternativ. Vi är en struktur som adresserar exakt de faktorer som gör unga sårbara för rekrytering.</div>
       </div>
       <div>
-        <div class="three-col a" style="margin-bottom:14px;">
-          <div class="phase-card">
-            <div class="phase-num">01</div>
-            <div class="phase-title">TRÄNING</div>
-            <ul class="phase-list">
-              <li>Fysisk grundträning</li>
-              <li>Kampsport</li>
-              <li>Teamövningar</li>
-              <li>Disciplin och rutin</li>
-            </ul>
-          </div>
-          <div class="phase-card">
-            <div class="phase-num">02</div>
-            <div class="phase-title">KARAKTÄR</div>
-            <ul class="phase-list">
-              <li>Beslutsfattande</li>
-              <li>Viljestyrka</li>
-              <li>Ansvar</li>
-              <li>Ledarskap</li>
-            </ul>
-          </div>
-          <div class="phase-card">
-            <div class="phase-num">03</div>
-            <div class="phase-title">GEMENSKAP</div>
-            <ul class="phase-list">
-              <li>Trygga relationer</li>
-              <li>Positiva förebilder</li>
-              <li>Tillhörighet</li>
-              <li>Struktur</li>
-            </ul>
-          </div>
+        <div class="three-col a" style="margin-bottom:12px;">
+          <div class="phase-card"><div class="phase-num">01</div><div class="phase-title">TRÄNING</div><ul class="phase-list"><li>Fysisk grundträning</li><li>Kampsport</li><li>Teamövningar</li><li>Disciplin och rutin</li></ul></div>
+          <div class="phase-card"><div class="phase-num">02</div><div class="phase-title">KARAKTÄR</div><ul class="phase-list"><li>Beslutsfattande</li><li>Viljestyrka</li><li>Ansvar</li><li>Ledarskap</li></ul></div>
+          <div class="phase-card"><div class="phase-num">03</div><div class="phase-title">GEMENSKAP</div><ul class="phase-list"><li>Trygga relationer</li><li>Positiva förebilder</li><li>Tillhörighet</li><li>Struktur</li></ul></div>
         </div>
-        <div class="highlight-box a">
-          <h3>SAMARBETA MED OSS</h3>
-          <p>Vi erbjuder Spark-paketet för föreningar och Kickstart för arbetsplatser och kommuner. Kontakta oss på teamresolve.se för att diskutera ett samarbete.</p>
-        </div>
+        <div class="highlight-box a"><h3>SAMARBETA MED OSS</h3><p>Vi erbjuder Spark-paketet för föreningar och Kickstart för arbetsplatser och kommuner. Kontakta oss på teamresolve.se.</p></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ========== SLIDE 14 – DISKUSSION ========== -->
+<!-- ========== S14 – DISKUSSION ========== -->
 <div class="slide" id="s14">
   <div class="max-w" style="text-align:center;">
     <div class="eyebrow a">20 MIN · ÖPPEN SESSION</div>
-    <div style="height:14px;"></div>
-    <div class="display a">FRÅGOR<br>OCH <span>DISKUSSION</span></div>
-    <div style="height:20px;"></div>
+    <div style="height:12px;"></div>
+    <div class="display a punch">FRÅGOR<br>OCH <span>DISKUSSION</span></div>
+    <div style="height:18px;"></div>
     <div class="three-col a">
-      <div class="card">
-        <div class="tag">DISKUSSIONSPUNKT 01</div>
-        <p>Vad är det svåraste steget i att ingripa tidigt? Vad hindrar oss professionellt och privat?</p>
-      </div>
-      <div class="card">
-        <div class="tag">DISKUSSIONSPUNKT 02</div>
-        <p>Hur samverkar vi bättre: skola, socialtjänst, polis, föräldrar och föreningsliv?</p>
-      </div>
-      <div class="card">
-        <div class="tag">DISKUSSIONSPUNKT 03</div>
-        <p>Vilka resurser saknas i din del av systemet för att förebygga rekrytering?</p>
-      </div>
-      <div class="card">
-        <div class="tag">DISKUSSIONSPUNKT 04</div>
-        <p>Hur ser ni på föreningars roll som Team Resolves i det förebyggande arbetet?</p>
-      </div>
-      <div class="card">
-        <div class="tag">DISKUSSIONSPUNKT 05</div>
-        <p>Vad tar du med dig härifrån och vad kan du implementera redan i nästa vecka?</p>
-      </div>
-      <div class="card">
-        <div class="tag">EGNA FRÅGOR</div>
-        <p>Är det något ni velat fråga eller lyfta som vi inte täckt? Nu är rätt tillfälle.</p>
-      </div>
+      <div class="card"><div class="tag">DISKUSSIONSPUNKT 01</div><p>Vad är det svåraste steget i att ingripa tidigt? Vad hindrar oss professionellt och privat?</p></div>
+      <div class="card"><div class="tag">DISKUSSIONSPUNKT 02</div><p>Hur samverkar vi bättre: skola, socialtjänst, polis, föräldrar och föreningsliv?</p></div>
+      <div class="card"><div class="tag">DISKUSSIONSPUNKT 03</div><p>Vilka resurser saknas i din del av systemet för att förebygga rekrytering?</p></div>
+      <div class="card"><div class="tag">DISKUSSIONSPUNKT 04</div><p>Hur ser ni på föreningars roll som Team Resolves i det förebyggande arbetet?</p></div>
+      <div class="card"><div class="tag">DISKUSSIONSPUNKT 05</div><p>Vad tar du med dig härifrån och vad kan du implementera redan i nästa vecka?</p></div>
+      <div class="card"><div class="tag">EGNA FRÅGOR</div><p>Är det något ni velat fråga eller lyfta som vi inte täckt? Nu är rätt tillfälle.</p></div>
     </div>
   </div>
 </div>
 
-<!-- ========== SLIDE 15 – NÄSTA STEG ========== -->
+<!-- ========== S15 – NÄSTA STEG ========== -->
 <div class="slide" id="s15">
   <div class="max-w">
     <div class="eyebrow a">EFTER WORKSHOPEN</div>
-    <div style="height:12px;"></div>
-    <div class="display-sm a">NÄSTA<br><span>STEG</span></div>
-    <div style="height:16px;"></div>
+    <div style="height:10px;"></div>
+    <div class="display-sm a punch">NÄSTA<br><span>STEG</span></div>
+    <div style="height:14px;"></div>
     <div class="four-col a">
-      <div class="card">
-        <div class="tag">FÖR FÖRÄLDRAR</div>
-        <ul>
-          <li>Ladda ner faktabladet och gå igenom varningstecknen</li>
-          <li>Boka in ett samtal med skolkuratorn</li>
-          <li>Undersök Team Resolve för ditt barn</li>
-          <li>Spara resursnumren i telefonen</li>
-        </ul>
-      </div>
-      <div class="card">
-        <div class="tag">FÖR LÄRARE</div>
-        <ul>
-          <li>Informera kollegor om varningstecknen</li>
-          <li>Gå igenom skolans rutin för anmälan</li>
-          <li>Identifiera elever som kan behöva extra stöd nu</li>
-          <li>Koppla Team Resolve till elevhälsan</li>
-        </ul>
-      </div>
-      <div class="card">
-        <div class="tag">FÖR KOMMUNEN</div>
-        <ul>
-          <li>Utvärdera befintliga förebyggande insatser</li>
-          <li>Identifiera gap i samverkan</li>
-          <li>Utforska partnerskap med ideell sektor</li>
-          <li>Kontakta Team Resolve för samarbete</li>
-        </ul>
-      </div>
-      <div class="card">
-        <div class="tag">FÖR ALLA</div>
-        <ul>
-          <li>Dela materialet med kollegor och grannar</li>
-          <li>Besök teamresolve.se</li>
-          <li>Ta med en person till nästa workshop</li>
-          <li>Agera tidigt, inte när det är för sent</li>
-        </ul>
-      </div>
+      <div class="card"><div class="tag">FÖR FÖRÄLDRAR</div><ul><li>Ladda ner faktabladet och gå igenom varningstecknen</li><li>Boka in ett samtal med skolkuratorn</li><li>Undersök Team Resolve för ditt barn</li><li>Spara resursnumren i telefonen</li></ul></div>
+      <div class="card"><div class="tag">FÖR LÄRARE</div><ul><li>Informera kollegor om varningstecknen</li><li>Gå igenom skolans rutin för anmälan</li><li>Identifiera elever som kan behöva extra stöd</li><li>Koppla Team Resolve till elevhälsan</li></ul></div>
+      <div class="card"><div class="tag">FÖR KOMMUNEN</div><ul><li>Utvärdera befintliga förebyggande insatser</li><li>Identifiera gap i samverkan</li><li>Utforska partnerskap med ideell sektor</li><li>Kontakta Team Resolve för samarbete</li></ul></div>
+      <div class="card"><div class="tag">FÖR ALLA</div><ul><li>Dela materialet med kollegor och grannar</li><li>Besök teamresolve.se</li><li>Ta med en person till nästa workshop</li><li>Agera tidigt, inte när det är för sent</li></ul></div>
     </div>
-    <div class="quote a" style="margin-top:14px;">
+    <div class="quote a" style="margin-top:12px;">
       <p>Det förebyggande arbetet kostar pengar och tid. Men varje ung person som aldrig rekryteras sparar samhället hundratals gånger mer än insatsen.</p>
       <cite>POLISMYNDIGHETEN · NATIONELLT CENTRUM MOT VÅLDSBEJAKANDE EXTREMISM</cite>
     </div>
   </div>
 </div>
 
-<!-- ========== SLIDE 16 – CLOSING ========== -->
+<!-- ========== S16 – CLOSING ========== -->
 <div class="slide" id="s16">
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;max-width:1000px;width:100%;align-items:center;">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,5vw,80px);max-width:1000px;width:100%;align-items:center;">
     <div>
       <div class="eyebrow a">TACK FÖR ER UPPMÄRKSAMHET</div>
-      <div style="height:16px;"></div>
-      <div class="display a">FORTIS<br>ET <span>LIBER</span></div>
+      <div style="height:14px;"></div>
+      <div class="display a punch">FORTIS<br>ET <span>LIBER</span></div>
       <div class="divider a"></div>
       <div class="body-text a">Stark och fri. Det är vad vi strävar mot för varje ung människa vi når. Det kräver engagemang från hela samhället, och det börjar med att ni är här idag.</div>
-      <div style="margin-top:24px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:4px;color:var(--orange);" class="a">TEAMRESOLVE.SE</div>
+      <div style="margin-top:20px;font-family:'Bebas Neue',sans-serif;font-size:clamp(16px,2.5vw,20px);letter-spacing:4px;color:var(--orange);" class="a">TEAMRESOLVE.SE</div>
     </div>
     <div class="a">
-      <div class="card" style="margin-bottom:12px;">
+      <div class="card" style="margin-bottom:10px;">
         <div class="tag">KONTAKTA OSS</div>
-        <p style="margin-bottom:8px;font-size:14px;color:var(--white);">Är du intresserad av ett samarbete, en föreläsning eller att ha Team Resolve i din organisation?</p>
-        <p>Besök <strong>teamresolve.se</strong> eller kontakta oss direkt för en förutsättningslös dialog om hur vi kan arbeta tillsammans.</p>
+        <p style="margin-bottom:7px;font-size:clamp(13px,1.5vw,14px);color:var(--white);">Är du intresserad av ett samarbete, en föreläsning eller att ha Team Resolve i din organisation?</p>
+        <p>Besök <strong>teamresolve.se</strong> eller kontakta oss direkt för en förutsättningslös dialog.</p>
       </div>
       <div class="card">
-        <div class="tag">MATERIAL FRÅN IDAG</div>
+        <div class="tag">NAVID YOUSEFI · FÖRELÄSARE</div>
         <ul>
-          <li>Faktablad: Varningstecken för föräldrar</li>
-          <li>Kommunikationsguid: Hur man pratar om det</li>
-          <li>Resurslista: Samhällsinstanser och kontakter</li>
-          <li>Checklista: Om du är orolig, vad du gör</li>
+          <li>20+ år inom gängkriminalitet, från rekrytering till aktivt nätverk</li>
+          <li>Beteendevetare</li>
+          <li>Säkerhets och konflikthanteringsinstruktör</li>
+          <li>Jobbat med inlåsta grova kriminella</li>
+          <li>Elitnivå inom kampsport</li>
         </ul>
       </div>
     </div>
@@ -805,31 +549,66 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--navy); c
 </div>
 
 <script>
-const totalSlides = 16;
-let current = 1;
-let timerStart = Date.now();
+const TOTAL = 16;
+let cur = 1;
+let t0 = Date.now();
 
+// timer
 setInterval(() => {
-  const e = Math.floor((Date.now() - timerStart) / 1000);
-  const m = String(Math.floor(e / 60)).padStart(2,'0');
-  const s = String(e % 60).padStart(2,'0');
-  document.getElementById('timer').textContent = m + ':' + s;
+  const e = Math.floor((Date.now()-t0)/1000);
+  document.getElementById('timer').textContent =
+    String(Math.floor(e/60)).padStart(2,'0')+':'+String(e%60).padStart(2,'0');
 }, 1000);
 
-function goTo(n) {
-  document.getElementById('s' + current).classList.remove('active');
-  current = Math.max(1, Math.min(totalSlides, n));
-  document.getElementById('s' + current).classList.add('active');
-  document.getElementById('counter').textContent = current + ' / ' + totalSlides;
-  document.getElementById('progress').style.width = ((current / totalSlides) * 100) + '%';
+function updateUI() {
+  document.getElementById('counter').textContent = cur+' / '+TOTAL;
+  document.getElementById('progress').style.width = (cur/TOTAL*100)+'%';
 }
-function nextSlide() { goTo(current + 1); }
-function prevSlide() { goTo(current - 1); }
+
+function goTo(n) {
+  if (n<1||n>TOTAL) return;
+  const ov = document.getElementById('overlay');
+  ov.classList.add('on');
+  setTimeout(() => {
+    const prev = document.getElementById('s'+cur);
+    prev.classList.remove('active');
+    // reset animation class on prev slide's .a elements
+    prev.querySelectorAll('.a').forEach(el => {
+      el.style.animation = 'none';
+      void el.offsetWidth;
+      el.style.animation = '';
+    });
+    cur = n;
+    const next = document.getElementById('s'+cur);
+    // reset animations before activating
+    next.querySelectorAll('.a').forEach(el => {
+      el.style.animation = 'none';
+      void el.offsetWidth;
+      el.style.animation = '';
+    });
+    next.classList.add('active');
+    updateUI();
+    ov.classList.remove('on');
+  }, 210);
+}
+
+function nav(dir) { goTo(cur+dir); }
+
+// keyboard
 document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
-  if (e.key === 'ArrowLeft') prevSlide();
+  if (e.key==='ArrowRight'||e.key===' ') { e.preventDefault(); nav(1); }
+  if (e.key==='ArrowLeft') { e.preventDefault(); nav(-1); }
 });
-document.getElementById('progress').style.width = ((1 / totalSlides) * 100) + '%';
+
+// swipe
+let tx=0;
+document.addEventListener('touchstart', e=>{ tx=e.touches[0].clientX; },{passive:true});
+document.addEventListener('touchend', e=>{
+  const dx=e.changedTouches[0].clientX-tx;
+  if(Math.abs(dx)>50) nav(dx<0?1:-1);
+},{passive:true});
+
+updateUI();
 </script>
 </body>
 </html>
