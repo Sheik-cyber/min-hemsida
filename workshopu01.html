@@ -13,7 +13,7 @@
   --card: #161B22;
   --orange-dim: rgba(255,92,26,0.10);
   --orange-glow: rgba(255,92,26,0.35);
-  --muted: rgba(245,242,237,0.5);
+  --muted: rgba(245,242,237,0.72);
 }
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html, body { width:100%; height:100%; overflow:hidden; background:var(--navy); color:var(--white); font-family:'Barlow',sans-serif; }
@@ -459,13 +459,23 @@ function goTo(n) {
     document.getElementById('s'+cur).classList.remove('active');
     cur = n;
     const next = document.getElementById('s'+cur);
-    // retrigger animations BEFORE making active
-    next.querySelectorAll('[style*="animation"]').forEach(el => {
-      el.style.animationName = 'none';
-      void el.offsetWidth;
-      el.style.animationName = '';
+    // retrigger: pause all animated els, force reflow, restart
+    const animEls = next.querySelectorAll('[style*="animation"]');
+    animEls.forEach(el => {
+      el.style.animationPlayState = 'paused';
+      el.style.opacity = '0';
     });
     next.classList.add('active');
+    // double rAF ensures browser has painted before we restart
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      animEls.forEach(el => {
+        el.style.animationName = 'none';
+        void el.offsetWidth;
+        el.style.animationName = '';
+        el.style.animationPlayState = '';
+        el.style.opacity = '';
+      });
+    }));
     updateUI();
     ov.classList.remove('on');
   }, 210);
