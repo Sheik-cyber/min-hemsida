@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Resolve — Workshop Ungdomar</title>
+<script src="https://cdn.ably.com/lib/ably.min-2.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500;600&display=swap');
+  :root{--orange:#FF5C1A;--dark:#080C12;--card:#141D2A;--card2:#1A2638;--white:#F5F2ED;--muted:rgba(245,242,237,0.48);--border:rgba(255,92,26,0.15);--A:#FF5C1A;--B:#3B9EFF;--C:#A855F7;--D:#22D3A0}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--dark);color:var(--white);font-family:'Barlow',sans-serif;font-weight:300;font-size:clamp(15px,2vw,17px);line-height:1.65;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom,16px)}
+  nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(8,12,18,0.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);height:60px;padding:0 clamp(1rem,4vw,2.5rem);display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.2rem,2.5vw,1.6rem);color:var(--orange);letter-spacing:0.12em;text-decoration:none}
+  .nav-back{font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;letter-spacing:0.14em;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color .2s;min-height:44px;display:flex;align-items:center}
+  .nav-back:hover{color:var(--orange)}
+  .nav-mode{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;padding:5px 12px;border-radius:3px;border:1px solid var(--border);background:rgba(255,92,26,0.08);color:var(--orange);display:none}
+  main{padding-top:60px}
+  .screen{display:none;animation:fadeIn .35s ease}
+  .screen.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+  /* MODE */
+  .mode-screen{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:clamp(2rem,6vw,5rem) clamp(1.2rem,5vw,3rem);text-align:center;position:relative;overflow:hidden}
+  .mode-screen::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 80% 30%,rgba(255,92,26,0.06) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 20% 80%,rgba(59,158,255,0.04) 0%,transparent 60%);pointer-events:none}
+  .mode-tag{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(0.68rem,1.3vw,0.82rem);letter-spacing:0.3em;color:var(--orange);text-transform:uppercase;margin-bottom:1rem}
+  .mode-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,10vw,7rem);line-height:0.92;letter-spacing:0.03em;margin-bottom:1.5rem}
+  .mode-title em{font-style:normal;-webkit-text-stroke:2px var(--orange);color:transparent}
+  .mode-sub{font-family:'Barlow Condensed',sans-serif;font-size:clamp(1rem,2vw,1.2rem);color:var(--muted);max-width:520px;line-height:1.6;margin-bottom:3rem}
+  .mode-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:1.2rem;width:100%;max-width:680px}
+  .mode-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:clamp(1.5rem,4vw,2.2rem);cursor:pointer;text-align:left;transition:all .25s;position:relative;overflow:hidden}
+  .mode-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--orange);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+  .mode-card:hover{border-color:rgba(255,92,26,0.4);transform:translateY(-3px)}
+  .mode-card:hover::after{transform:scaleX(1)}
+  .mode-card-icon{font-size:2rem;margin-bottom:1rem;display:block}
+  .mode-card h3{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.5rem,3vw,1.9rem);letter-spacing:0.06em;margin-bottom:0.5rem}
+  .mode-card p{font-size:clamp(0.85rem,1.7vw,0.92rem);color:var(--muted);line-height:1.6}
+
+  /* SESSION */
+  .session-setup{max-width:520px;margin:0 auto;padding:clamp(2rem,5vw,4rem) clamp(1.2rem,5vw,2.5rem);text-align:center}
+  .session-code-display{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,15vw,8rem);color:var(--orange);letter-spacing:0.25em;line-height:1;margin:2rem 0}
+  .voter-count{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--white);line-height:1}
+  .voter-label{font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-bottom:2rem}
+
+  /* JOIN */
+  .join-screen{max-width:480px;margin:0 auto;padding:clamp(2rem,5vw,4rem) clamp(1.2rem,5vw,2.5rem);text-align:center}
+  .join-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,6vw,3.5rem);letter-spacing:0.04em;margin-bottom:0.8rem}
+  .join-sub{font-family:'Barlow Condensed',sans-serif;font-size:1rem;color:var(--muted);margin-bottom:2rem;line-height:1.6}
+  .join-input{width:100%;background:var(--card);border:1px solid var(--border);color:var(--white);font-family:'Bebas Neue',sans-serif;font-size:2.5rem;letter-spacing:0.3em;text-align:center;padding:1rem;border-radius:4px;outline:none;transition:border-color .2s;text-transform:uppercase}
+  .join-input:focus{border-color:var(--orange)}
+  .join-error{font-family:'Barlow Condensed',sans-serif;font-size:0.88rem;color:#ff5252;margin-top:0.5rem;min-height:1.2rem}
+
+  /* LEADER */
+  .leader-screen{padding:clamp(1.5rem,4vw,3rem) clamp(1.2rem,5vw,4rem);max-width:1100px;margin:0 auto}
+  .sc-counter{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.75rem;letter-spacing:0.22em;color:var(--orange);text-transform:uppercase;margin-bottom:0.6rem}
+  .sc-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3.5rem);letter-spacing:0.04em;line-height:1;margin-bottom:0.8rem}
+  .scenario-body{background:var(--card2);border-left:4px solid var(--orange);padding:clamp(1.2rem,3vw,2rem);margin-bottom:1.5rem;border-radius:0 6px 6px 0}
+  .situation-label{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:0.72rem;letter-spacing:0.25em;color:var(--orange);text-transform:uppercase;margin-bottom:0.6rem}
+  .situation-text{font-family:'Barlow Condensed',sans-serif;font-size:clamp(1.05rem,2.2vw,1.3rem);font-weight:600;color:var(--white);line-height:1.5}
+  .options-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+  @media(max-width:600px){.options-grid{grid-template-columns:1fr}}
+  .opt-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.2rem 1.4rem;display:flex;gap:1rem;align-items:flex-start}
+  .opt-letter{font-family:'Bebas Neue',sans-serif;font-size:2rem;line-height:1;flex-shrink:0;width:2rem;text-align:center}
+  .opt-A .opt-letter{color:var(--A)}.opt-B .opt-letter{color:var(--B)}.opt-C .opt-letter{color:var(--C)}.opt-D .opt-letter{color:var(--D)}
+  .opt-text{font-size:clamp(0.88rem,1.8vw,0.95rem);color:rgba(245,242,237,0.85);line-height:1.6;padding-top:0.3rem}
+  .vote-bar-wrap{margin-top:0.8rem}
+  .vote-bar-track{background:rgba(255,255,255,0.07);border-radius:2px;height:8px;width:100%;overflow:hidden}
+  .vote-bar-fill{height:100%;border-radius:2px;transition:width .5s ease;width:0%}
+  .fill-A{background:var(--A)}.fill-B{background:var(--B)}.fill-C{background:var(--C)}.fill-D{background:var(--D)}
+  .vote-count{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.8rem;letter-spacing:0.1em;color:var(--muted);margin-top:5px;display:flex;justify-content:space-between}
+  .live-label{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.75rem;letter-spacing:0.18em;color:var(--orange);text-transform:uppercase;display:flex;align-items:center;margin-bottom:1rem}
+  .live-dot{display:inline-block;width:8px;height:8px;background:var(--orange);border-radius:50%;margin-right:6px;animation:pulse 1.2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+  .total-votes{font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:1.5rem}
+  .total-votes span{color:var(--white);font-weight:600}
+  .discussion-box{background:rgba(255,92,26,0.07);border:1px solid rgba(255,92,26,0.2);border-radius:6px;padding:1.4rem 1.6rem;margin-bottom:1.5rem;display:none}
+  .discussion-box.show{display:block}
+  .discussion-label{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.72rem;letter-spacing:0.22em;color:var(--orange);text-transform:uppercase;margin-bottom:0.7rem}
+  .discussion-q p{font-size:0.95rem;color:var(--white);line-height:1.7;margin-bottom:0.5rem}
+  .discussion-q p:last-child{margin:0}
+  .leader-controls{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;padding-top:1.2rem;border-top:1px solid var(--border);margin-top:1rem}
+
+  /* MOBILE VOTE */
+  .vote-screen{min-height:calc(100vh - 60px);padding:clamp(1.5rem,5vw,3rem) clamp(1.2rem,5vw,2.5rem);display:flex;flex-direction:column}
+  .vote-situation{font-family:'Barlow Condensed',sans-serif;font-size:clamp(1rem,2.2vw,1.15rem);font-weight:600;color:var(--white);line-height:1.5;margin-bottom:1.8rem;padding:1.2rem 1.4rem;background:var(--card2);border-left:3px solid var(--orange);border-radius:0 4px 4px 0}
+  .vote-options{display:flex;flex-direction:column;gap:0.9rem;flex:1}
+  .vote-btn{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.4rem;display:flex;gap:1rem;align-items:center;cursor:pointer;transition:all .2s;min-height:64px;text-align:left;width:100%;font-family:'Barlow',sans-serif;font-size:clamp(0.9rem,2vw,1rem);color:rgba(245,242,237,0.85);line-height:1.5}
+  .vote-btn:hover{border-color:rgba(255,92,26,0.35)}
+  .vote-btn:active{transform:scale(0.98)}
+  .voted-A{background:rgba(255,92,26,0.15)!important;border-color:var(--A)!important;color:var(--white)!important;pointer-events:none}
+  .voted-B{background:rgba(59,158,255,0.12)!important;border-color:var(--B)!important;color:var(--white)!important;pointer-events:none}
+  .voted-C{background:rgba(168,85,247,0.12)!important;border-color:var(--C)!important;color:var(--white)!important;pointer-events:none}
+  .voted-D{background:rgba(34,211,160,0.1)!important;border-color:var(--D)!important;color:var(--white)!important;pointer-events:none}
+  .vbtn-letter{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;line-height:1;flex-shrink:0}
+  .vbtn-A .vbtn-letter{color:var(--A)}.vbtn-B .vbtn-letter{color:var(--B)}.vbtn-C .vbtn-letter{color:var(--C)}.vbtn-D .vbtn-letter{color:var(--D)}
+  .vote-thanks{text-align:center;padding:3rem 1rem;display:none;flex-direction:column;align-items:center;gap:1rem}
+  .vote-thanks-icon{font-size:3.5rem}
+  .vote-thanks-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,6vw,3.5rem);color:var(--orange);letter-spacing:0.05em}
+  .vote-thanks-sub{font-family:'Barlow Condensed',sans-serif;font-size:1rem;color:var(--muted);line-height:1.6;max-width:300px}
+  .vote-waiting{text-align:center;padding:3rem 1rem;display:none}
+  .vote-waiting p{font-family:'Barlow Condensed',sans-serif;font-size:1rem;color:var(--muted)}
+
+  /* INDIVIDUAL */
+  .individual-screen{max-width:680px;margin:0 auto;padding:clamp(1.5rem,4vw,3rem) clamp(1.2rem,5vw,2.5rem)}
+  .ind-progress{display:flex;gap:6px;margin-bottom:2rem;flex-wrap:wrap}
+  .ind-dot{width:28px;height:6px;background:var(--card2);border-radius:3px;transition:background .3s}
+  .ind-dot.done{background:var(--orange)}
+  .ind-dot.current{background:rgba(255,92,26,0.4)}
+  .ind-result{max-width:800px;margin:0 auto;padding:clamp(1.5rem,4vw,3rem) clamp(1.2rem,5vw,2.5rem)}
+  .result-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,200px),1fr));gap:1rem;margin:1.5rem 0}
+  .result-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.2rem;text-align:center}
+  .result-sc-num{font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.18em;color:var(--muted);text-transform:uppercase;margin-bottom:0.4rem}
+  .result-choice{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;line-height:1;margin-bottom:0.3rem}
+  .result-choice-A{color:var(--A)}.result-choice-B{color:var(--B)}.result-choice-C{color:var(--C)}.result-choice-D{color:var(--D)}
+  .result-text{font-size:0.78rem;color:var(--muted);line-height:1.4}
+
+  /* BUTTONS */
+  .btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:clamp(0.82rem,1.7vw,0.95rem);letter-spacing:0.16em;text-transform:uppercase;padding:0 clamp(1.2rem,3vw,2rem);height:48px;border-radius:4px;cursor:pointer;border:none;transition:all .2s;display:inline-flex;align-items:center;gap:0.5rem;min-height:44px;white-space:nowrap}
+  .btn-primary{background:var(--orange);color:var(--dark)}
+  .btn-primary:hover{background:#ff7a40;transform:translateY(-1px)}
+  .btn-ghost{background:transparent;color:var(--orange);border:1px solid var(--border)}
+  .btn-ghost:hover{border-color:var(--orange);background:rgba(255,92,26,0.06)}
+  .btn-reveal{background:rgba(255,92,26,0.12);color:var(--orange);border:1px solid rgba(255,92,26,0.25)}
+  .btn-reveal:hover{background:rgba(255,92,26,0.2)}
+
+  footer{padding:clamp(2rem,4vw,3rem) clamp(1.2rem,5vw,2.5rem);border-top:1px solid rgba(255,255,255,0.05);display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center}
+  .footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.12em;color:var(--orange)}
+  .footer-note{font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;letter-spacing:0.16em;color:var(--muted);text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="utbildning.html">RESOLVE</a>
+  <div class="nav-mode" id="navMode"></div>
+  <a class="nav-back" href="utbildning.html">← Tillbaka</a>
+</nav>
+
+<main>
+
+<!-- MODE SELECT -->
+<div class="screen active" id="screen-mode">
+  <div class="mode-screen">
+    <div class="mode-tag">🦁 Workshop — Ungdomar</div>
+    <div class="mode-title">VÄLJ<br><em>LÄGE</em></div>
+    <p class="mode-sub">Välj hur ni ska köra workshopen. Båda lägena utgår från samma scenarier men ger er olika typ av information om gruppen.</p>
+    <div class="mode-cards">
+      <div class="mode-card" onclick="startGroupSetup()">
+        <span class="mode-card-icon">📺</span>
+        <h3>GRUPPLÄGE</h3>
+        <p>Ledaren kör på storskärm. Ungdomarna röstar live via sina mobiler. Resultatet syns direkt och skapar diskussion.</p>
+      </div>
+      <div class="mode-card" onclick="startIndividual()">
+        <span class="mode-card-icon">📱</span>
+        <h3>INDIVIDUELLT LÄGE</h3>
+        <p>Varje person svarar på sin egna enhet utan att se de andras svar. Avslöjar hur individen tänker utan grupptryck.</p>
+      </div>
+      <div class="mode-card" onclick="showJoin()">
+        <span class="mode-card-icon">🔗</span>
+        <h3>GÅ MED I SESSION</h3>
+        <p>Du är deltagare och har fått en sessionskod från din ledare. Skriv in koden här så är du med live.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LEADER SETUP -->
+<div class="screen" id="screen-setup">
+  <div class="session-setup">
+    <div class="mode-tag">Gruppläge — Ledare</div>
+    <div class="sc-title" style="margin-bottom:1rem;text-align:center;">ER SESSIONSKOD</div>
+    <p style="font-family:'Barlow Condensed',sans-serif;font-size:1rem;color:var(--muted);margin-bottom:0.5rem;line-height:1.6;text-align:center;">Be ungdomarna öppna samma länk på sina mobiler, välja Gå med i session och skriva in den här koden.</p>
+    <div class="session-code-display" id="sessionCodeDisplay"></div>
+    <div class="voter-count" id="voterCount">0</div>
+    <div class="voter-label">inloggade just nu</div>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;">
+      <button class="btn btn-primary" onclick="startGroupLeader()">Starta workshopen →</button>
+      <button class="btn btn-ghost" onclick="goMode()">← Tillbaka</button>
+    </div>
+  </div>
+</div>
+
+<!-- JOIN SCREEN -->
+<div class="screen" id="screen-join">
+  <div class="join-screen">
+    <div class="mode-tag">🦁 Resolve Workshop</div>
+    <div class="join-title">SKRIV IN<br>KODEN</div>
+    <p class="join-sub">Din ledare har en sessionskod på storskärmen. Skriv in den här så är du med live.</p>
+    <input class="join-input" id="joinInput" maxlength="4" placeholder="XXXX" oninput="this.value=this.value.toUpperCase()">
+    <div class="join-error" id="joinError"></div>
+    <div style="margin-top:1.5rem;display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;">
+      <button class="btn btn-primary" onclick="joinSession()">Anslut →</button>
+      <button class="btn btn-ghost" onclick="goMode()">← Tillbaka</button>
+    </div>
+  </div>
+</div>
+
+<!-- LEADER SCENARIO VIEW -->
+<div class="screen" id="screen-leader">
+  <div class="leader-screen">
+    <div id="leaderContent"></div>
+    <div class="leader-controls">
+      <button class="btn btn-reveal" id="btnDiscuss" onclick="showDiscussion()">Visa diskussionsfrågor</button>
+      <button class="btn btn-primary" id="btnNextSc" onclick="nextScenario()">Nästa scenario →</button>
+      <button class="btn btn-ghost" onclick="goMode()">← Avsluta</button>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE VOTE VIEW -->
+<div class="screen" id="screen-vote">
+  <div class="vote-screen">
+    <div id="voteContent"></div>
+    <div class="vote-thanks" id="voteThanks">
+      <span class="vote-thanks-icon">🦅</span>
+      <div class="vote-thanks-title">RÖST INNE</div>
+      <p class="vote-thanks-sub">Vänta på att ledaren visar resultatet och går vidare till nästa scenario.</p>
+    </div>
+    <div class="vote-waiting" id="voteWaiting">
+      <span style="font-size:2rem;display:block;margin-bottom:1rem;">⏳</span>
+      <p>Du är ansluten. Väntar på att ledaren startar nästa scenario...</p>
+    </div>
+  </div>
+</div>
+
+<!-- INDIVIDUAL -->
+<div class="screen" id="screen-individual">
+  <div class="individual-screen" id="indContent"></div>
+</div>
+
+<!-- INDIVIDUAL RESULT -->
+<div class="screen" id="screen-ind-result">
+  <div class="ind-result">
+    <div class="mode-tag">Dina svar</div>
+    <div class="sc-title">DU VALDE<br><em>SÅ HÄR</em></div>
+    <p style="font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6;">Det finns inga rätta svar. Det viktiga är att du kan förklara varför du valde som du valde.</p>
+    <div class="result-grid" id="indResultGrid"></div>
+    <div style="background:rgba(255,92,26,0.07);border-left:3px solid var(--orange);padding:1.2rem 1.5rem;margin-top:1.5rem;border-radius:0 4px 4px 0;">
+      <strong style="font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;letter-spacing:0.18em;color:var(--orange);text-transform:uppercase;display:block;margin-bottom:0.4rem;">Kom ihåg</strong>
+      <p style="font-size:0.9rem;color:var(--white);">Det som skiljer ett bra beslut från ett dåligt är inte vilket alternativ du valde. Det är om du kan stå för det och förklara ditt tänk efteråt.</p>
+    </div>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem;">
+      <button class="btn btn-primary" onclick="resetIndividual()">Gör om workshopen</button>
+      <button class="btn btn-ghost" onclick="goMode()">← Välj läge</button>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <div class="footer-logo">RESOLVE</div>
+  <div class="footer-note">Workshop Ungdomar — 2025</div>
+  <div class="footer-note">teamresolve.se</div>
+</footer>
+
+<script>
+const ABLY_KEY = 'p1bgEQ._0kx3w:F4EIDVw1QLGvW6DqoOolYG6cTQao7Q0xacCbOHe-T58';
+
+const SCENARIOS = [
+  {
+    title:'GRUPPTRYCKET',
+    situation:'Du och tre kompisar är på väg hem. En av dem börjar reta en ensam kille som ni inte känner. Resten skrattar. Du känner att det är fel men alla andra verkar okej med det.',
+    options:[
+      {letter:'A',text:'Du skrattar med för att inte sticka ut och hoppas att det tar slut snart.'},
+      {letter:'B',text:'Du säger åt kompisen att det räcker och att ni sticker därifrån.'},
+      {letter:'C',text:'Du säger inget men går bort från situationen så du inte är en del av den.'},
+      {letter:'D',text:'Du pratar med killen som rets och bryter situationen utan att konfrontera kompisen direkt.'}
+    ],
+    discussion:['Vilket alternativ kräver mest mod och varför?','Vad händer med din relation till kompisarna om du väljer B? Är det värt det?','Är det skillnad mellan att delta aktivt och att bara vara tyst bredvid?','Vad tror ni att killen som rets minns från den kvällen?']
+  },
+  {
+    title:'RYKTET',
+    situation:'En video sprids i er klass. Den visar en tjej i en situation hon uppenbarligen inte ville filmas i. Folk kommenterar och skrattar. Någon skickar den till dig.',
+    options:[
+      {letter:'A',text:'Du öppnar den, tittar och skickar vidare utan att tänka mer på det.'},
+      {letter:'B',text:'Du öppnar den men skickar inte vidare. Du säger ingenting.'},
+      {letter:'C',text:'Du öppnar inte videon och svarar att du inte vill vara del av det.'},
+      {letter:'D',text:'Du kontaktar tjejen privat och berättar vad som sprids.'}
+    ],
+    discussion:['Vad händer med tjejen om alla väljer A? Vad händer om alla väljer C?','Är det skillnad på att sprida och att bara titta?','Vad gör du om den som skickat videon är din bästa kompis?','Vad säger lagen om att sprida bilder på någon utan deras tillstånd?']
+  },
+  {
+    title:'ERBJUDANDET',
+    situation:'En äldre kille som du respekterar erbjuder dig ett enkelt jobb. Du ska hålla ett paket ett par timmar och sedan lämna det vidare. Han lovar dig pengar och säger att det inte är farligt.',
+    options:[
+      {letter:'A',text:'Du tackar ja eftersom du litar på honom och pengarna behövs.'},
+      {letter:'B',text:'Du frågar direkt vad som är i paketet innan du bestämmer dig.'},
+      {letter:'C',text:'Du tackar nej utan förklaring och håller avstånd till killen framöver.'},
+      {letter:'D',text:'Du pratar med en vuxen du litar på om erbjudandet.'}
+    ],
+    discussion:['Vad händer om du tackar ja och paketet innehåller något olagligt?','Är det naivt att fråga vad som är i paketet eller är det faktiskt klokt?','Varför tror ni att erbjudandet kom just till dig?','Hur påverkar det dig om du tackar nej till något som känns fel?']
+  },
+  {
+    title:'KONFLIKTEN',
+    situation:'En konflikt mellan två i er umgängeskrets har eskalerat på sociala medier och folk börjar ta sida. Du känner båda. Din närmaste kompis ber dig stötta hans sida offentligt.',
+    options:[
+      {letter:'A',text:'Du stöttar kompisen offentligt för det är han du känner bäst.'},
+      {letter:'B',text:'Du håller dig utanför och säger till kompisen att du inte vill bli inblandad.'},
+      {letter:'C',text:'Du försöker prata med båda parterna privat och minska spänningen.'},
+      {letter:'D',text:'Du lämnar alla gruppchattar och sociala medier tills det lagt sig.'}
+    ],
+    discussion:['Vad händer med konflikten om fler och fler tar sida?','Kan man vara lojal mot en kompis och ändå inte stötta honom i allt?','Vilket alternativ eskalerar konflikten mest och vilket dämpar den?','Vad gör du om konflikten börjar röra sig mot fysiskt våld?']
+  },
+  {
+    title:'POLISEN',
+    situation:'Du och kompisar sitter i ett trappuppgång. En polisbil stannar och poliserna börjar ställa frågor. En av dina kompisar är irriterad och svarar aggressivt.',
+    options:[
+      {letter:'A',text:'Du backar upp kompisen för ni har inte gjort något och polisen ska inte behandla er så.'},
+      {letter:'B',text:'Du svarar lugnt på frågorna som riktas mot dig och ignorerar kompisens beteende.'},
+      {letter:'C',text:'Du säger tyst till kompisen att ta det lugnt utan att konfrontera polisen.'},
+      {letter:'D',text:'Du säger ingenting och låter de andra prata.'}
+    ],
+    discussion:['Vilket alternativ ger bäst utfall för er och varför?','Förändras svaret om polisen uppträder respektlöst mot er?','Vad kan hända med kompisen om han fortsätter vara aggressiv?','Finns det situationer då man ska ifrågasätta polisen och hur gör man det rätt?']
+  },
+  {
+    title:'VITTNET',
+    situation:'Du ser ett slagsmål i närheten. En person verkar bli allvarligt skadad. Du känner en av de inblandade ytligt. Ingen annan verkar reagera.',
+    options:[
+      {letter:'A',text:'Du filmar händelsen för att ha bevis.'},
+      {letter:'B',text:'Du ringer 112 direkt och beskriver vad du ser.'},
+      {letter:'C',text:'Du går därifrån för att inte bli inblandad.'},
+      {letter:'D',text:'Du ropar att du har ringt polisen för att avskräcka de som slåss.'}
+    ],
+    discussion:['Om alla väljer C vad händer med personen som skadats?','Är det skillnad på att ingripa fysiskt och att ringa hjälp?','Kan det finnas situationer då det faktiskt är farligare att stanna kvar?','Vad tror ni att ni kommer att minnas mer om tio år, att ni agerade eller att ni gick förbi?']
+  }
+];
+
+let ably=null, channel=null, sessionCode='', isLeader=false;
+let groupStep=0, votes={}, hasVoted=false;
+let indStep=0, indAnswers={};
+const LETTERS=['A','B','C','D'];
+
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+function setNavMode(txt){const el=document.getElementById('navMode');el.textContent=txt;el.style.display='block';}
+
+function goMode(){
+  if(ably){try{ably.close();}catch(e){}ably=null;channel=null;}
+  document.getElementById('navMode').style.display='none';
+  showScreen('screen-mode');
+}
+
+function genCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<4;i++)s+=c[Math.floor(Math.random()*c.length)];return s;}
+
+async function startGroupSetup(){
+  sessionCode=genCode();
+  document.getElementById('sessionCodeDisplay').textContent=sessionCode;
+  document.getElementById('voterCount').textContent='0';
+  setNavMode('Gruppläge — Ledare');
+  showScreen('screen-setup');
+  ably=new Ably.Realtime({key:ABLY_KEY});
+  channel=ably.channels.get('resolve-ws-'+sessionCode);
+  await channel.presence.enter({role:'leader'});
+  channel.presence.subscribe(()=>{
+    channel.presence.get((err,members)=>{
+      if(!err){
+        const n=members.filter(m=>m.data&&m.data.role==='voter').length;
+        const el=document.getElementById('voterCount');
+        if(el)el.textContent=n;
+      }
+    });
+  });
+}
+
+function startGroupLeader(){
+  isLeader=true;groupStep=0;votes={};
+  renderLeader();
+  showScreen('screen-leader');
+  channel.publish('ctrl',{action:'scenario',step:0});
+  channel.subscribe('vote',msg=>{
+    const{step,letter}=msg.data;
+    if(step!==groupStep)return;
+    if(!votes[step])votes[step]={A:0,B:0,C:0,D:0,total:0};
+    votes[step][letter]++;votes[step].total++;
+    updateBars(step);
+  });
+}
+
+function renderLeader(){
+  const sc=SCENARIOS[groupStep];
+  if(!votes[groupStep])votes[groupStep]={A:0,B:0,C:0,D:0,total:0};
+  const opts=sc.options.map(o=>`
+    <div class="opt-card opt-${o.letter}">
+      <div class="opt-letter">${o.letter}</div>
+      <div style="flex:1;">
+        <div class="opt-text">${o.text}</div>
+        <div class="vote-bar-wrap">
+          <div class="vote-bar-track"><div class="vote-bar-fill fill-${o.letter}" id="fill-${o.letter}" style="width:0%"></div></div>
+          <div class="vote-count"><span id="cnt-${o.letter}">0 röster</span><span id="pct-${o.letter}">0%</span></div>
+        </div>
+      </div>
+    </div>`).join('');
+  const discQs=sc.discussion.map(q=>`<p>🗣 ${q}</p>`).join('');
+  document.getElementById('leaderContent').innerHTML=`
+    <div style="margin-bottom:1.5rem;">
+      <div class="live-label"><span class="live-dot"></span>Live röstning aktiv</div>
+      <div class="sc-counter">Scenario ${groupStep+1} av ${SCENARIOS.length}</div>
+      <div class="sc-title">${sc.title}</div>
+    </div>
+    <div class="scenario-body">
+      <div class="situation-label">Situationen</div>
+      <div class="situation-text">${sc.situation}</div>
+    </div>
+    <div class="total-votes">Totalt inkomna röster: <span id="totalVotes">0</span></div>
+    <div class="options-grid">${opts}</div>
+    <div class="discussion-box" id="discBox">
+      <div class="discussion-label">💬 Diskutera detta med gruppen</div>
+      <div class="discussion-q">${discQs}</div>
+    </div>`;
+  document.getElementById('btnDiscuss').style.display='inline-flex';
+  document.getElementById('btnNextSc').textContent=groupStep<SCENARIOS.length-1?'Nästa scenario →':'Avsluta workshopen';
+}
+
+function updateBars(step){
+  const v=votes[step];if(!v)return;
+  LETTERS.forEach(l=>{
+    const pct=v.total>0?Math.round((v[l]/v.total)*100):0;
+    const fill=document.getElementById('fill-'+l);
+    const cnt=document.getElementById('cnt-'+l);
+    const pctEl=document.getElementById('pct-'+l);
+    if(fill)fill.style.width=pct+'%';
+    if(cnt)cnt.textContent=v[l]+' röst'+(v[l]===1?'':'er');
+    if(pctEl)pctEl.textContent=pct+'%';
+  });
+  const t=document.getElementById('totalVotes');
+  if(t)t.textContent=v.total;
+}
+
+function showDiscussion(){
+  const box=document.getElementById('discBox');
+  if(box){box.classList.add('show');box.scrollIntoView({behavior:'smooth',block:'start'});}
+  document.getElementById('btnDiscuss').style.display='none';
+}
+
+function nextScenario(){
+  if(groupStep<SCENARIOS.length-1){
+    groupStep++;renderLeader();
+    channel.publish('ctrl',{action:'scenario',step:groupStep});
+  }else{
+    channel.publish('ctrl',{action:'end'});
+    document.getElementById('leaderContent').innerHTML=`
+      <div style="text-align:center;padding:3rem 1rem;">
+        <span style="font-size:4rem;display:block;margin-bottom:1rem;">🦅</span>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,7vw,5rem);color:var(--orange);letter-spacing:0.05em;line-height:1;margin-bottom:0.8rem;">BRA JOBBAT</div>
+        <p style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;color:var(--muted);max-width:500px;margin:0 auto;line-height:1.6;">Ni har gått igenom alla ${SCENARIOS.length} scenarier. Det viktigaste är inte vad ni valde utan att ni kan förklara varför.</p>
+      </div>`;
+    document.getElementById('btnDiscuss').style.display='none';
+    document.getElementById('btnNextSc').style.display='none';
+  }
+}
+
+function showJoin(){showScreen('screen-join');}
+
+async function joinSession(){
+  const code=document.getElementById('joinInput').value.trim().toUpperCase();
+  if(code.length!==4){document.getElementById('joinError').textContent='Koden är fyra tecken lång.';return;}
+  document.getElementById('joinError').textContent='Ansluter...';
+  try{
+    ably=new Ably.Realtime({key:ABLY_KEY});
+    channel=ably.channels.get('resolve-ws-'+code);
+    await channel.presence.enter({role:'voter'});
+    sessionCode=code;hasVoted=false;
+    setNavMode('Deltagare');
+    channel.subscribe('ctrl',msg=>{
+      if(msg.data.action==='scenario'){
+        groupStep=msg.data.step;hasVoted=false;
+        renderMobileVote();
+        document.getElementById('voteThanks').style.display='none';
+        document.getElementById('voteWaiting').style.display='none';
+        document.getElementById('voteContent').style.display='block';
+        showScreen('screen-vote');
+      }
+      if(msg.data.action==='end'){
+        document.getElementById('voteContent').style.display='none';
+        document.getElementById('voteThanks').style.display='none';
+        const w=document.getElementById('voteWaiting');
+        w.style.display='block';
+        w.innerHTML='<span style="font-size:2.5rem;display:block;margin-bottom:0.8rem;">🦅</span><p style="font-family:Bebas Neue,sans-serif;font-size:1.8rem;color:var(--orange);letter-spacing:0.05em;">WORKSHOPEN ÄR KLAR</p><p style="font-family:Barlow Condensed,sans-serif;font-size:1rem;color:var(--muted);margin-top:0.5rem;">Bra jobbat idag.</p>';
+      }
+    });
+    showScreen('screen-vote');
+    document.getElementById('voteContent').style.display='none';
+    document.getElementById('voteThanks').style.display='none';
+    document.getElementById('voteWaiting').style.display='block';
+  }catch(e){
+    document.getElementById('joinError').textContent='Kunde inte ansluta. Kontrollera koden och försök igen.';
+  }
+}
+
+function renderMobileVote(){
+  const sc=SCENARIOS[groupStep];
+  const opts=sc.options.map(o=>`
+    <button class="vote-btn vbtn-${o.letter}" id="vbtn-${o.letter}" onclick="castVote('${o.letter}')">
+      <span class="vbtn-letter">${o.letter}</span>
+      <span>${o.text}</span>
+    </button>`).join('');
+  document.getElementById('voteContent').innerHTML=`
+    <div style="margin-bottom:1.2rem;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:0.72rem;letter-spacing:0.25em;color:var(--orange);text-transform:uppercase;margin-bottom:0.4rem;">Scenario ${groupStep+1} av ${SCENARIOS.length}</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(1.6rem,4vw,2.2rem);letter-spacing:0.04em;margin-bottom:0.8rem;">${sc.title}</div>
+    </div>
+    <div class="vote-situation">${sc.situation}</div>
+    <div class="vote-options" style="margin-top:1.2rem;">${opts}</div>
+    <p style="font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;color:var(--muted);margin-top:1.2rem;">Det finns inget rätt svar. Välj det som stämmer mest med hur du faktiskt hade agerat.</p>`;
+}
+
+function castVote(letter){
+  if(hasVoted)return;hasVoted=true;
+  LETTERS.forEach(l=>{const btn=document.getElementById('vbtn-'+l);if(btn){btn.disabled=true;if(l===letter)btn.classList.add('voted-'+l);}});
+  channel.publish('vote',{step:groupStep,letter});
+  document.getElementById('voteContent').style.display='none';
+  document.getElementById('voteThanks').style.display='flex';
+}
+
+function startIndividual(){
+  indStep=0;indAnswers={};
+  setNavMode('Individuellt');
+  renderIndividual();
+  showScreen('screen-individual');
+}
+
+function renderIndividual(){
+  const sc=SCENARIOS[indStep];
+  const dots=SCENARIOS.map((_,i)=>`<div class="ind-dot ${i<indStep?'done':i===indStep?'current':''}"></div>`).join('');
+  const opts=sc.options.map(o=>`
+    <button class="vote-btn vbtn-${o.letter}" onclick="answerInd('${o.letter}')">
+      <span class="vbtn-letter">${o.letter}</span>
+      <span>${o.text}</span>
+    </button>`).join('');
+  document.getElementById('indContent').innerHTML=`
+    <div class="ind-progress">${dots}</div>
+    <div class="sc-counter">Scenario ${indStep+1} av ${SCENARIOS.length}</div>
+    <div class="sc-title" style="margin-bottom:1.2rem;">${sc.title}</div>
+    <div class="vote-situation">${sc.situation}</div>
+    <div class="vote-options" style="margin-top:1.5rem;">${opts}</div>
+    <p style="font-family:'Barlow Condensed',sans-serif;font-size:0.82rem;color:var(--muted);margin-top:1.5rem;">Det finns inget rätt svar. Välj det alternativ som stämmer mest med hur du faktiskt hade agerat.</p>`;
+}
+
+function answerInd(letter){
+  indAnswers[indStep]={letter,text:SCENARIOS[indStep].options.find(o=>o.letter===letter).text};
+  if(indStep<SCENARIOS.length-1){indStep++;renderIndividual();window.scrollTo(0,0);}
+  else showIndResult();
+}
+
+function showIndResult(){
+  const cards=SCENARIOS.map((sc,i)=>{
+    const ans=indAnswers[i];
+    return `<div class="result-card"><div class="result-sc-num">Scenario ${i+1}</div><div class="result-choice result-choice-${ans.letter}">${ans.letter}</div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.8rem;color:var(--white);margin-bottom:0.4rem;">${sc.title}</div><div class="result-text">${ans.text}</div></div>`;
+  }).join('');
+  document.getElementById('indResultGrid').innerHTML=cards;
+  showScreen('screen-ind-result');
+}
+
+function resetIndividual(){startIndividual();}
+</script>
+</body>
+</html>
