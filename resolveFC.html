@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Resolve — Spår 1: Föräldrar &amp; Coacher</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700&family=Barlow:wght@300;400;500&display=swap');
+  :root{--orange:#FF5C1A;--dark:#0D1117;--white:#F5F2ED;--gray:#1E2530;--gray2:#151B24;--muted:rgba(245,242,237,0.55);--red:#E53935;--amber:#FFB300;--green:#43A047}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--dark);color:var(--white);font-family:'Barlow',sans-serif;font-weight:300;font-size:clamp(15px,2.2vw,17px);line-height:1.7;overflow-x:hidden}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(13,17,23,0.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,92,26,0.2);padding:0 clamp(1rem,4vw,3rem);height:64px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.2rem,2.5vw,1.6rem);color:var(--orange);letter-spacing:0.12em;text-decoration:none;white-space:nowrap}
+  .nav-back{font-family:'Barlow Condensed',sans-serif;font-size:0.82rem;letter-spacing:0.15em;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color 0.2s}
+  .nav-back:hover{color:var(--orange)}
+  .hero{min-height:65vh;padding:clamp(7rem,14vw,11rem) clamp(1.5rem,6vw,5rem) clamp(4rem,8vw,6rem);position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 70% at 90% 20%,rgba(255,92,26,0.08) 0%,transparent 65%);pointer-events:none}
+  .hero-tag{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:clamp(0.72rem,1.4vw,0.85rem);letter-spacing:0.25em;color:var(--orange);text-transform:uppercase;margin-bottom:1rem;animation:fadeUp 0.5s ease forwards}
+  .hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,9vw,7rem);line-height:0.95;letter-spacing:0.04em;animation:fadeUp 0.6s ease forwards 0.15s;opacity:0}
+  .hero h1 em{font-style:normal;color:var(--orange)}
+  .hero-sub{font-family:'Barlow Condensed',sans-serif;font-size:clamp(1rem,2.2vw,1.2rem);color:var(--muted);max-width:600px;margin-top:1.5rem;line-height:1.6;animation:fadeUp 0.6s ease forwards 0.3s;opacity:0}
+  .toc{background:var(--gray);border-left:3px solid var(--orange);margin:0 clamp(1.5rem,6vw,5rem);padding:2rem clamp(1.2rem,3vw,2rem)}
+  .toc-title{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.1em;color:var(--orange);margin-bottom:1rem}
+  .toc ol{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.5rem 2rem;counter-reset:toc-counter}
+  .toc li{counter-increment:toc-counter}
+  .toc a{font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;font-weight:600;letter-spacing:0.06em;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color 0.2s;display:flex;gap:0.5rem;align-items:baseline}
+  .toc a::before{content:counter(toc-counter,decimal-leading-zero);font-size:0.7rem;color:var(--orange);flex-shrink:0}
+  .toc a:hover{color:var(--white)}
+  .content{padding:clamp(3rem,6vw,5rem) clamp(1.5rem,6vw,5rem)}
+  .module{margin-bottom:clamp(3.5rem,7vw,5rem);scroll-margin-top:80px}
+  .module-header{display:flex;align-items:center;gap:1.2rem;margin-bottom:1.8rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,92,26,0.2)}
+  .module-num{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;line-height:1;color:var(--orange);opacity:0.4;flex-shrink:0}
+  .module-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.6rem,3.5vw,2.2rem);letter-spacing:0.06em;line-height:1.1}
+  .module-title small{display:block;font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:0.2em;color:var(--orange);text-transform:uppercase;margin-bottom:0.3rem}
+  p{margin-bottom:1rem;color:rgba(245,242,237,0.85)}
+  .lead{font-family:'Barlow Condensed',sans-serif;font-size:clamp(1.05rem,2.2vw,1.2rem);color:var(--white);line-height:1.6;margin-bottom:1.5rem}
+  .callout{background:rgba(255,92,26,0.07);border-left:3px solid var(--orange);padding:1.2rem 1.5rem;margin:1.5rem 0;border-radius:0 4px 4px 0}
+  .callout strong{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.8rem;letter-spacing:0.18em;color:var(--orange);text-transform:uppercase;display:block;margin-bottom:0.4rem}
+  .table-wrap{overflow-x:auto;margin:1.5rem 0;-webkit-overflow-scrolling:touch}
+  table{width:100%;border-collapse:collapse;min-width:400px;font-size:clamp(0.82rem,1.8vw,0.92rem)}
+  thead tr{background:var(--orange)}
+  thead th{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.8rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.8rem 1rem;text-align:left;color:var(--dark)}
+  tbody tr{border-bottom:1px solid rgba(255,255,255,0.06)}
+  tbody tr:nth-child(even){background:rgba(255,255,255,0.03)}
+  tbody td{padding:0.75rem 1rem;color:rgba(245,242,237,0.85);vertical-align:top}
+  tbody td:first-child{font-weight:500;color:var(--white)}
+  .signals{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:1rem;margin:1.5rem 0}
+  .signal-card{background:var(--gray);border:1px solid rgba(255,255,255,0.08);border-radius:4px;padding:1.2rem 1.3rem}
+  .signal-card .s-icon{font-size:1.4rem;margin-bottom:0.6rem;display:block}
+  .signal-card h4{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.9rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--orange);margin-bottom:0.4rem}
+  .signal-card p{font-size:0.85rem;margin:0}
+  .steps{margin:1.5rem 0}
+  .step{display:flex;gap:1.2rem;align-items:flex-start;padding:1rem 0;border-bottom:1px solid rgba(255,255,255,0.06)}
+  .step:last-child{border-bottom:none}
+  .step-num{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;line-height:1;color:var(--orange);flex-shrink:0;min-width:2rem;text-align:center}
+  .step-body h4{font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;font-size:0.95rem;margin-bottom:0.3rem}
+  .step-body p{font-size:0.88rem;margin:0}
+  .law-box{background:var(--gray2);border:1px solid rgba(255,92,26,0.25);border-radius:4px;padding:1.5rem;margin:1.5rem 0}
+  .law-box h4{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.1em;color:var(--orange);margin-bottom:0.7rem}
+  .law-box p{font-size:0.88rem;margin-bottom:0.5rem}
+  .law-box p:last-child{margin:0}
+  footer{padding:clamp(2rem,4vw,3.5rem) clamp(1.5rem,6vw,5rem);border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center}
+  .footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:0.12em;color:var(--orange)}
+  .footer-note{font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;letter-spacing:0.18em;color:var(--muted);text-transform:uppercase}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html">RESOLVE</a>
+  <a class="nav-back" href="index.html">← Tillbaka</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-tag">🦅 Spår 1 — Föräldrar &amp; Coacher</div>
+  <h1>LEDARSKAP<br>I EN <em>TUFF</em><br>VERKLIGHET</h1>
+  <p class="hero-sub">Det räcker inte att vilja väl. Du behöver veta vad du tittar efter, hur du pratar med unga och vad du faktiskt kan göra när det väl händer.</p>
+</section>
+
+<div class="toc">
+  <div class="toc-title">INNEHÅLL</div>
+  <ol>
+    <li><a href="#m1">Samhällsläge 2024 och 2025</a></li>
+    <li><a href="#m2">Tidiga varningstecken</a></li>
+    <li><a href="#m3">Gängrekrytering går till så här</a></li>
+    <li><a href="#m4">Ditt ansvar som vuxen ledare</a></li>
+    <li><a href="#m5">Juridik för föräldrar och coacher</a></li>
+    <li><a href="#m6">Praktisk kommunikation med unga</a></li>
+    <li><a href="#m7">Krissituation steg för steg</a></li>
+    <li><a href="#m8">Resolve-metoden</a></li>
+  </ol>
+</div>
+
+<div class="content">
+
+  <div class="module" id="m1">
+    <div class="module-header">
+      <div class="module-num">01</div>
+      <div class="module-title"><small>Samhällsanalys</small>SVERIGE 2024 OCH 2025 — VERKLIGHETEN VI ARBETAR I</div>
+    </div>
+    <p class="lead">Sverige befinner sig i ett historiskt läge när det gäller grov brottslighet bland unga. Att förstå hotbilden är inte pessimism. Det är ansvarsfullt ledarskap.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Indikator</th><th>Trend 2024</th><th>Vad det innebär för dig</th></tr></thead>
+        <tbody>
+          <tr><td>Dödligt skjutvapenvåld</td><td>Fortsatt hög nivå efter historiskt rekord 2022 och 2023</td><td>Ungdomar i utsatta områden växer upp med normaliserat våld runt sig</td></tr>
+          <tr><td>Rekryteringsålder till kriminella nätverk</td><td>Sänkt ned mot 12 till 14 år</td><td>Vuxna måste identifiera riskerna långt innan ungdomarna fyllt 18</td></tr>
+          <tr><td>Knivvåld bland unga</td><td>Ökande trend och vanligast i åldern 15 till 29 år</td><td>Konflikter eskalerar snabbare och med farligare verktyg än förr</td></tr>
+          <tr><td>Digitalt initierade konflikter</td><td>Stark ökning de senaste åren</td><td>En konflikt som börjar online kan bli fysisk på några timmar</td></tr>
+          <tr><td>Antal unga i kriminella nätverk</td><td>Polisen bedömer att det rör sig om flera tusen i Sverige</td><td>Nätverken finns i din stad och inte bara i statistiken</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout">
+      <strong>Resolve-perspektiv</strong>
+      Det handlar inte om att skapa rädsla. Det handlar om att vara ärlig mot sig själv och de unga man ansvarar för. En coach som inte ser verkligheten kan inte skydda sina spelare.
+    </div>
+  </div>
+
+  <div class="module" id="m2">
+    <div class="module-header">
+      <div class="module-num">02</div>
+      <div class="module-title"><small>Riskidentifiering</small>TIDIGA VARNINGSTECKEN</div>
+    </div>
+    <p class="lead">Gängrekrytering sker inte över en natt. Det finns ett mönster och det mönstret är synligt om du vet vad du tittar efter.</p>
+    <div class="signals">
+      <div class="signal-card">
+        <span class="s-icon">📱</span>
+        <h4>Förändrat beteende digitalt</h4>
+        <p>Ny telefonvana, hemlighetsfull, okänd kontaktkrets online och nya symboler i profilen som du inte känner igen.</p>
+      </div>
+      <div class="signal-card">
+        <span class="s-icon">💰</span>
+        <h4>Oförklarade tillgångar</h4>
+        <p>Ny utrustning, kläder och pengar utan en känd inkomstkälla. Fråga utan att anklaga.</p>
+      </div>
+      <div class="signal-card">
+        <span class="s-icon">👥</span>
+        <h4>Ny och okänd umgängeskrets</h4>
+        <p>Gamla vänner försvinner. Nya vuxna kontakter som aldrig presenteras. Hemlighetsmakeri kring var man är.</p>
+      </div>
+      <div class="signal-card">
+        <span class="s-icon">🏫</span>
+        <h4>Skolfrånvaro och prestationsfall</h4>
+        <p>Skolan tappar prioritet snabbt. Ursäkter för att undvika aktiviteter. Trötthet utan förklaring.</p>
+      </div>
+      <div class="signal-card">
+        <span class="s-icon">⚡</span>
+        <h4>Ökad spänning och aggressivitet</h4>
+        <p>Kort stubin. Överreaktion på vanlig kritik. Defensivt vid enkla och harmlösa frågor.</p>
+      </div>
+      <div class="signal-card">
+        <span class="s-icon">🌙</span>
+        <h4>Förändrade tider</h4>
+        <p>Sena nätter utan förklaring. Borta under helger. Otillgänglig utan att kommunicera var man är.</p>
+      </div>
+    </div>
+    <div class="callout">
+      <strong>Viktigt att komma ihåg</strong>
+      Ett enskilt tecken är inte bevis på något. Men när tre eller fler saker förändras samtidigt så är det dags att ta initiativet och ha ett tryggt samtal.
+    </div>
+  </div>
+
+  <div class="module" id="m3">
+    <div class="module-header">
+      <div class="module-num">03</div>
+      <div class="module-title"><small>Förståelse</small>GÄNGREKRYTERING GÅR TILL SÅ HÄR</div>
+    </div>
+    <p class="lead">Kriminella nätverk börjar inte med hot. De börjar med tillhörighet, status och känslan av att äntligen vara en del av något.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>De identifierar sårbarheten</h4>
+          <p>Nätverket väljer unga som söker tillhörighet, saknar tydliga vuxna förebilder, har ekonomisk stress hemma eller befinner sig i pågående konflikter i skolan.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Kontakt skapas med värme</h4>
+          <p>Det börjar vänligt. Gåvor, bekräftelse, status och skydd erbjuds. Den unge känner sig sedd och respekterad och kanske för första gången på länge.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Isoleringen börjar sakta</h4>
+          <p>Den unge uppmuntras gradvis att hålla avstånd till familj, gamla vänner och skolpersonal. Budskapet är att de inte förstår dig. Nätverket tar över som enda referenspunkt.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Småleveranser och testuppdrag</h4>
+          <p>De första uppgifterna verkar triviala. Hålla ett paket. Passa upp på en plats en stund. Men skulden börjar byggas upp och när den unge vill backa är det för sent.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h4>Kontroll genom skuld och rädsla</h4>
+          <p>Nu är den unge involverad i brott. Att ta sig ur är svårt och riskabelt. Lojaliteten upprätthålls med en kombination av skuld, belöning och rädsla.</p>
+        </div>
+      </div>
+    </div>
+    <div class="callout">
+      <strong>Resolve-princip</strong>
+      Det bästa skyddet mot rekrytering är en ung person som redan har det nätverket erbjuder. Tillhörighet, respekt, syfte och tydliga vuxna som bryr sig. Det är precis vad Resolve bygger.
+    </div>
+  </div>
+
+  <div class="module" id="m4">
+    <div class="module-header">
+      <div class="module-num">04</div>
+      <div class="module-title"><small>Ledarskap</small>DITT ANSVAR SOM VUXEN LEDARE</div>
+    </div>
+    <p class="lead">Du behöver inte vara expert på kriminalitet för att göra skillnad. Du behöver vara en pålitlig, konsekvent och modig vuxen.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Princip</th><th>I praktiken</th></tr></thead>
+        <tbody>
+          <tr><td>Var förutsägbar</td><td>Ungdomar behöver vuxna som är där. Inte perfekta utan konsekventa. Visa upp, håll vad du lovar.</td></tr>
+          <tr><td>Ställ frågor utan att döma</td><td>Hur har du det är mer kraftfullt än varför gör du så. Nyfikenhet öppnar dörrarna. Anklagelse stänger dem.</td></tr>
+          <tr><td>Sätt gränser med respekt</td><td>En gräns utan förklaring skapar motstånd. En gräns med tydlig orsak skapar respekt.</td></tr>
+          <tr><td>Agera vid oro och vänta inte</td><td>Vänta inte på att situationen ska lösa sig. Att agera tidigt är alltid enklare än att agera sent.</td></tr>
+          <tr><td>Involvera rätt stöd</td><td>Du behöver inte lösa allt ensam. Socialtjänst, skola och Resolve är resurser som finns för att hjälpa.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="module" id="m5">
+    <div class="module-header">
+      <div class="module-num">05</div>
+      <div class="module-title"><small>Juridik</small>VAD DU HAR RÄTT OCH SKYLDIGHET ATT GÖRA</div>
+    </div>
+    <div class="law-box">
+      <h4>ANMÄLNINGSSKYLDIGHET</h4>
+      <p>Alla som arbetar i verksamhet med barn och unga är skyldiga att anmäla till socialtjänsten om de misstänker att ett barn far illa. Det gäller även om du är osäker på om det stämmer.</p>
+      <p>Du anmäler din oro och inte ett fastställt faktum. Det är socialtjänstens uppgift att utreda vad som faktiskt stämmer.</p>
+    </div>
+    <div class="law-box">
+      <h4>OROSANMÄLAN — SÅ HÄR GÖR DU</h4>
+      <p>Steg 1: Ring socialtjänsten i den unges stadsdel. Du kan ringa och rådgöra anonymt.</p>
+      <p>Steg 2: Lämna din information. Vem du är, vem ärendet gäller och varför du är orolig.</p>
+      <p>Steg 3: Socialtjänsten tar över ärendet. Du har gjort din del.</p>
+      <p>Steg 4: Dokumentera vad du sett, när det hände och varför du valde att agera.</p>
+    </div>
+    <div class="law-box">
+      <h4>TYSTNADSPLIKT OCH SEKRETESS</h4>
+      <p>Anmälningsskyldigheten bryter sekretessen. Du får anmäla oro för ett barn även om det innebär att du delar information du normalt inte delar.</p>
+      <p>Att inte anmäla när du borde kan ha juridiska konsekvenser för dig som ansvarig vuxen.</p>
+    </div>
+  </div>
+
+  <div class="module" id="m6">
+    <div class="module-header">
+      <div class="module-num">06</div>
+      <div class="module-title"><small>Kommunikation</small>PRAKTISK KOMMUNIKATION MED UNGA</div>
+    </div>
+    <p class="lead">Hur du pratar med en ung person avgör om du når in eller inte. Det handlar om teknik och inte om att vara perfekt.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Situation</th><th>Fungerar inte</th><th>Fungerar</th></tr></thead>
+        <tbody>
+          <tr><td>Den unge är tystlåten</td><td>Varför pratar du inte med mig?</td><td>Sitt bredvid. Gör något parallellt. Pressa inte. Närvaron räcker.</td></tr>
+          <tr><td>Du misstänker problem</td><td>Jag vet att du är inblandad i något.</td><td>Jag märker att du verkar tung. Vill du prata eller bara hänga lite?</td></tr>
+          <tr><td>Du sätter en gräns</td><td>Det är regler. Punkt.</td><td>Det funkar inte så här och jag säger det för att jag bryr mig om dig.</td></tr>
+          <tr><td>Den unge är arg</td><td>Höja rösten och argumentera tillbaka</td><td>Sänk din ton. Ge utrymme. Kom tillbaka när affektnivån är lägre.</td></tr>
+          <tr><td>Den unge har gjort fel</td><td>Skam och straff utan samtal</td><td>Konsekvens plus samtal om varför det hände plus en tydlig väg framåt.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="module" id="m7">
+    <div class="module-header">
+      <div class="module-num">07</div>
+      <div class="module-title"><small>Beredskap</small>KRISSITUATION STEG FÖR STEG</div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Säkra situationen</h4>
+          <p>Din säkerhet och de ungas säkerhet är prioritet ett. Agera inte heroiskt om situationen är farlig.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Ring 112 vid akut fara</h4>
+          <p>Tveka inte. Det är alltid bättre att tillkalla hjälp en gång för mycket.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Kontakta ansvarig chef eller ledare</h4>
+          <p>Informera omedelbart. Du ska inte bära det ansvaret ensam.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Dokumentera det som hände</h4>
+          <p>Skriv ned vad som hände, när det hände, vilka som var inblandade och vad du faktiskt gjorde. Datum och klockslag.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h4>Ta hand om dig själv efteråt</h4>
+          <p>En traumatisk händelse påverkar dig. Sök stöd. Debriefing är inte svaghet utan professionalism.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="module" id="m8">
+    <div class="module-header">
+      <div class="module-num">08</div>
+      <div class="module-title"><small>Resolve</small>RESOLVE-METODEN</div>
+    </div>
+    <p class="lead">Resolve arbetar utifrån tre pelare som tillsammans bygger det starkaste skyddet mot negativ påverkan utifrån.</p>
+    <div class="signals">
+      <div class="signal-card">
+        <span class="s-icon">💪</span>
+        <h4>Fysisk träning</h4>
+        <p>Kroppen är ett verktyg för disciplin, stresstolerans och självkontroll. En tränad kropp ger ett starkare och mer motståndskraftigt sinne.</p>
+      </div>
+      <div class="signal-card">
+        <span class="s-icon">🎯</span>
+        <h4>Karaktärsbyggande</h4>
+        <p>Viljestyrka, ansvar och ledarskap tränas och inte föds. Resolve skapar miljöer där dessa egenskaper kan växa fram på riktigt.</p>
+      </div>
+      <div class="signal-card">
+        <span class="s-icon">🧭</span>
+        <h4>Rätt val</h4>
+        <p>Att fatta bra beslut under press. Att tänka på konsekvenserna. Att ha integritet när det faktiskt kostar något.</p>
+      </div>
+    </div>
+    <div class="callout">
+      <strong>Status: Resolve System Optimized — Unique Education Structure Integrated</strong>
+      Spår 1 komplett. Fortis et liber — Stark och fri.
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-logo">RESOLVE</div>
+  <div class="footer-note">Spår 1 — Föräldrar &amp; Coacher — 2025</div>
+  <div class="footer-note">teamresolve.se</div>
+</footer>
+</body>
+</html>

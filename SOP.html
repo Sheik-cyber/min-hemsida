@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Resolve — SOP Resolve Värdar</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700&family=Barlow:wght@300;400;500&display=swap');
+  :root{--orange:#FF5C1A;--dark:#0D1117;--white:#F5F2ED;--gray:#1E2530;--gray2:#151B24;--muted:rgba(245,242,237,0.55)}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--dark);color:var(--white);font-family:'Barlow',sans-serif;font-weight:300;font-size:clamp(15px,2.2vw,17px);line-height:1.7;overflow-x:hidden}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(13,17,23,0.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,92,26,0.2);padding:0 clamp(1rem,4vw,3rem);height:64px;display:flex;align-items:center;justify-content:space-between}
+  .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.2rem,2.5vw,1.6rem);color:var(--orange);letter-spacing:0.12em;text-decoration:none}
+  .nav-back{font-family:'Barlow Condensed',sans-serif;font-size:0.82rem;letter-spacing:0.15em;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color 0.2s}
+  .nav-back:hover{color:var(--orange)}
+  .hero{min-height:55vh;padding:clamp(7rem,14vw,10rem) clamp(1.5rem,6vw,5rem) clamp(4rem,8vw,6rem);display:flex;flex-direction:column;justify-content:flex-end}
+  .hero-tag{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:clamp(0.72rem,1.4vw,0.85rem);letter-spacing:0.25em;color:var(--orange);text-transform:uppercase;margin-bottom:1rem}
+  .hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,8vw,6.5rem);line-height:0.95;letter-spacing:0.04em}
+  .hero h1 em{font-style:normal;color:var(--orange)}
+  .hero-sub{font-family:'Barlow Condensed',sans-serif;font-size:clamp(1rem,2.2vw,1.2rem);color:var(--muted);max-width:580px;margin-top:1.5rem;line-height:1.6}
+  .content{padding:clamp(3rem,6vw,5rem) clamp(1.5rem,6vw,5rem)}
+  .module{margin-bottom:clamp(3rem,7vw,5rem);scroll-margin-top:80px}
+  .module-header{display:flex;align-items:center;gap:1.2rem;margin-bottom:1.8rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,92,26,0.2)}
+  .module-num{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;line-height:1;color:var(--orange);opacity:0.35;flex-shrink:0;min-width:2.5rem}
+  .module-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.5rem,3.2vw,2rem);letter-spacing:0.06em;line-height:1.1}
+  .module-title small{display:block;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:0.22em;color:var(--orange);text-transform:uppercase;margin-bottom:0.3rem}
+  p{margin-bottom:1rem;color:rgba(245,242,237,0.82)}
+  .lead{font-family:'Barlow Condensed',sans-serif;font-size:clamp(1.05rem,2vw,1.15rem);color:var(--white);line-height:1.6;margin-bottom:1.5rem}
+  .callout{background:rgba(255,92,26,0.07);border-left:3px solid var(--orange);padding:1.2rem 1.5rem;margin:1.5rem 0}
+  .callout strong{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:0.18em;color:var(--orange);text-transform:uppercase;display:block;margin-bottom:0.4rem}
+  .table-wrap{overflow-x:auto;margin:1.5rem 0;-webkit-overflow-scrolling:touch}
+  table{width:100%;border-collapse:collapse;min-width:360px;font-size:clamp(0.82rem,1.8vw,0.92rem)}
+  thead tr{background:var(--orange)}
+  thead th{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.75rem 1rem;text-align:left;color:var(--dark)}
+  tbody tr{border-bottom:1px solid rgba(255,255,255,0.06)}
+  tbody tr:nth-child(even){background:rgba(255,255,255,0.03)}
+  tbody td{padding:0.7rem 1rem;color:rgba(245,242,237,0.82);vertical-align:top}
+  tbody td:first-child{font-weight:500;color:var(--white)}
+  .steps{margin:1.5rem 0}
+  .step{display:flex;gap:1.2rem;align-items:flex-start;padding:1rem 0;border-bottom:1px solid rgba(255,255,255,0.06)}
+  .step:last-child{border-bottom:none}
+  .step-num{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;line-height:1;color:var(--orange);flex-shrink:0;min-width:1.8rem}
+  .step-body h4{font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;font-size:0.92rem;margin-bottom:0.3rem}
+  .step-body p{font-size:0.86rem;margin:0}
+  .law-box{background:var(--gray2);border:1px solid rgba(255,92,26,0.2);border-radius:4px;padding:1.4rem;margin:1.5rem 0}
+  .law-box h4{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.1em;color:var(--orange);margin-bottom:0.6rem}
+  .law-box p{font-size:0.86rem;margin-bottom:0.5rem}
+  .law-box p:last-child{margin:0}
+  footer{padding:clamp(2rem,4vw,3.5rem) clamp(1.5rem,6vw,5rem);border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center}
+  .footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:0.12em;color:var(--orange)}
+  .footer-note{font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;letter-spacing:0.18em;color:var(--muted);text-transform:uppercase}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html">RESOLVE</a>
+  <a class="nav-back" href="index.html">← Tillbaka</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-tag">⚡ Operativt dokument — Intern användning</div>
+  <h1>SOP<br><em>RESOLVE</em><br>VÄRDAR</h1>
+  <p class="hero-sub">Standard Operating Procedures för alla Resolve Värdar. Gäller all operativ personal. Version 2025.</p>
+</section>
+
+<div class="content">
+
+  <div class="module">
+    <div class="module-header">
+      <div class="module-num">01</div>
+      <div class="module-title"><small>Uppdrag</small>MANDAT OCH BEFOGENHETER</div>
+    </div>
+    <p class="lead">Resolve Värdar är Resolves operativa trygghetsresurs. Uppdraget är att agera preventivt, bygga relationer och säkerställa trygghet i alla miljöer där Resolve är verksamt.</p>
+    <div class="callout"><strong>Kärnprincip</strong>Trygghet skapas genom kompetens, närvaro och mentalt ledarskap. Inte genom maktutövning.</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Befogenhet</th><th>Gäller</th></tr></thead>
+      <tbody>
+        <tr><td>Polisiära befogenheter</td><td>Gäller inte för Resolve Värdar</td></tr>
+        <tr><td>Ordningsvaktsbefogenheter</td><td>Gäller inte för Resolve Värdar</td></tr>
+        <tr><td>Envarsrätt (RB 24:7)</td><td>Tillämpligt</td></tr>
+        <tr><td>Nödvärnsrätt (BrB 24:1)</td><td>Tillämpligt</td></tr>
+        <tr><td>Nödrätt (BrB 24:4)</td><td>Tillämpligt</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="module">
+    <div class="module-header">
+      <div class="module-num">02</div>
+      <div class="module-title"><small>Utrustning</small>UNIFORM OCH UTRUSTNING</div>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Utrustning</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Mobiltelefon fulladdat</td><td>Obligatorisk vid varje pass</td></tr>
+        <tr><td>Första hjälpen-kit</td><td>Obligatorisk vid varje pass</td></tr>
+        <tr><td>Resolves kontaktkort</td><td>Obligatorisk vid varje pass</td></tr>
+        <tr><td>Incidentrapportblankett</td><td>Obligatorisk vid varje pass</td></tr>
+      </tbody>
+    </table></div>
+    <p>Uniformen bärs <strong>enbart under tjänstgöring</strong>. Aldrig privat, aldrig på väg till eller från arbetet. Resolve Värdar röker inte i uniform.</p>
+  </div>
+
+  <div class="module">
+    <div class="module-header">
+      <div class="module-num">03</div>
+      <div class="module-title"><small>Protokoll</small>INGRIPANDETRAPPA</div>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Närvaro</h4><p>Tydlig och professionell närvaro signalerar kontroll. Det är i sig preventivt.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Verbal intervention</h4><p>Lågaffektivt och auktoritativt bemötande. Deeskalering är alltid förstahandsval.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Direkt ingripande</h4><p>Tillämpas när situationen kräver fysiskt agerande och risken bedöms hanterbar utan fara för personalen.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Tillkalla förstärkning</h4><p>Vid vapen, överväldigande antal eller en ej hanterbar risk: Ring 112. Lämna platsen. Säkra personalen.</p></div></div>
+    </div>
+  </div>
+
+  <div class="module">
+    <div class="module-header">
+      <div class="module-num">04</div>
+      <div class="module-title"><small>Hot och våld</small>INCIDENTPROTOKOLL</div>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Händelse</th><th>Incidentrapport</th></tr></thead>
+      <tbody>
+        <tr><td>Hot mot Resolve Värd</td><td>Alltid obligatorisk</td></tr>
+        <tr><td>Våld mot Resolve Värd</td><td>Alltid obligatorisk</td></tr>
+        <tr><td>Vittnat traumatisk händelse</td><td>Alltid obligatorisk</td></tr>
+        <tr><td>Olycka i arbetet</td><td>Alltid obligatorisk</td></tr>
+        <tr><td>Ingripande av något slag</td><td>Alltid obligatorisk</td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout"><strong>Princip</strong>Rapportering skyddar personal juridiskt och psykosocialt. Ansvaret delas alltid med chef och aldrig bärs ensam.</div>
+  </div>
+
+  <div class="module">
+    <div class="module-header">
+      <div class="module-num">05</div>
+      <div class="module-title"><small>Juridik</small>ENVARSRÄTT, NÖD OCH NÖDVÄRN</div>
+    </div>
+    <div class="law-box">
+      <h4>ENVARSRÄTT (RB 24:7)</h4>
+      <p>Om den som begått brott med fängelsestraff i straffskalan påträffas på bar gärning eller flyende fot får denne gripas av envar. Den gripne ska skyndsamt överlämnas till närmaste polis.</p>
+    </div>
+    <div class="law-box">
+      <h4>NÖDRÄTT (BrB 24:4)</h4>
+      <p>Handling i nöd är inte brott om fara hotar liv, hälsa eller egendom och handlingen är proportionerlig mot faran.</p>
+    </div>
+    <div class="law-box">
+      <h4>NÖDVÄRNSRÄTT (BrB 24:1)</h4>
+      <p>Rätt att använda proportionerligt våld mot påbörjat eller överhängande brottsligt angrepp på person eller egendom. Inte mer våld än situationen faktiskt kräver.</p>
+    </div>
+    <div class="callout"><strong>Resolve-princip</strong>Fysisk konfrontation är alltid sista utväg. Deeskalering, smart positionering och tillbakadragande prioriteras alltid före ingripande.</div>
+  </div>
+
+  <div class="module">
+    <div class="module-header">
+      <div class="module-num">06</div>
+      <div class="module-title"><small>Snabbreferens</small>KRITISKA ÅTGÄRDER</div>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Situation</th><th>Åtgärd</th></tr></thead>
+      <tbody>
+        <tr><td>Akut nödsituation</td><td>Ring 112 omedelbart</td></tr>
+        <tr><td>Hot eller våld</td><td>Säkra personal, ring 112 och kontakta chef</td></tr>
+        <tr><td>Berusad minderårig</td><td>Kontakta vårdnadshavare omgående</td></tr>
+        <tr><td>Misstänkt narkotika</td><td>Ring polis alltid oavsett ålder på inblandade</td></tr>
+        <tr><td>Brand</td><td>Rädda, varna, larma, släck och utrym i den ordningen</td></tr>
+        <tr><td>Traumatisk händelse</td><td>Kontakta chef omgående så att debriefing kan erbjudas</td></tr>
+        <tr><td>Oro för ung person</td><td>Intern diskussion med kollega och chef, sedan socialtjänsten</td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout"><strong>Status: Resolve System Optimized — Ready for Deployment</strong>SOP Resolve Värdar 2025. Fortis et liber — Stark och fri.</div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-logo">RESOLVE</div>
+  <div class="footer-note">SOP Resolve Värdar — 2025</div>
+  <div class="footer-note">teamresolve.se</div>
+</footer>
+</body>
+</html>

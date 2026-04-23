@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Resolve — Spår 2: Ungdomar</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500&display=swap');
+  :root{--orange:#FF5C1A;--dark:#0A0E14;--card:#141920;--card2:#1A2030;--white:#F5F2ED;--muted:rgba(245,242,237,0.55)}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--dark);color:var(--white);font-family:'Barlow',sans-serif;font-weight:300;font-size:clamp(15px,2.2vw,17px);overflow-x:hidden}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,20,0.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,92,26,0.2);padding:0 clamp(1rem,4vw,3rem);height:64px;display:flex;align-items:center;justify-content:space-between}
+  .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.2rem,2.5vw,1.6rem);color:var(--orange);letter-spacing:0.12em;text-decoration:none}
+  .nav-back{font-family:'Barlow Condensed',sans-serif;font-size:0.82rem;letter-spacing:0.15em;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color 0.2s}
+  .nav-back:hover{color:var(--orange)}
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:clamp(7rem,14vw,11rem) clamp(1.5rem,6vw,5rem) clamp(5rem,10vw,7rem);position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 100% 100%,rgba(255,92,26,0.12) 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 0% 0%,rgba(255,92,26,0.05) 0%,transparent 50%);pointer-events:none}
+  .hero-tag{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(0.72rem,1.5vw,0.9rem);letter-spacing:0.3em;color:var(--orange);text-transform:uppercase;margin-bottom:1.2rem;animation:fadeUp 0.5s ease forwards}
+  .hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,13vw,10rem);line-height:0.9;letter-spacing:0.02em;animation:fadeUp 0.6s ease forwards 0.15s;opacity:0}
+  .hero h1 em{font-style:normal;-webkit-text-stroke:2px var(--orange);color:transparent}
+  .hero-line{display:block;width:clamp(40px,8vw,80px);height:3px;background:var(--orange);margin:2rem 0;animation:fadeUp 0.5s ease forwards 0.3s;opacity:0}
+  .hero-sub{font-family:'Barlow Condensed',sans-serif;font-size:clamp(1.1rem,2.5vw,1.4rem);color:var(--muted);max-width:540px;line-height:1.55;animation:fadeUp 0.6s ease forwards 0.45s;opacity:0}
+  .hero-sub strong{color:var(--white);font-weight:600}
+  .statement{padding:clamp(4rem,8vw,6rem) clamp(1.5rem,6vw,5rem);text-align:center;border-top:1px solid rgba(255,92,26,0.15);border-bottom:1px solid rgba(255,92,26,0.15)}
+  .statement-text{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,6vw,4.5rem);letter-spacing:0.05em;line-height:1.1;max-width:900px;margin:0 auto}
+  .statement-text em{font-style:normal;color:var(--orange)}
+  .content{padding:clamp(3rem,6vw,5rem) clamp(1.5rem,6vw,5rem)}
+  .module{margin-bottom:clamp(4rem,8vw,6rem);scroll-margin-top:80px}
+  .module-tag{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(0.7rem,1.4vw,0.82rem);letter-spacing:0.28em;color:var(--orange);text-transform:uppercase;margin-bottom:0.8rem}
+  .module-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3.2rem);letter-spacing:0.04em;line-height:1;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:2px solid rgba(255,92,26,0.2)}
+  .lead{font-family:'Barlow Condensed',sans-serif;font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--white);line-height:1.6;margin-bottom:1.5rem}
+  p{margin-bottom:1rem;color:rgba(245,242,237,0.8);line-height:1.7}
+  .truth-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:1rem;margin:2rem 0}
+  .truth-card{background:var(--card);border-top:3px solid var(--orange);padding:1.5rem;position:relative}
+  .truth-card .t-num{font-family:'Bebas Neue',sans-serif;font-size:3rem;line-height:1;color:rgba(255,92,26,0.15);position:absolute;top:0.8rem;right:1rem}
+  .truth-card h4{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--white);margin-bottom:0.6rem;position:relative;z-index:1}
+  .truth-card p{font-size:0.88rem;margin:0;position:relative;z-index:1}
+  .scenario-block{background:var(--card2);border-left:3px solid var(--orange);padding:1.5rem;margin:1.5rem 0}
+  .scenario-label{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.75rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--orange);margin-bottom:0.6rem}
+  .scenario-q{font-family:'Barlow Condensed',sans-serif;font-size:clamp(1rem,2vw,1.15rem);font-weight:600;color:var(--white);margin-bottom:1rem}
+  .scenario-a{font-size:0.9rem;color:var(--muted);line-height:1.6}
+  .scenario-a strong{color:var(--white)}
+  .choice-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+  .choice-bad,.choice-good{padding:1.2rem 1.3rem;border-radius:4px;font-size:0.88rem;line-height:1.6}
+  .choice-bad{background:rgba(229,57,53,0.1);border-left:3px solid #E53935}
+  .choice-bad .c-label{font-weight:700;color:#ff5252;font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.4rem}
+  .choice-good{background:rgba(67,160,71,0.08);border-left:3px solid #43A047}
+  .choice-good .c-label{font-weight:700;color:#69f0ae;font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.4rem}
+  .callout{background:rgba(255,92,26,0.08);border:1px solid rgba(255,92,26,0.25);padding:1.4rem 1.6rem;margin:1.5rem 0}
+  .callout strong{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:0.2em;color:var(--orange);text-transform:uppercase;display:block;margin-bottom:0.5rem}
+  .callout p{font-size:0.92rem;margin:0;color:var(--white)}
+  .big-quote{padding:clamp(3rem,6vw,5rem) clamp(1.5rem,6vw,5rem);text-align:center}
+  .big-quote blockquote{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,5vw,3.5rem);letter-spacing:0.06em;line-height:1.2;color:var(--white);max-width:800px;margin:0 auto}
+  .big-quote blockquote em{font-style:normal;color:var(--orange)}
+  .big-quote cite{display:block;margin-top:1.2rem;font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase}
+  footer{padding:clamp(2rem,4vw,3.5rem) clamp(1.5rem,6vw,5rem);border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center}
+  .footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:0.12em;color:var(--orange)}
+  .footer-note{font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;letter-spacing:0.18em;color:var(--muted);text-transform:uppercase}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:520px){.choice-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html">RESOLVE</a>
+  <a class="nav-back" href="index.html">← Tillbaka</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-tag">🦁 Spår 2 — Ungdomar</div>
+  <h1>DU<br>VÄLJER<br><em>VÄGEN</em></h1>
+  <span class="hero-line"></span>
+  <p class="hero-sub"><strong>Ingen är dömd att hamna fel.</strong> Men valen du gör nu, även de du tror inte spelar någon roll, formar vem du blir.</p>
+</section>
+
+<div class="statement">
+  <div class="statement-text">
+    DET FINNS <em>INGEN GENVÄG</em> TILL RESPEKT SOM HÅLLER. ÄKTA RESPEKT BYGGS MED <em>TID, KARAKTÄR</em> OCH <em>RÄTT VAL</em>.
+  </div>
+</div>
+
+<div class="content">
+
+  <div class="module" id="verklighet">
+    <div class="module-tag">Fakta utan filter</div>
+    <div class="module-title">VERKLIGHETEN 2024 OCH 2025</div>
+    <p class="lead">Vi pratar inte om statistik för att skrämma dig. Vi pratar om det för att du ska fatta välgrundade beslut.</p>
+    <div class="truth-grid">
+      <div class="truth-card">
+        <div class="t-num">01</div>
+        <h4>Rekryteringsåldern sjunker</h4>
+        <p>Kriminella nätverk börjar rekrytera redan vid 12 till 14 år. De väljer inte de svagaste. De väljer de som söker tillhörighet.</p>
+      </div>
+      <div class="truth-card">
+        <div class="t-num">02</div>
+        <h4>Det börjar aldrig med kriminalitet</h4>
+        <p>Det börjar med respekt, pengar och gemenskap. Sedan är du för djupt inne för att backa utan att det kostar dig något stort.</p>
+      </div>
+      <div class="truth-card">
+        <div class="t-num">03</div>
+        <h4>Vägen ut är dyrare än vägen in</h4>
+        <p>De flesta i kriminella nätverk vill ta sig ut. Men att lämna kostar. Relationellt, ekonomiskt och ibland med livet.</p>
+      </div>
+      <div class="truth-card">
+        <div class="t-num">04</div>
+        <h4>Online-konflikter dödar</h4>
+        <p>Konflikter som börjar med ett inlägg eller en video slutar ibland med skjutningar. Det händer snabbare än du tror.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="module" id="grupptryck">
+    <div class="module-tag">Mental styrka</div>
+    <div class="module-title">GRUPPTRYCK OCH HUR DU HANTERAR DET</div>
+    <p class="lead">Alla vet att grupptryck existerar. Få pratar om hur det faktiskt känns inifrån och hur man bryter det.</p>
+
+    <div class="scenario-block">
+      <div class="scenario-label">Scenario</div>
+      <div class="scenario-q">Alla andra gör det. Varför kan inte du?</div>
+      <div class="scenario-a"><strong>Sanningen:</strong> Den frågan är designad för att flytta fokus från vad du faktiskt gör till vad andra tycker om dig. Det är manipulation och inte ett argument. Svara på fakta och inte på manipulationen.</div>
+    </div>
+
+    <div class="scenario-block">
+      <div class="scenario-label">Scenario</div>
+      <div class="scenario-q">Det är bara en gång. Det spelar ingen roll.</div>
+      <div class="scenario-a"><strong>Sanningen:</strong> Det är aldrig bara en gång. Det som inte spelar roll nu sätter ett mönster som spelar stor roll senare. Din karaktär byggs av vad du gör när det faktiskt kostar dig något.</div>
+    </div>
+
+    <div class="scenario-block">
+      <div class="scenario-label">Scenario</div>
+      <div class="scenario-q">Du är feg om du inte gör det.</div>
+      <div class="scenario-a"><strong>Sanningen:</strong> Det tar mer mod att säga nej inför en grupp än att följa med strömmen. Den som kallar dig feg vet det. Det är precis därför de anstränger sig för att bryta ner dig.</div>
+    </div>
+
+    <div class="callout">
+      <strong>Resolve-princip</strong>
+      <p>Du är inte svag för att du säger nej. Du är stark. Styrka är att göra rätt val när det faktiskt kostar dig något.</p>
+    </div>
+  </div>
+
+  <div class="module" id="sjalvskydd">
+    <div class="module-tag">Taktisk medvetenhet</div>
+    <div class="module-title">SJÄLVSKYDD I VARDAGEN</div>
+    <p class="lead">Du behöver inte vara paranoisk. Du behöver bara vara vaken.</p>
+    <div class="truth-grid">
+      <div class="truth-card">
+        <div class="t-num">01</div>
+        <h4>Situationsmedvetenhet</h4>
+        <p>Telefonen ner när du är ute. Känn av rummet. Var är utgångarna? Vem är runt dig? Det tar tre sekunder och kan rädda dig.</p>
+      </div>
+      <div class="truth-card">
+        <div class="t-num">02</div>
+        <h4>Lita på instinkten</h4>
+        <p>Om något känns fel är det fel. Din hjärna läser av signaler snabbare än du tänker medvetet. Lyssna på den känslan.</p>
+      </div>
+      <div class="truth-card">
+        <div class="t-num">03</div>
+        <h4>Lämna i tid</h4>
+        <p>Det bästa sättet att undvika en situation är att lämna innan den eskalerar. Det kräver ingen förklaring. Bara ett beslut.</p>
+      </div>
+      <div class="truth-card">
+        <div class="t-num">04</div>
+        <h4>Sociala medier</h4>
+        <p>Allt du lägger upp finns kvar. Konflikter du startar online kan följa dig fysiskt. Tänk innan du postar och inte efteråt.</p>
+      </div>
+    </div>
+    <p style="margin-top:1.5rem;">Om du hamnar i en situation med risk för våld:</p>
+    <div class="choice-row">
+      <div class="choice-bad">
+        <div class="c-label">Undvik detta</div>
+        Stanna och försök bevisa dig. Eskalera verbalt. Videofilma och publicera. Hämnas direkt.
+      </div>
+      <div class="choice-good">
+        <div class="c-label">Gör istället</div>
+        Lämna situationen. Ring 112 om det är akut. Prata med en vuxen du litar på. Dokumentera utan att publicera.
+      </div>
+    </div>
+  </div>
+
+  <div class="module" id="konsekvens">
+    <div class="module-tag">Konsekvenstänk</div>
+    <div class="module-title">VAL HAR KONSEKVENSER ÄVEN OM DU INTE SER DEM NU</div>
+    <p class="lead">Det är lätt att tänka kortsiktigt när man är ung. Men dina beslut idag formar vem du kan vara om tio år.</p>
+    <div class="choice-row">
+      <div class="choice-bad">
+        <div class="c-label">Kortsiktig vinst</div>
+        Snabba pengar. Status i gruppen just nu. Känslan av makt och kontroll.
+      </div>
+      <div class="choice-good">
+        <div class="c-label">Långsiktig frihet</div>
+        Frihet att välja vad du vill göra. Respekt som inte kräver våld för att upprätthållas. Möjligheten att bygga det liv du faktiskt vill ha.
+      </div>
+    </div>
+    <div class="scenario-block">
+      <div class="scenario-label">Tänk igenom det</div>
+      <div class="scenario-q">Vad vill du att ditt liv ska se ut om 10 år?</div>
+      <div class="scenario-a">Inte vad dina kompisar vill. Inte vad sociala medier säger är häftigt. Vad <strong>du</strong> faktiskt vill. Svara ärligt för dig själv. Välj sedan de saker som rör dig i den riktningen och inte bort från den.</div>
+    </div>
+  </div>
+
+  <div class="module" id="vagen">
+    <div class="module-tag">Det du bygger</div>
+    <div class="module-title">RESOLVE-VÄGEN</div>
+    <p class="lead">Resolve erbjuder ingen genväg. Vi erbjuder något bättre. Ett sätt att bli den starkaste versionen av dig själv.</p>
+    <div class="truth-grid">
+      <div class="truth-card">
+        <div class="t-num">💪</div>
+        <h4>Fysisk träning</h4>
+        <p>Träning bygger mer än muskler. Det bygger disciplin, tålamod och förmågan att pusha igenom när det är som svårast.</p>
+      </div>
+      <div class="truth-card">
+        <div class="t-num">🎯</div>
+        <h4>Mental styrka</h4>
+        <p>Viljestyrka tränas och föds inte. Varje gång du väljer rätt under press bygger du den muskel som verkligen spelar roll.</p>
+      </div>
+      <div class="truth-card">
+        <div class="t-num">🧭</div>
+        <h4>Rätt val</h4>
+        <p>Inte att alltid göra det lätta. Att ha modet att göra det rätta och veta skillnaden när det är som svårast.</p>
+      </div>
+    </div>
+    <div class="callout">
+      <strong>Status: Resolve System Optimized — Unique Education Structure Integrated</strong>
+      <p>Spår 2 komplett. Fortis et liber — Stark och fri. Aldrig ge upp.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="big-quote">
+  <blockquote>
+    "STARK OCH FRI<br>BYGGS <em>INIFRÅN</em>.<br>INGEN KAN TA<br>DET FRÅN DIG."
+  </blockquote>
+  <cite>Team Resolve — Fortis et liber</cite>
+</div>
+
+<footer>
+  <div class="footer-logo">RESOLVE</div>
+  <div class="footer-note">Spår 2 — Ungdomar — 2025</div>
+  <div class="footer-note">teamresolve.se</div>
+</footer>
+</body>
+</html>
