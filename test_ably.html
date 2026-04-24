@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Ably Test</title>
+<script src="https://cdn.ably.com/lib/ably.min-2.js"></script>
+</head>
+<body style="background:#0D1117;color:#F5F2ED;font-family:sans-serif;padding:2rem;">
+<h2 style="color:#FF5C1A;">ABLY ANSLUTNINGSTEST</h2>
+<div id="status" style="margin:1rem 0;padding:1rem;background:#1E2530;border-radius:4px;">Testar anslutning...</div>
+<div id="pubtest" style="margin:1rem 0;padding:1rem;background:#1E2530;border-radius:4px;display:none;"></div>
+<div id="subtest" style="margin:1rem 0;padding:1rem;background:#1E2530;border-radius:4px;display:none;"></div>
+
+<script>
+const KEY = 'p1bgEQ.gfvW8g:q2Bq5mpNplXICSjUPAFMeLxnURYx5cN9faN9btheM60';
+const status = document.getElementById('status');
+const pubtest = document.getElementById('pubtest');
+const subtest = document.getElementById('subtest');
+
+async function runTest() {
+  try {
+    status.textContent = '1. Ansluter till Ably...';
+    const client = new Ably.Realtime({ key: KEY });
+    
+    await new Promise((res, rej) => {
+      const t = setTimeout(() => rej(new Error('Timeout efter 8 sekunder')), 8000);
+      client.connection.once('connected', () => { clearTimeout(t); res(); });
+      client.connection.once('failed', (err) => { clearTimeout(t); rej(err); });
+    });
+    
+    status.innerHTML = '✅ Anslutning lyckades!';
+    status.style.borderLeft = '3px solid #43A047';
+    
+    // Test publish
+    pubtest.style.display = 'block';
+    pubtest.textContent = '2. Testar publish...';
+    const ch = client.channels.get('resolve-test-' + Date.now());
+    
+    // Test subscribe first
+    subtest.style.display = 'block';
+    subtest.textContent = '3. Testar subscribe...';
+    
+    const received = new Promise((res, rej) => {
+      const t = setTimeout(() => rej(new Error('Inget meddelande mottaget inom 5 sek')), 5000);
+      ch.subscribe('ping', (msg) => {
+        clearTimeout(t);
+        res(msg.data);
+      });
+    });
+    
+    await ch.publish('ping', { text: 'resolve-test', ts: Date.now() });
+    pubtest.innerHTML = '✅ Publish fungerar!';
+    pubtest.style.borderLeft = '3px solid #43A047';
+    
+    const data = await received;
+    subtest.innerHTML = '✅ Subscribe fungerar! Mottog: ' + JSON.stringify(data);
+    subtest.style.borderLeft = '3px solid #43A047';
+    
+    client.close();
+    
+    const final = document.createElement('div');
+    final.style.cssText = 'margin:1rem 0;padding:1rem;background:#0E1A0E;border-left:3px solid #43A047;border-radius:4px;font-size:1.1rem;';
+    final.innerHTML = '🦅 ALLT FUNGERAR — Ably är redo för workshopen';
+    document.body.appendChild(final);
+    
+  } catch(e) {
+    status.innerHTML = '❌ FEL: ' + e.message;
+    status.style.borderLeft = '3px solid #E53935';
+    const help = document.createElement('div');
+    help.style.cssText = 'margin:1rem 0;padding:1rem;background:#1A0E0E;border-left:3px solid #E53935;border-radius:4px;';
+    help.innerHTML = 'Felkod: ' + e.message + '<br><br>Kontrollera att nyckeln har Publish och Subscribe aktiverat i Ably-dashboarden.';
+    document.body.appendChild(help);
+  }
+}
+
+runTest();
+</script>
+</body>
+</html>
