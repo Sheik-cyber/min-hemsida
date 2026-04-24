@@ -1182,7 +1182,7 @@ function renderSolo(){
       </button>`;
     });
     html+=`</div><p style="font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;color:var(--muted);margin-top:0.8rem;">Det finns inget rätt svar.</p>`;
-    if(saved){html+=`<div class="btn-row"><button class="btn btn-primary" onclick="soloNext()">Nästa →</button></div>`;}
+    if(saved){html+=`<div class="btn-row"><button class="btn btn-primary" onclick="soloNext()">Nästa →</button>${(soloStep>0||soloSubStep>0)?'<button class="btn btn-ghost" onclick="soloPrev()">← Tillbaka</button>':''}</div>`;}
   }
 
   if(mod.type==='pressure'){
@@ -1196,7 +1196,7 @@ function renderSolo(){
       </button>`;
     });
     html+=`</div>`;
-    if(saved){html+=`<div class="btn-row"><button class="btn btn-primary" onclick="soloNext()">Nästa →</button></div>`;}
+    if(saved){html+=`<div class="btn-row"><button class="btn btn-primary" onclick="soloNext()">Nästa →</button>${(soloStep>0||soloSubStep>0)?'<button class="btn btn-ghost" onclick="soloPrev()">← Tillbaka</button>':''}</div>`;}
   }
 
   if(mod.type==='commitment'){
@@ -1216,7 +1216,7 @@ function renderSolo(){
       </button>`;
     });
     html+=`</div>`;
-    if(saved){html+=`<div class="btn-row"><button class="btn btn-primary" onclick="soloNext()">Nästa →</button></div>`;}
+    if(saved){html+=`<div class="btn-row"><button class="btn btn-primary" onclick="soloNext()">Nästa →</button>${(soloStep>0||soloSubStep>0)?'<button class="btn btn-ghost" onclick="soloPrev()">← Tillbaka</button>':''}</div>`;}
   }
 
   if(mod.type==='evaluation'){
@@ -1250,7 +1250,7 @@ function renderSolo(){
       </button>`;
     });
     html+=`</div>`;
-    if(saved){html+=`<div class="btn-row"><button class="btn btn-primary" onclick="soloNext()">Nästa →</button></div>`;}
+    if(saved){html+=`<div class="btn-row"><button class="btn btn-primary" onclick="soloNext()">Nästa →</button>${(soloStep>0||soloSubStep>0)?'<button class="btn btn-ghost" onclick="soloPrev()">← Tillbaka</button>':''}</div>`;}
   }
 
   if(mod.type==='evaluation'){
