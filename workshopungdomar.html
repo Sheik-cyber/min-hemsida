@@ -217,8 +217,9 @@ footer{padding:clamp(1.5rem,4vw,3rem) clamp(1.2rem,5vw,2.5rem);border-top:1px so
     <p class="lead">Generera en engångskod för ledare. Dela koden med dina ledare men inte med deltagare.</p>
 
     <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.5rem;margin-bottom:1.2rem;">
-      <p style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--orange);margin-bottom:0.5rem;">Aktiv ledarkod för denna session</p>
-      <div id="leaderCodeDisplay" style="font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:var(--white);letter-spacing:0.3em;line-height:1;margin-bottom:0.8rem;">----</div>
+      <p style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--orange);margin-bottom:0.5rem;">Aktiv gästkod — dela med gästföreläsare</p>
+      <div id="leaderCodeDisplay" style="font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:var(--white);letter-spacing:0.3em;line-height:1;margin-bottom:0.4rem;">----</div>
+      <div id="leaderCodeTimer" style="font-family:'Barlow Condensed',sans-serif;font-size:0.82rem;letter-spacing:0.12em;color:var(--muted);margin-bottom:0.8rem;min-height:1.2rem;"></div>
       <button class="btn btn-primary" onclick="generateLeaderCode()">Generera ny kod →</button>
     </div>
 
@@ -239,7 +240,7 @@ footer{padding:clamp(1.5rem,4vw,3rem) clamp(1.2rem,5vw,2.5rem);border-top:1px so
   <div class="wrap" style="max-width:480px;text-align:center;">
     <div class="tag">Ledare</div>
     <div class="big">LEDAR<br><em>KOD</em></div>
-    <p class="lead" style="margin:0 auto 1.5rem;">Skriv in koden du fått från admin.</p>
+    <p class="lead" style="margin:0 auto 1.5rem;">Skriv in din ledarkod. Fasta ledare använder sin kod. Gästledare använder koden från admin.</p>
     <input class="join-input" id="leaderLoginInput" maxlength="4" placeholder="XXXX" type="password" style="letter-spacing:0.5em;font-size:2.5rem;" onkeydown="if(event.key==='Enter')verifyLeader()">
     <div id="leaderLoginErr" style="font-family:'Barlow Condensed',sans-serif;font-size:0.88rem;color:#ff5252;margin-top:0.5rem;min-height:1.2rem;"></div>
     <div class="btn-row" style="justify-content:center;margin-top:1.2rem;">
@@ -525,9 +526,11 @@ const LIBRARY = {
 const ABLY_KEY = 'p1bgEQ.gfvW8g:q2Bq5mpNplXICSjUPAFMeLxnURYx5cN9faN9btheM60';
 
 // ═══ ADMIN / AUTH ═══
-const ADMIN_CODE = '2234'; // Ändra detta i GitHub om koden läcker ut
-let leaderCode = '';       // Engångskod genererad av admin för denna session
-let leaderCodeActive = ''; // Den kod ledaren loggat in med
+// Ändra koderna i GitHub om de läcker ut — sök på koden och byt ut den
+const ADMIN_CODE  = '2234'; // Admin — full tillgång och historik
+const LEADER_CODE = '1988'; // Fasta ledare — alltid tillgång
+let guestCode = '';          // Engångskod för gästledare, genereras av admin
+let leaderCodeActive = '';
 let ably = null, channel = null;
 let sessionCode = '';
 let selectedModules = ['warmup','omar','pressure','eval'];
@@ -1338,31 +1341,92 @@ function verifyAdmin() {
         <p>${s.participants} deltagare &nbsp;·&nbsp; ${s.blocks.join(', ')}${s.avgRating?' &nbsp;·&nbsp; ⭐ '+s.avgRating+'/5':''}</p>
       </div>`).join('');
   }
+  // Ladda eventuell sparad ledarkod
+  loadStoredGuestCode();
+  renderAdminCode();
   showScreen('s-admin');
 }
 
 function generateLeaderCode() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  leaderCode = Array.from({length:4}, () => chars[Math.floor(Math.random()*chars.length)]).join('');
-  document.getElementById('leaderCodeDisplay').textContent = leaderCode;
+  guestCode = Array.from({length:4}, () => chars[Math.floor(Math.random()*chars.length)]).join('');
+  const expiry = Date.now() + 90 * 60 * 1000; // 90 minuter
+  sessionStorage.setItem('resolveGuestCode', JSON.stringify({code: guestCode, expiry}));
+  renderAdminCode();
+}
+
+function renderAdminCode() {
+  const el = document.getElementById('leaderCodeDisplay');
+  const timerEl = document.getElementById('leaderCodeTimer');
+  if (!el) return;
+  if (!guestCode) {
+    el.textContent = '----';
+    if (timerEl) timerEl.textContent = 'Ingen aktiv gästkod';
+    return;
+  }
+  el.textContent = guestCode;
+  // Start countdown
+  if (window._codeTimer) clearInterval(window._codeTimer);
+  window._codeTimer = setInterval(() => {
+    const stored = sessionStorage.getItem('resolveGuestCode');
+    if (!stored) { clearInterval(window._codeTimer); if(timerEl) timerEl.textContent = 'Kod utgången'; return; }
+    const {expiry} = JSON.parse(stored);
+    const left = Math.max(0, expiry - Date.now());
+    if (left === 0) {
+      clearInterval(window._codeTimer);
+      guestCode = '';
+      sessionStorage.removeItem('resolveGuestCode');
+      if (el) el.textContent = '----';
+      if (timerEl) timerEl.textContent = 'Kod utgången — generera ny';
+      return;
+    }
+    const m = Math.floor(left / 60000);
+    const s = Math.floor((left % 60000) / 1000);
+    if (timerEl) timerEl.textContent = `Aktiv i ${m}:${String(s).padStart(2,'0')} till`;
+  }, 1000);
+}
+
+function loadStoredGuestCode() {
+  try {
+    const stored = sessionStorage.getItem('resolveGuestCode');
+    if (!stored) return;
+    const {code, expiry} = JSON.parse(stored);
+    if (Date.now() < expiry) {
+      guestCode = code;
+    } else {
+      guestCode = '';
+      sessionStorage.removeItem('resolveGuestCode');
+    }
+  } catch(e) {}
 }
 
 function verifyLeader() {
-  const val = document.getElementById('leaderLoginInput').value.trim().toUpperCase();
-  if (!leaderCode) {
-    document.getElementById('leaderLoginErr').textContent = 'Ingen aktiv ledarkod. Admin måste generera en kod först.';
-    return;
-  }
-  if (val !== leaderCode) {
-    document.getElementById('leaderLoginErr').textContent = 'Fel kod. Kontrollera med admin.';
+  loadStoredGuestCode();
+  const val = document.getElementById('leaderLoginInput').value.trim();
+  const err = document.getElementById('leaderLoginErr');
+
+  // Fast ledare
+  if (val === LEADER_CODE) {
+    err.textContent = '';
     document.getElementById('leaderLoginInput').value = '';
+    leaderCodeActive = 'leader';
+    buildModulePicker();
+    showScreen('s-leader-setup');
     return;
   }
-  document.getElementById('leaderLoginErr').textContent = '';
+
+  // Gästledare — kontrollera mot aktiv gästkod
+  if (guestCode && val.toUpperCase() === guestCode) {
+    err.textContent = '';
+    document.getElementById('leaderLoginInput').value = '';
+    leaderCodeActive = 'guest';
+    buildModulePicker();
+    showScreen('s-leader-setup');
+    return;
+  }
+
+  err.textContent = 'Fel kod. Fast ledare eller gästkod från admin krävs.';
   document.getElementById('leaderLoginInput').value = '';
-  leaderCodeActive = val;
-  buildModulePicker();
-  showScreen('s-leader-setup');
 }
 
 // ══════════════════════════════════════════
@@ -1370,6 +1434,7 @@ function verifyLeader() {
 // ══════════════════════════════════════════
 buildModulePicker();
 renderHistoryScreen();
+loadStoredGuestCode(); // Ladda sparad ledarkod om sidan laddas om
 
 // Show history screen when navigating to it
 document.getElementById('s-history').addEventListener('animationstart', renderHistoryScreen);
