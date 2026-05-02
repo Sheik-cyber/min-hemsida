@@ -156,6 +156,10 @@ footer{padding:clamp(1.5rem,4vw,3rem) clamp(1.2rem,5vw,2.5rem);border-top:1px so
 .footer-note{font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;letter-spacing:0.16em;color:var(--muted);text-transform:uppercase}
 
 @media print{nav,footer,.btn-row{display:none!important}main{padding-top:0}}
+@media(max-width:640px){
+  #s-leader .wrap-wide{grid-template-columns:1fr!important}
+  #s-leader [style*="position:sticky"]{position:relative!important;top:0!important;order:-1}
+}
 </style>
 </head>
 <body>
@@ -314,14 +318,24 @@ footer{padding:clamp(1.5rem,4vw,3rem) clamp(1.2rem,5vw,2.5rem);border-top:1px so
 
 <!-- ══ LEADER ACTIVE ══ -->
 <div class="screen" id="s-leader">
-  <div class="wrap-wide">
-    <div class="live-pill"><span class="live-dot"></span>Live session aktiv</div>
-    <div id="leaderBlock"></div>
-    <div style="display:flex;gap:0.8rem;flex-wrap:wrap;padding-top:1rem;border-top:1px solid var(--border);margin-top:1rem;">
-      <button class="btn btn-primary" id="btnNext" onclick="leaderNext()">Nästa →</button>
-      <button class="btn btn-ghost" id="btnBack" onclick="leaderBack()" style="display:none;">← Tillbaka</button>
-      <button class="btn btn-ghost" id="btnDisc" onclick="showDisc()" style="display:none;">Visa diskussion</button>
-      <button class="btn btn-ghost" onclick="endSession()">Avsluta</button>
+  <div class="wrap-wide" style="display:grid;grid-template-columns:1fr 200px;gap:1.5rem;align-items:start;">
+    <div>
+      <div class="live-pill"><span class="live-dot"></span>Live session aktiv</div>
+      <div id="leaderBlock"></div>
+      <div style="display:flex;gap:0.8rem;flex-wrap:wrap;padding-top:1rem;border-top:1px solid var(--border);margin-top:1rem;">
+        <button class="btn btn-primary" id="btnNext" onclick="leaderNext()">Nästa →</button>
+        <button class="btn btn-ghost" id="btnBack" onclick="leaderBack()" style="display:none;">← Tillbaka</button>
+        <button class="btn btn-ghost" id="btnDisc" onclick="showDisc()" style="display:none;">Visa diskussion</button>
+        <button class="btn btn-ghost" onclick="endSession()">Avsluta</button>
+      </div>
+    </div>
+    <div style="position:sticky;top:80px;">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1rem;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--orange);margin-bottom:0.6rem;">Deltagare <span id="sidebarCount" style="color:var(--white);">0</span></div>
+        <div id="sidebarList" style="display:flex;flex-direction:column;gap:0.4rem;max-height:60vh;overflow-y:auto;">
+          <p style="font-family:'Barlow Condensed',sans-serif;font-size:0.82rem;color:var(--muted);">Väntar...</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -674,13 +688,15 @@ async function startLeaderSession() {
     joinCount = Object.keys(participants).length;
     const countEl = document.getElementById('joinCount');
     if (countEl) countEl.textContent = joinCount;
-    // Update participant chips — only visible on leader screen s-code
+    // Update participant chips on setup screen
     const listEl = document.getElementById('participantList');
     if (listEl) {
       listEl.innerHTML = Object.entries(participants).map(([id, name]) =>
         `<span style="background:var(--card);border:1px solid var(--border);border-radius:4px;padding:4px 12px;font-family:'Barlow Condensed',sans-serif;font-size:0.88rem;color:var(--white);">${name}</span>`
       ).join('');
     }
+    // Update persistent sidebar on active leader screen
+    updateParticipantSidebar();
   });
 
   // Collect responses
@@ -882,6 +898,21 @@ function updateEvalDisplay() {
     commEl.innerHTML = '<p style="font-family:Barlow Condensed,sans-serif;font-weight:700;font-size:0.75rem;letter-spacing:0.18em;color:var(--orange);text-transform:uppercase;margin-bottom:0.5rem;">VAD DE TAR MED SIG</p>' +
     comments.map(c => `<div style="background:var(--card);border-left:3px solid var(--orange);padding:0.6rem 1rem;margin-bottom:0.4rem;border-radius:0 4px 4px 0;font-size:0.88rem;color:rgba(245,242,237,0.85);">${c}</div>`).join('');
   }
+}
+
+function updateParticipantSidebar() {
+  const countEl = document.getElementById('sidebarCount');
+  const listEl  = document.getElementById('sidebarList');
+  if (!listEl) return;
+  const entries = Object.entries(participants);
+  if (countEl) countEl.textContent = entries.length;
+  if (!entries.length) {
+    listEl.innerHTML = '<p style="font-family:Barlow Condensed,sans-serif;font-size:0.82rem;color:var(--muted);">Väntar på deltagare...</p>';
+    return;
+  }
+  listEl.innerHTML = entries.map(([pid, name]) =>
+    `<div style="background:var(--card2);border-radius:4px;padding:5px 10px;font-family:'Barlow Condensed',sans-serif;font-size:0.88rem;font-weight:600;color:var(--white);">${name}</div>`
+  ).join('');
 }
 
 function buildParticipantPicker() {
